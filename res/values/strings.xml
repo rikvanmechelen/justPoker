@@ -5,7 +5,13 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">justPoker</string>
     <string name="btn_send">Send</string>
-    <string name="edit_message">blort</string>
+    <string name="edit_message">Enter a message</string>
     <string name="title_activity_display_message">DisplayMessageActivity</string>
+    <string name="open_client_btn">client</string>
+    <string name="open_server_btn">server</string>
+    <string name="title_activity_client">JustPokerClient</string>
+    <string name="title_activity_server">JustPokerServer</string>
+    <string name="client_hello">client hello</string>
+    <string name="server_hello">server hello</string>
 
 </resources>

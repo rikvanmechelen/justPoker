@@ -27,6 +27,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.MainActivity" />
         </activity>
+        <activity
+            android:name=".ClientActivity"
+            android:label="@string/title_activity_client" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ServerActivity"
+            android:label="@string/title_activity_server" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
