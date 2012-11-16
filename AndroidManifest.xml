@@ -6,6 +6,8 @@
     <uses-sdk
         android:minSdkVersion="13"
         android:targetSdkVersion="15" />
+    
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -30,6 +32,9 @@
         <activity
             android:name=".ClientActivity"
             android:label="@string/title_activity_client" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.infogroep.justpoker.MainActivity" />
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -37,9 +42,19 @@
         <activity
             android:name=".ServerActivity"
             android:label="@string/title_activity_server" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.infogroep.justpoker.MainActivity" />
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ServerTableActivity"
+            android:label="@string/title_activity_server_table" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.infogroep.justpoker.ServerActivity" />
         </activity>
     </application>
 

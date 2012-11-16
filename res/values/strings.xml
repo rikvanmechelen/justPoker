@@ -13,5 +13,7 @@
     <string name="title_activity_server">JustPokerServer</string>
     <string name="client_hello">client hello</string>
     <string name="server_hello">server hello</string>
+    <string name="start_server">Start Server</string>
+    <string name="title_activity_server_table">ServerTableActivity</string>
 
 </resources>
