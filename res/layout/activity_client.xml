@@ -11,4 +11,36 @@
         android:text="@string/client_hello"
         tools:context=".ClientActivity" />
 
+    <EditText
+        android:id="@+id/server_ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="19dp"
+        android:layout_marginTop="18dp"
+        android:ems="10"
+        android:inputType="text|numberDecimal" />
+
+    <TextView
+        android:id="@+id/server_ip_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/server_ip"
+        android:layout_alignBottom="@+id/server_ip"
+        android:layout_alignParentLeft="true"
+        android:text="Server IP"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/server_ip"
+        android:layout_below="@+id/server_ip"
+        android:layout_marginLeft="15dp"
+        android:onClick="connectToServer"
+        android:text="connect" />
+
 </RelativeLayout>
