@@ -3,13 +3,8 @@ package be.infogroep.justpoker;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 public class TapTestActivity extends Activity {
@@ -26,21 +21,6 @@ public class TapTestActivity extends Activity {
 			@Override
 			public void onTopToBottom() {
 				printMessage("TopToBottom");
-			}
-
-			@Override
-			public void onRightToLeft() {
-				printMessage("RightToLeft");
-			}
-
-			@Override
-			public void onLeftToRight() {
-				printMessage("LeftToRight");
-			}
-
-			@Override
-			public void onBottomToTop() {
-				printMessage("BottomToTop");
 			}
 		});
 	}
