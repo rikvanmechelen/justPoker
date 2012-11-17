@@ -1,20 +1,21 @@
 package be.infogroep.justpoker;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import be.infogroep.justpoker.Validators.IPAddressValidator;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -52,12 +53,10 @@ public class ClientActivity extends Activity {
 			return null;
 		}
 	}
-
-	
 	private static Connection serverConnection;
-	private static int myClientID;
 
-	
+	// private static int myClientID;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,8 +74,8 @@ public class ClientActivity extends Activity {
 		String ip = e.getText().toString();
 		if (handelIpAddressValidation(e)) {
 			new ConnectAsyncTask(ip, CommLib.SERVER_PORT, listener).execute();
-			
-			//serverConnection.sendTCP("SENDING CLIENT MESSAGE!");
+
+			// serverConnection.sendTCP("SENDING CLIENT MESSAGE!");
 		}
 	}
 
@@ -116,16 +115,16 @@ public class ClientActivity extends Activity {
 			super.received(c, m);
 
 			Log.v("justPoker - Client", "Received message " + m.toString());
-			
-			//if (m instanceof String) {
-			//	// Client view
-			//	Log.v("wePoker - Client", "Procesing state message " + m.toString());				
-			//}
 
-		
+			// if (m instanceof String) {
+			// // Client view
+			// Log.v("wePoker - Client", "Procesing state message " +
+			// m.toString());
+			// }
+
 		}
 	};
-	
+
 	private void setServerConnection(Connection c) {
 		serverConnection = c;
 	}

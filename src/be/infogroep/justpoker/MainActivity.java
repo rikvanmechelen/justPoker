@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void openClient(View view) {
-		Intent intent = new Intent(this, ClientActivity.class);
+		Intent intent = new Intent(this, TapTestActivity.class);
 		startActivity(intent);
 	}
 }

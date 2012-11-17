@@ -6,7 +6,7 @@
     <uses-sdk
         android:minSdkVersion="13"
         android:targetSdkVersion="15" />
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -35,6 +35,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.MainActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -45,6 +46,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.MainActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -55,6 +57,20 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.ServerActivity" />
+        </activity>
+        <activity
+            android:name=".TapTestActivity"
+            android:label="@string/title_activity_tap_test" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.infogroep.justpoker.ClientActivity" />
+        </activity>
+        <activity
+            android:name=".ChangeTextActivity"
+            android:label="@string/title_activity_change_text" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.infogroep.justpoker.TapTestActivity" />
         </activity>
     </application>
 

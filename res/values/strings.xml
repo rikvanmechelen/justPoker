@@ -15,5 +15,9 @@
     <string name="server_hello">server hello</string>
     <string name="start_server">Start Server</string>
     <string name="title_activity_server_table">ServerTableActivity</string>
+    <string name="title_activity_tap_test">TapTestActivity</string>
+    <string name="tap_test">tap_test</string>
+    <string name="tap_test_button">test</string>
+    <string name="title_activity_change_text">ChangeTextActivity</string>
 
 </resources>
