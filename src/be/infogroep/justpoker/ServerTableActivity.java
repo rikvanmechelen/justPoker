@@ -2,11 +2,15 @@ package be.infogroep.justpoker;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.support.v4.app.NavUtils;
 
 public class ServerTableActivity extends Activity {
+	
+	private PokerServer cps;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -14,7 +18,7 @@ public class ServerTableActivity extends Activity {
         setContentView(R.layout.activity_server_table);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
-        PokerServer cps = new PokerServer();
+        cps = new PokerServer();
 		cps.start();
     }
 
@@ -31,8 +35,14 @@ public class ServerTableActivity extends Activity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            
         }
         return super.onOptionsItemSelected(item);
     }
-
+    
+    public void stopServer(MenuItem  m){
+		Intent intent = new Intent(this, ServerActivity.class);
+    	cps.stop();
+		startActivity(intent);
+    }
 }

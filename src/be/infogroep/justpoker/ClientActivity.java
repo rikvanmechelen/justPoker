@@ -25,6 +25,8 @@ import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.CommLibConnectionInfo;
 
 public class ClientActivity extends Activity {
+	private static Connection serverConnection;
+
 	public class ConnectAsyncTask extends AsyncTask<Void, Void, Client> {
 
 		private int port;
@@ -53,7 +55,6 @@ public class ClientActivity extends Activity {
 			return null;
 		}
 	}
-	private static Connection serverConnection;
 
 	// private static int myClientID;
 
@@ -74,6 +75,8 @@ public class ClientActivity extends Activity {
 		String ip = e.getText().toString();
 		if (handelIpAddressValidation(e)) {
 			new ConnectAsyncTask(ip, CommLib.SERVER_PORT, listener).execute();
+			
+			
 
 			// serverConnection.sendTCP("SENDING CLIENT MESSAGE!");
 		}
@@ -115,7 +118,11 @@ public class ClientActivity extends Activity {
 			super.received(c, m);
 
 			Log.v("justPoker - Client", "Received message " + m.toString());
-
+			
+			while (serverConnection == null){
+				
+			};
+			serverConnection.sendTCP("OMG, this is sooo cool");
 			// if (m instanceof String) {
 			// // Client view
 			// Log.v("wePoker - Client", "Procesing state message " +
