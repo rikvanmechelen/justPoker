@@ -28,14 +28,8 @@ public class TapTestActivity extends Activity {
 
 			@Override
 			public void onBottomToTop() {
-				printMessage("swiped", textView2);
-				ObjectAnimator animation1 = ObjectAnimator.ofFloat(card1,
-						"y", -100);
-				animation1.setDuration(1000);
-				ObjectAnimator animation2 = ObjectAnimator.ofFloat(card1, "alpha", 0);
-				animation2.setDuration(1000);
-				animation2.start();
-				animation1.start();
+				fold(card1);
+				fold(card2);
 			}
 
 			@Override
@@ -51,6 +45,13 @@ public class TapTestActivity extends Activity {
 			}
 		});
 		card2.setOnTouchListener(new OnFlingGestureListener() {
+			
+			@Override
+			public void onBottomToTop() {
+				fold(card1);
+				fold(card2);
+			}
+
 			@Override
 			public void onDoubletap() {
 				printMessage("Card2 doubletap", textView2);
@@ -84,5 +85,14 @@ public class TapTestActivity extends Activity {
 
 	public void printMessage(String s, TextView t) {
 		t.setText(s);
+	}
+
+	private void fold(ImageView card) {
+		ObjectAnimator move = ObjectAnimator.ofFloat(card, "y", 0);
+		ObjectAnimator fade = ObjectAnimator.ofFloat(card, "alpha", 0);
+		move.setDuration(300);
+		fade.setDuration(300);
+		move.start();
+		fade.start();
 	}
 }

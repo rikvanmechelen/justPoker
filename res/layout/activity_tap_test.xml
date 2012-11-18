@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <TextView
         android:id="@+id/tap_test_text2"
@@ -12,32 +11,23 @@
         android:layout_alignParentRight="true"
         android:text="CLICK ME" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/card1"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tap_test_text2" >
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="66dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/spades_king" />
 
-        <ImageView
-            android:id="@+id/card1"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="76dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/spades_king" />
-
-        <ImageView
-            android:id="@+id/card2"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/card1"
-            android:scaleType="fitXY"
-            android:src="@drawable/spades_ace" />
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/card2"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_alignTop="@+id/card1"
+        android:layout_toRightOf="@+id/card1"
+        android:scaleType="fitXY"
+        android:src="@drawable/spades_ace" />
 
 </RelativeLayout>
