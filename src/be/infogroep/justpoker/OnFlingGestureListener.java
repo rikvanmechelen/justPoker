@@ -13,14 +13,25 @@ public abstract class OnFlingGestureListener implements OnTouchListener {
 			new GestureListener());
 
 	public boolean onTouch(final View v, final MotionEvent event) {
-		return gdt.onTouchEvent(event);
+		gdt.onTouchEvent(event);
+		return true;
 	}
 
 	private final class GestureListener extends SimpleOnGestureListener {
 
 		private static final int SWIPE_MIN_DISTANCE = 60;
 		private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-
+		
+		public boolean onSingleTapConfirmed(MotionEvent e){
+			onTap();
+			return true;
+		}
+		
+		public boolean onDoubleTap(MotionEvent e){
+			onDoubletap();
+			return true;
+		}
+		
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 				float velocityY) {
@@ -53,5 +64,9 @@ public abstract class OnFlingGestureListener implements OnTouchListener {
 	public void onBottomToTop() {};
 
 	public void onTopToBottom() {};
+	
+	public void onTap() {};
+	
+	public void onDoubletap() {};
 
 }
