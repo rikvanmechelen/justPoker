@@ -23,19 +23,21 @@ public class PokerServer {
 	
 	int nextClientID = 0;
 	private ConcurrentSkipListMap<Integer, Connection> connections = new ConcurrentSkipListMap<Integer, Connection>();
-
+	private volatile Thread serverThread;
+	private Server server;
+	
 	
 	Runnable serverR = new Runnable() {
 		public void run() {
 			try {
 				Log.d("justPoker - Server", "Creating server");
-				Server s = new Server();
-				Kryo k = s.getKryo();
+				server = new Server();
+				Kryo k = server.getKryo();
 				//k.setRegistrationRequired(false); //false is the default
 				k.register(UUID.class, new UUIDSerializer());
-				s.bind(CommLib.SERVER_PORT);
-				s.start();
-				s.addListener(new Listener() {
+				server.bind(CommLib.SERVER_PORT);
+				server.start();
+				server.addListener(new Listener() {
 					@Override
 					public void connected(Connection c) {
 						super.connected(c);
@@ -46,7 +48,7 @@ public class PokerServer {
 					@Override
 					public void received(Connection c, Object msg) {
 						super.received(c, msg);
-						Log.d("justPoker - Server", "Message received");
+						Log.d("justPoker - Server", "Message received " + msg);
 //						if (msg instanceof FutureMessage) {
 //							FutureMessage fm = (FutureMessage) msg;
 //							Log.d("justPoker - Server", "Resolving future " + fm.futureId + "(" + CommLib.futures.get(fm.futureId) + ") with value " + fm.futureValue);
@@ -73,14 +75,29 @@ public class PokerServer {
 		};
 	};
 	
-	public void start() {		
-		Log.d("justPoker - Server", "Starting server and exporter threads...");
-		new Thread(serverR).start();
-		//new Thread(gameLoop).start();
+	public synchronized void start() {		
+		Log.d("justPoker - Server", "Starting server thread...");
+		if(serverThread == null){
+			serverThread = new Thread(serverR);
+			serverThread.start();
+			//new Thread(gameLoop).start();
+		  }
+		
 	}
 	
+	public synchronized void stop(){
+		  if(serverThread != null){
+		    //Thread tmpThread = serverThread;
+			server.stop();
+		    serverThread.interrupt();
+		    serverThread = null;
+		    //tmpThread.interrupt();
+		    Log.d("justPoker - Server", "Stoped server thread");
+		  }
+		}
+	
 	public void addClient(Connection c) {
-		Log.d("wePoker - Server", "Adding client " + c.getRemoteAddressTCP());
+		Log.d("justPoker - Server", "Adding client " + c.getRemoteAddressTCP());
 		connections.put(nextClientID, c);
 		c.sendTCP("Hello world of justPoker");
 		nextClientID++;

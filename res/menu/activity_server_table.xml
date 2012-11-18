@@ -3,4 +3,6 @@
         android:title="@string/menu_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/stop_server" 
+        android:showAsAction="always" android:title="Stop server" android:onClick="stopServer"/>
 </menu>
