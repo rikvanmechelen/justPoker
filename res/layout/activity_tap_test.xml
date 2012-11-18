@@ -4,9 +4,17 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/tap_test_text2"
+        android:layout_width="144dp"
+        android:layout_height="135dp"
+        android:clickable="true"
+        android:onClick="sendMessage"
+        android:text="CLICK ME" />
+
+    <TextView
         android:id="@+id/tap_test_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="144dp"
+        android:layout_height="135dp"
         android:clickable="true"
         android:onClick="sendMessage"
         android:text="CLICK ME" />

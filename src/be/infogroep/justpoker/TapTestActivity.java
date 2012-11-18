@@ -15,14 +15,23 @@ public class TapTestActivity extends Activity {
 		setContentView(R.layout.activity_tap_test);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		TextView textView = (TextView) findViewById(R.id.tap_test_text);
+		final TextView textView = (TextView) findViewById(R.id.tap_test_text);
 		textView.setOnTouchListener(new OnFlingGestureListener() {
 
 			@Override
 			public void onTopToBottom() {
-				printMessage("TopToBottom");
+				printMessage("TopToBottom 1", textView);
 			}
 		});
+		final TextView textView2 = (TextView) findViewById(R.id.tap_test_text2);
+		textView2.setOnTouchListener(new OnFlingGestureListener() {
+
+			@Override
+			public void onTopToBottom() {
+				printMessage("TopToBottom 2", textView2);
+			}
+		});
+		
 	}
 
 	@Override
@@ -41,9 +50,9 @@ public class TapTestActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void printMessage(String s) {
-		TextView textView = (TextView) findViewById(R.id.tap_test_text);
-		textView.append("\n");
-		textView.append(s);
+	public void printMessage(String s, TextView t) {
+		//TextView textView = (TextView) findViewById(R.id.tap_test_text);
+		t.append("\n");
+		t.append(s);
 	}
 }
