@@ -10,6 +10,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:onClick="openServer"/>
+
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="createConnection"
+        android:text="Connect" />
     
     <Button android:id="@+id/open_client"
         android:text="@string/open_client_btn"

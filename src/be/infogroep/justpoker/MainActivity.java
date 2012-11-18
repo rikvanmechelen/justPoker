@@ -30,4 +30,8 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, TapTestActivity.class);
 		startActivity(intent);
 	}
+	public void createConnection(View view) {
+		Intent intent = new Intent(this, ClientActivity.class);
+		startActivity(intent);
+	}
 }
