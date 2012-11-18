@@ -25,4 +25,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:onClick="openClient"/>
+    <Button android:id="@+id/open_curl"
+        android:text="@string/open_curl_btn"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="createCurl"/>
 </LinearLayout>

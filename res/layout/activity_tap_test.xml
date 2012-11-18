@@ -3,30 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/tap_test_text2"
-        android:layout_width="144dp"
-        android:layout_height="135dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:text="CLICK ME" />
-
     <ImageView
         android:id="@+id/card1"
-        android:layout_width="100dp"
-        android:layout_height="150dp"
-        android:layout_alignParentLeft="true"
+        android:layout_width="150dp"
+        android:layout_height="225dp"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="66dp"
+        android:contentDescription="@string/card1"
         android:scaleType="fitXY"
         android:src="@drawable/spades_king" />
 
     <ImageView
         android:id="@+id/card2"
-        android:layout_width="100dp"
-        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:layout_height="225dp"
+        android:layout_alignLeft="@+id/card1"
         android:layout_alignTop="@+id/card1"
-        android:layout_toRightOf="@+id/card1"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@string/card2"
         android:scaleType="fitXY"
         android:src="@drawable/spades_ace" />
 
