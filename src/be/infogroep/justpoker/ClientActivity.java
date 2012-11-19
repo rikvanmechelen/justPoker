@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import be.infogroep.justpoker.Validators.IPAddressValidator;
+import be.infogroep.justpoker.messages.RegisterMessage;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -25,7 +26,10 @@ import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.CommLibConnectionInfo;
 
 public class ClientActivity extends Activity {
+
 	private static Connection serverConnection;
+	private static int myClientID;
+	private static String name = "Rik";
 
 	public class ConnectAsyncTask extends AsyncTask<Void, Void, Client> {
 
@@ -55,8 +59,20 @@ public class ClientActivity extends Activity {
 			return null;
 		}
 	}
-
-	// private static int myClientID;
+	
+	public class MessageSender extends AsyncTask<Void, Void, Object> {
+		private Connection server;
+		private Object message;
+		
+		public MessageSender(Connection s, Object m) {
+			this.server = s;
+			this.message = m;
+		}
+		
+		protected Object doInBackground(Void... params) {
+			return server.sendTCP(message);
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,10 +91,10 @@ public class ClientActivity extends Activity {
 		String ip = e.getText().toString();
 		if (handelIpAddressValidation(e)) {
 			new ConnectAsyncTask(ip, CommLib.SERVER_PORT, listener).execute();
-			
-			
 
-			// serverConnection.sendTCP("SENDING CLIENT MESSAGE!");
+			while (serverConnection == null) {}
+			
+			//new MessageSender(serverConnection, "SENDING CLIENT MESSAGE! Owh Yah :)").execute();
 		}
 	}
 
@@ -107,9 +123,9 @@ public class ClientActivity extends Activity {
 	Listener listener = new Listener() {
 
 		@Override
-		public void connected(Connection arg0) {
-			super.connected(arg0);
-			setServerConnection(arg0);
+		public void connected(Connection c) {
+			super.connected(c);
+			setServerConnection(c);
 			Log.d("justPoker - Client", "Connected to server!");
 		}
 
@@ -119,16 +135,16 @@ public class ClientActivity extends Activity {
 
 			Log.v("justPoker - Client", "Received message " + m.toString());
 			
-			while (serverConnection == null){
-				
-			};
-			serverConnection.sendTCP("OMG, this is sooo cool");
+			if (m instanceof RegisterMessage){
+				myClientID = ((RegisterMessage) m).getClient_id();
+				serverConnection.sendTCP(new RegisterMessage(name));
+			}
+			// serverConnection.sendTCP("OMG, this is sooo cool");
 			// if (m instanceof String) {
 			// // Client view
 			// Log.v("wePoker - Client", "Procesing state message " +
 			// m.toString());
 			// }
-
 		}
 	};
 

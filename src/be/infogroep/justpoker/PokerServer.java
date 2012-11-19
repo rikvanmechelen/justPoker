@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.io.IOException;
 
 import android.util.Log;
+import be.infogroep.justpoker.messages.Message;
+import be.infogroep.justpoker.messages.RegisterMessage;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
@@ -35,6 +37,8 @@ public class PokerServer {
 				Kryo k = server.getKryo();
 				//k.setRegistrationRequired(false); //false is the default
 				k.register(UUID.class, new UUIDSerializer());
+				k.register(Message.class);
+				k.register(RegisterMessage.class);
 				server.bind(CommLib.SERVER_PORT);
 				server.start();
 				server.addListener(new Listener() {
@@ -99,7 +103,8 @@ public class PokerServer {
 	public void addClient(Connection c) {
 		Log.d("justPoker - Server", "Adding client " + c.getRemoteAddressTCP());
 		connections.put(nextClientID, c);
-		c.sendTCP("Hello world of justPoker");
+		RegisterMessage m = new RegisterMessage(nextClientID);
+		c.sendTCP(m);
 		nextClientID++;
 	}
 	
