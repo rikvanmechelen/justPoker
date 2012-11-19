@@ -19,5 +19,10 @@
     <string name="tap_test">tap_test</string>
     <string name="tap_test_button">test</string>
     <string name="title_activity_change_text">ChangeTextActivity</string>
+    <string name="card1">card1</string>
+    <string name="card2">card2</string>
+    <string name="click_me">click me</string>
+    <string name="open_curl_btn">curl</string>
+    <string name="title_activity_curl">CurlActivity</string>
 
 </resources>

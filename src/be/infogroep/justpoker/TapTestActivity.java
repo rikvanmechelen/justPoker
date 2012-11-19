@@ -20,7 +20,6 @@ public class TapTestActivity extends Activity {
 		setContentView(R.layout.activity_tap_test);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		final TextView textView2 = (TextView) findViewById(R.id.tap_test_text2);
 		final ImageView card1 = (ImageView) findViewById(R.id.card1);
 		final ImageView card2 = (ImageView) findViewById(R.id.card2);
 
@@ -34,7 +33,6 @@ public class TapTestActivity extends Activity {
 
 			@Override
 			public void onDoubletap() {
-				printMessage("Card1 doubletap", textView2);
 				if (flippedCard1) {
 					card1.setImageResource(R.drawable.spades_ace);
 					flippedCard1 = false;
@@ -54,7 +52,6 @@ public class TapTestActivity extends Activity {
 
 			@Override
 			public void onDoubletap() {
-				printMessage("Card2 doubletap", textView2);
 				if (flippedCard2) {
 					card2.setImageResource(R.drawable.spades_king);
 					flippedCard2 = false;
@@ -88,11 +85,14 @@ public class TapTestActivity extends Activity {
 	}
 
 	private void fold(ImageView card) {
-		ObjectAnimator move = ObjectAnimator.ofFloat(card, "y", 0);
+		ObjectAnimator move = ObjectAnimator.ofFloat(card, "y", -225);
 		ObjectAnimator fade = ObjectAnimator.ofFloat(card, "alpha", 0);
+		ObjectAnimator spin = ObjectAnimator.ofFloat(card, "rotation", 180);
 		move.setDuration(300);
 		fade.setDuration(300);
+		spin.setDuration(300);
 		move.start();
-		fade.start();
+		//fade.start();
+		spin.start();
 	}
 }
