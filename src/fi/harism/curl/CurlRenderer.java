@@ -90,7 +90,7 @@ public class CurlRenderer implements GLSurfaceView.Renderer {
 		return null;
 	}
 
-	@Override
+	//@Override
 	public synchronized void onDrawFrame(GL10 gl) {
 
 		mObserver.onDrawFrame();
@@ -111,7 +111,7 @@ public class CurlRenderer implements GLSurfaceView.Renderer {
 		}
 	}
 
-	@Override
+	//@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		gl.glViewport(0, 0, width, height);
 		mViewportWidth = width;
@@ -137,7 +137,7 @@ public class CurlRenderer implements GLSurfaceView.Renderer {
 		gl.glLoadIdentity();
 	}
 
-	@Override
+	//@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		gl.glClearColor(0f, 0f, 0f, 1f);
 		gl.glShadeModel(GL10.GL_SMOOTH);

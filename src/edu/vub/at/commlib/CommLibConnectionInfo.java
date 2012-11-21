@@ -44,8 +44,8 @@ public class CommLibConnectionInfo {
 		Kryo k = ret.getKryo();
 		k.setRegistrationRequired(false);
 		k.register(UUID.class, new UUIDSerializer());
-		k.register(Message.class);
-		k.register(RegisterMessage.class);
+		//k.register(Message.class);
+		//k.register(RegisterMessage.class);
 		if (listener != null)
 			ret.addListener(listener);
 		ret.connect(5000, ipAddress, port);

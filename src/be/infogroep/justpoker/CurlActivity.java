@@ -35,7 +35,6 @@ public class CurlActivity extends Activity {
 	 * CurlView size changed observer.
 	 */
 	private class SizeChangedObserver implements CurlView.SizeChangedObserver {
-		@Override
 		public void onSizeChanged(int w, int h) {
 			if (w > h) {
 				mCurlView.setViewMode(CurlView.SHOW_TWO_PAGES);
@@ -92,7 +91,6 @@ public class CurlActivity extends Activity {
 			return b;
 		}
 
-		@Override
 		public void updatePage(CurlPage page, int width, int height, int index) {
 
 			switch (index) {
@@ -103,12 +101,17 @@ public class CurlActivity extends Activity {
 				page.setTexture(back, CurlPage.SIDE_BACK);
 				page.setTexture(front, CurlPage.SIDE_FRONT);
 				break;
+			case 1:
+				Bitmap front1 = loadBitmap(width, height, 0);
+				Bitmap back1 = loadBitmap(width, height, 1);
+				page.setTexture(back1, CurlPage.SIDE_BACK);
+				page.setTexture(front1, CurlPage.SIDE_FRONT);
+				break;
 			}
 		}
 
-		@Override
 		public int getPageCount() {
-			return 1;
+			return 2;
 		}
 	}
 }

@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:contentDescription="@string/card1"
         android:scaleType="fitXY"
-        android:src="@drawable/spades_king" />
+        android:src="@drawable/card_backside" />
 
     <ImageView
         android:id="@+id/card2"
@@ -23,6 +23,6 @@
         android:layout_marginTop="30dp"
         android:contentDescription="@string/card2"
         android:scaleType="fitXY"
-        android:src="@drawable/spades_ace" />
+        android:src="@drawable/card_backside" />
 
 </RelativeLayout>

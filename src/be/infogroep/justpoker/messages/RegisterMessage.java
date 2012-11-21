@@ -1,6 +1,6 @@
 package be.infogroep.justpoker.messages;
 
-public class RegisterMessage {
+public class RegisterMessage extends Message{
 	private String name;
 	private Integer client_id;
 	

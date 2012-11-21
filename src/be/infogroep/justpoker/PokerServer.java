@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.io.IOException;
 
 import android.util.Log;
+import be.infogroep.justpoker.GameElements.Deck;
 import be.infogroep.justpoker.messages.Message;
 import be.infogroep.justpoker.messages.RegisterMessage;
 
@@ -27,6 +28,12 @@ public class PokerServer {
 	private ConcurrentSkipListMap<Integer, Connection> connections = new ConcurrentSkipListMap<Integer, Connection>();
 	private volatile Thread serverThread;
 	private Server server;
+	private Deck deck;
+	
+	public PokerServer() {
+		deck = new Deck();
+		deck.shuffle();
+	}
 	
 	
 	Runnable serverR = new Runnable() {
@@ -35,10 +42,10 @@ public class PokerServer {
 				Log.d("justPoker - Server", "Creating server");
 				server = new Server();
 				Kryo k = server.getKryo();
-				//k.setRegistrationRequired(false); //false is the default
+				k.setRegistrationRequired(false); //false is the default
 				k.register(UUID.class, new UUIDSerializer());
-				k.register(Message.class);
-				k.register(RegisterMessage.class);
+				//k.register(Message.class);
+				//k.register(RegisterMessage.class);
 				server.bind(CommLib.SERVER_PORT);
 				server.start();
 				server.addListener(new Listener() {

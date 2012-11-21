@@ -1,19 +1,24 @@
 package be.infogroep.justpoker;
 
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 public abstract class OnFlingGestureListener implements OnTouchListener {
-
+	
+	private final GestureListener x = new GestureListener();
+	
 	@SuppressWarnings("deprecation")
 	private final GestureDetector gdt = new GestureDetector(
-			new GestureListener());
+			x);
 
 	public boolean onTouch(final View v, final MotionEvent event) {
 		gdt.onTouchEvent(event);
+		x.onTouchEvent(event);
 		return true;
 	}
 
@@ -27,9 +32,17 @@ public abstract class OnFlingGestureListener implements OnTouchListener {
 			return true;
 		}
 		
+		public void onTouchEvent(MotionEvent event) {
+			onTouchevent(event);
+		}
+
 		public boolean onDoubleTap(MotionEvent e){
 			onDoubletap();
 			return true;
+		}
+		
+		public void onLongPress(MotionEvent e){
+			onLongpress();
 		}
 		
 		@Override
@@ -55,6 +68,7 @@ public abstract class OnFlingGestureListener implements OnTouchListener {
 			}
 			return false;
 		}
+		
 	}
 
 	public void onRightToLeft() {};
@@ -68,5 +82,9 @@ public abstract class OnFlingGestureListener implements OnTouchListener {
 	public void onTap() {};
 	
 	public void onDoubletap() {};
+	
+	public void onLongpress() {};
+	
+	public void onTouchevent(MotionEvent e) {};
 
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,26 +24,40 @@ public class TapTestActivity extends Activity {
 		final ImageView card1 = (ImageView) findViewById(R.id.card1);
 		final ImageView card2 = (ImageView) findViewById(R.id.card2);
 
-		card1.setOnTouchListener(new OnFlingGestureListener() {
-
+		card2.setOnTouchListener(new OnFlingGestureListener() {
+			private boolean longPressed = false;
 			@Override
 			public void onBottomToTop() {
 				fold(card1);
 				fold(card2);
 			}
 
+//			@Override
+//			public void onDoubletap() {
+//				if (flippedCard1) {
+//					card1.setImageResource(R.drawable.spades_ace);
+//					flippedCard1 = false;
+//				} else {
+//					card1.setImageResource(R.drawable.card_backside);
+//					flippedCard1 = true;
+//				}
+//			}
 			@Override
-			public void onDoubletap() {
-				if (flippedCard1) {
-					card1.setImageResource(R.drawable.spades_ace);
-					flippedCard1 = false;
-				} else {
+			public void onLongpress() {
+				card1.setImageResource(R.drawable.spades_ace);
+				card2.setImageResource(R.drawable.spades_king);
+				longPressed = true;
+			}
+			
+			public void onTouchevent(MotionEvent e){
+				if (longPressed && e.getAction() == MotionEvent.ACTION_UP) {
 					card1.setImageResource(R.drawable.card_backside);
-					flippedCard1 = true;
+					card2.setImageResource(R.drawable.card_backside);
+					longPressed = false;
 				}
 			}
 		});
-		card2.setOnTouchListener(new OnFlingGestureListener() {
+		card1.setOnTouchListener(new OnFlingGestureListener() {
 			
 			@Override
 			public void onBottomToTop() {
@@ -50,15 +65,20 @@ public class TapTestActivity extends Activity {
 				fold(card2);
 			}
 
+//			@Override
+//			public void onDoubletap() {
+//				if (flippedCard2) {
+//					card2.setImageResource(R.drawable.spades_king);
+//					flippedCard2 = false;
+//				} else {
+//					card2.setImageResource(R.drawable.card_backside);
+//					flippedCard2 = true;
+//				}
+//			}
+			
 			@Override
-			public void onDoubletap() {
-				if (flippedCard2) {
-					card2.setImageResource(R.drawable.spades_king);
-					flippedCard2 = false;
-				} else {
-					card2.setImageResource(R.drawable.card_backside);
-					flippedCard2 = true;
-				}
+			public void onLongpress() {
+				card2.setImageResource(R.drawable.card_backside);
 			}
 		});
 

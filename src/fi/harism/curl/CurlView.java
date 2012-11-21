@@ -137,7 +137,7 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
 		mPageRight.setFlipTexture(false);
 	}
 
-	@Override
+	//@Override
 	public void onDrawFrame() {
 		// We are not animating.
 		if (mAnimate == false) {
@@ -192,7 +192,7 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
 		}
 	}
 
-	@Override
+	//@Override
 	public void onPageSizeChanged(int width, int height) {
 		mPageBitmapWidth = width;
 		mPageBitmapHeight = height;
@@ -209,7 +209,7 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
 		}
 	}
 
-	@Override
+	//@Override
 	public void onSurfaceCreated() {
 		// In case surface is recreated, let page meshes drop allocated texture
 		// ids and ask for new ones. There's no need to set textures here as
@@ -219,7 +219,7 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
 		mPageCurl.resetTexture();
 	}
 
-	@Override
+	//@Override
 	public boolean onTouch(View view, MotionEvent me) {
 		// No dragging during animation at the moment.
 		// TODO: Stop animation on touch event and return to drag mode.
