@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
 public class ServerTableActivity extends Activity {
@@ -45,4 +46,9 @@ public class ServerTableActivity extends Activity {
     	cps.stop();
 		startActivity(intent);
     }
+
+	public void printMessage(Object msg) {
+		TextView log = (TextView) findViewById(R.id.serverLog);
+		log.append(msg+"\n");
+	}
 }

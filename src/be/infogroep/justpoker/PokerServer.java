@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.io.IOException;
 
 import android.util.Log;
+import android.widget.TextView;
 import be.infogroep.justpoker.GameElements.Deck;
 import be.infogroep.justpoker.messages.Message;
 import be.infogroep.justpoker.messages.RegisterMessage;
@@ -21,58 +22,63 @@ import com.esotericsoftware.kryonet.Server;
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.UUIDSerializer;
 
-
 public class PokerServer {
-	
+
 	int nextClientID = 0;
 	private ConcurrentSkipListMap<Integer, Connection> connections = new ConcurrentSkipListMap<Integer, Connection>();
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
-	
+	private ServerTableActivity activity;
+
 	public PokerServer() {
 		deck = new Deck();
 		deck.shuffle();
 	}
-	
-	
+
 	Runnable serverR = new Runnable() {
 		public void run() {
 			try {
 				Log.d("justPoker - Server", "Creating server");
 				server = new Server();
 				Kryo k = server.getKryo();
-				k.setRegistrationRequired(false); //false is the default
+				k.setRegistrationRequired(false); // false is the default
 				k.register(UUID.class, new UUIDSerializer());
-				//k.register(Message.class);
-				//k.register(RegisterMessage.class);
+				// k.register(Message.class);
+				// k.register(RegisterMessage.class);
 				server.bind(CommLib.SERVER_PORT);
 				server.start();
 				server.addListener(new Listener() {
 					@Override
 					public void connected(Connection c) {
 						super.connected(c);
-						Log.d("justPoker - Server", "Client connected: " + c.getRemoteAddressTCP());
+						Log.d("justPoker - Server",
+								"Client connected: " + c.getRemoteAddressTCP());
 						addClient(c);
 					}
-					
+
 					@Override
 					public void received(Connection c, Object msg) {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
-//						if (msg instanceof FutureMessage) {
-//							FutureMessage fm = (FutureMessage) msg;
-//							Log.d("justPoker - Server", "Resolving future " + fm.futureId + "(" + CommLib.futures.get(fm.futureId) + ") with value " + fm.futureValue);
-//							CommLib.resolveFuture(fm.futureId, fm.futureValue);
-//						}
-//						if (msg instanceof SetClientParameterMessage) {
-//							SetClientParameterMessage cm = (SetClientParameterMessage) msg;
-//							Log.d("wePoker - Server", "Got SetIDReplyMessage: "+cm.toString());
-//							registerClient(c, cm.nickname, cm.avatar, cm.money);
-//							gameLoop.broadcast(cm);
-//						}
+						//activity.printMessage(msg);
+						// if (msg instanceof FutureMessage) {
+						// FutureMessage fm = (FutureMessage) msg;
+						// Log.d("justPoker - Server", "Resolving future " +
+						// fm.futureId + "(" + CommLib.futures.get(fm.futureId)
+						// + ") with value " + fm.futureValue);
+						// CommLib.resolveFuture(fm.futureId, fm.futureValue);
+						// }
+						// if (msg instanceof SetClientParameterMessage) {
+						// SetClientParameterMessage cm =
+						// (SetClientParameterMessage) msg;
+						// Log.d("wePoker - Server",
+						// "Got SetIDReplyMessage: "+cm.toString());
+						// registerClient(c, cm.nickname, cm.avatar, cm.money);
+						// gameLoop.broadcast(cm);
+						// }
 					}
-					
+
 					@Override
 					public void disconnected(Connection c) {
 						super.disconnected(c);
@@ -85,28 +91,28 @@ public class PokerServer {
 			}
 		};
 	};
-	
-	public synchronized void start() {		
+
+	public synchronized void start() {
 		Log.d("justPoker - Server", "Starting server thread...");
-		if(serverThread == null){
+		if (serverThread == null) {
 			serverThread = new Thread(serverR);
 			serverThread.start();
-			//new Thread(gameLoop).start();
-		  }
-		
-	}
-	
-	public synchronized void stop(){
-		  if(serverThread != null){
-		    //Thread tmpThread = serverThread;
-			server.stop();
-		    serverThread.interrupt();
-		    serverThread = null;
-		    //tmpThread.interrupt();
-		    Log.d("justPoker - Server", "Stoped server thread");
-		  }
+			// new Thread(gameLoop).start();
 		}
-	
+
+	}
+
+	public synchronized void stop() {
+		if (serverThread != null) {
+			// Thread tmpThread = serverThread;
+			server.stop();
+			serverThread.interrupt();
+			serverThread = null;
+			// tmpThread.interrupt();
+			Log.d("justPoker - Server", "Stoped server thread");
+		}
+	}
+
 	public void addClient(Connection c) {
 		Log.d("justPoker - Server", "Adding client " + c.getRemoteAddressTCP());
 		connections.put(nextClientID, c);
@@ -114,24 +120,29 @@ public class PokerServer {
 		c.sendTCP(m);
 		nextClientID++;
 	}
-	
-	public void registerClient(Connection c, String nickname, int avatar, int money) {
+
+	public void registerClient(Connection c, String nickname, int avatar,
+			int money) {
 		for (Integer i : connections.keySet()) {
 			if (connections.get(i) == c) {
-				//gameLoop.addPlayer(c, i, nickname, avatar, money);
+				// gameLoop.addPlayer(c, i, nickname, avatar, money);
 				return;
 			}
 		}
 	}
-	
+
 	public void removeClient(Connection c) {
-		//Log.d("wePoker - Server", "Client removed: " + c);
+		// Log.d("wePoker - Server", "Client removed: " + c);
 		for (Integer i : connections.keySet()) {
 			if (connections.get(i) == c) {
-				//gameLoop.removePlayer(i);
+				// gameLoop.removePlayer(i);
 				connections.remove(i);
 				return;
 			}
 		}
+	}
+
+	public void start(ServerTableActivity serverTableActivity) {
+		activity = serverTableActivity;
 	}
 }

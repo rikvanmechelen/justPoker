@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,8 +29,11 @@ import edu.vub.at.commlib.CommLibConnectionInfo;
 public class ClientActivity extends Activity {
 
 	private static Connection serverConnection;
+	public static final String connectionID = "connectionID";
 	private static int myClientID;
 	private static String name = "Rik";
+	
+	private PokerClient client;
 
 	public class ConnectAsyncTask extends AsyncTask<Void, Void, Client> {
 
@@ -59,25 +63,13 @@ public class ClientActivity extends Activity {
 			return null;
 		}
 	}
-	
-	public class MessageSender extends AsyncTask<Void, Void, Object> {
-		private Connection server;
-		private Object message;
-		
-		public MessageSender(Connection s, Object m) {
-			this.server = s;
-			this.message = m;
-		}
-		
-		protected Object doInBackground(Void... params) {
-			return server.sendTCP(message);
-		}
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_client);
+		client = PokerClient.getInstance();
+		client.setName("Rik");
 	}
 
 	@Override
@@ -89,12 +81,10 @@ public class ClientActivity extends Activity {
 	public void connectToServer(View view) {
 		final EditText e = (EditText) findViewById(R.id.server_ip);
 		String ip = e.getText().toString();
-		if (handelIpAddressValidation(e)) {
-			new ConnectAsyncTask(ip, CommLib.SERVER_PORT, listener).execute();
-
-			while (serverConnection == null) {}
-			
-			//new MessageSender(serverConnection, "SENDING CLIENT MESSAGE! Owh Yah :)").execute();
+		if (handelIpAddressValidation(e) && client.connectToServer(ip)) {
+				Intent intent = new Intent(this, TapTestActivity.class);
+				//intent.putExtra(connectionID, client);
+				startActivity(intent);
 		}
 	}
 
@@ -119,34 +109,6 @@ public class ClientActivity extends Activity {
 		}
 		return true;
 	}
-
-	Listener listener = new Listener() {
-
-		@Override
-		public void connected(Connection c) {
-			super.connected(c);
-			setServerConnection(c);
-			Log.d("justPoker - Client", "Connected to server!");
-		}
-
-		@Override
-		public void received(Connection c, Object m) {
-			super.received(c, m);
-
-			Log.v("justPoker - Client", "Received message " + m.toString());
-			
-			if (m instanceof RegisterMessage){
-				myClientID = ((RegisterMessage) m).getClient_id();
-				serverConnection.sendTCP(new RegisterMessage(name));
-			}
-			// serverConnection.sendTCP("OMG, this is sooo cool");
-			// if (m instanceof String) {
-			// // Client view
-			// Log.v("wePoker - Client", "Procesing state message " +
-			// m.toString());
-			// }
-		}
-	};
 
 	private void setServerConnection(Connection c) {
 		serverConnection = c;

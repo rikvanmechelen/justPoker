@@ -13,9 +13,12 @@ import android.widget.TextView;
 public class TapTestActivity extends Activity {
 	boolean flippedCard1;
 	boolean flippedCard2;
+	PokerClient client;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		//client = PokerClient.getInstance();
+		//client.getServerConnection().sendTCP("Owh Yah, Duffman is pounding in the direction!");
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);
