@@ -17,8 +17,8 @@ public class TapTestActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		//client = PokerClient.getInstance();
-		//client.getServerConnection().sendTCP("Owh Yah, Duffman is pounding in the direction!");
+		client = PokerClient.getInstance();
+		client.sendHello();
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);

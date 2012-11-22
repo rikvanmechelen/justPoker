@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
-public class ServerTableActivity extends Activity {
+public class ServerTableActivity extends Activity implements PrintServerLog{
 	
 	private PokerServer cps;
 
@@ -20,7 +20,7 @@ public class ServerTableActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
         cps = new PokerServer();
-		cps.start();
+		cps.start(this);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class PokerServer {
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
-	private ServerTableActivity activity;
+	private PrintServerLog activity;
 
 	public PokerServer() {
 		deck = new Deck();
@@ -61,7 +61,7 @@ public class PokerServer {
 					public void received(Connection c, Object msg) {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
-						//activity.printMessage(msg);
+						activity.printMessage(msg);
 						// if (msg instanceof FutureMessage) {
 						// FutureMessage fm = (FutureMessage) msg;
 						// Log.d("justPoker - Server", "Resolving future " +
@@ -144,5 +144,6 @@ public class PokerServer {
 
 	public void start(ServerTableActivity serverTableActivity) {
 		activity = serverTableActivity;
+		start();
 	}
 }

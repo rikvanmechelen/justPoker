@@ -65,6 +65,10 @@ public class PokerClient implements Serializable {
 		name = n;
 	}
 
+	public void sendHello() {
+		new SendAsyncMessage(serverConnection, "Owh Yah, Duffman is pounding in the direction!").execute();
+	}
+	
 	public Listener listener = new Listener() {
 
 		@Override
@@ -107,7 +111,20 @@ public class PokerClient implements Serializable {
 		// new MessageSender(serverConnection,
 		// "SENDING CLIENT MESSAGE! Owh Yah :)").execute();
 	}
-	
+
+	public class SendAsyncMessage extends AsyncTask<Void, Void, Client> {		
+		private Connection c;
+		private Object o;
+		public SendAsyncMessage(Connection co, Object obj) {
+			this.c = co;
+			this.o = obj;
+		}
+		@Override
+		protected Client doInBackground(Void... params) {
+			c.sendTCP(o);
+			return null;
+		}	
+	}
 
 	public class ConnectAsyncTask extends AsyncTask<Void, Void, Client> {
 
