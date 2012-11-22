@@ -1,5 +1,7 @@
 package be.infogroep.justpoker.messages;
 
-public abstract class Message {
+import java.io.Serializable;
+
+public abstract class Message implements Serializable {
 
 }

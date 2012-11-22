@@ -8,6 +8,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.io.IOException;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
 import be.infogroep.justpoker.GameElements.Deck;
@@ -22,19 +26,51 @@ import com.esotericsoftware.kryonet.Server;
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.UUIDSerializer;
 
-public class PokerServer {
+public class PokerServer extends Service {
+	//private static final String TAG = "PokerServer";
+    public static final String BROADCAST_ACTION = "be.infogroep.justpoker.servertableactivity.displayevent";
+    private static PokerServer SingletonPokerServer;
 
 	int nextClientID = 0;
 	private ConcurrentSkipListMap<Integer, Connection> connections = new ConcurrentSkipListMap<Integer, Connection>();
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
-	private PrintServerLog activity;
+	private final Handler handler = new Handler();
+	Intent intent;
 
 	public PokerServer() {
 		deck = new Deck();
 		deck.shuffle();
+		start();
 	}
+	
+	public static PokerServer getInstance() {
+		if (SingletonPokerServer == null) {
+			SingletonPokerServer = new PokerServer();
+		}
+		return SingletonPokerServer;
+	}
+	
+	@Override
+    public void onCreate() {
+        super.onCreate();
+        getIntent();	
+    }
+	
+	private Intent getIntent() {
+		if (intent == null) {
+			Log.d("justPoker - Server", "Creating intent "+BROADCAST_ACTION);
+			intent = new Intent(BROADCAST_ACTION);	
+		}
+		return intent;
+	}
+	
+	@Override
+    public void onStart(Intent intent, int startId) {
+        handler.removeCallbacks(serverR);
+        handler.postDelayed(serverR, 1000); // 1 second   
+    }
 
 	Runnable serverR = new Runnable() {
 		public void run() {
@@ -48,6 +84,7 @@ public class PokerServer {
 				// k.register(RegisterMessage.class);
 				server.bind(CommLib.SERVER_PORT);
 				server.start();
+				final Runnable test = this;
 				server.addListener(new Listener() {
 					@Override
 					public void connected(Connection c) {
@@ -61,7 +98,9 @@ public class PokerServer {
 					public void received(Connection c, Object msg) {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
-						activity.printMessage(msg);
+						DisplayLoggingInfo(msg);
+						handler.postDelayed(test, 2000);
+						//activity.printMessage(msg);
 						// if (msg instanceof FutureMessage) {
 						// FutureMessage fm = (FutureMessage) msg;
 						// Log.d("justPoker - Server", "Resolving future " +
@@ -91,6 +130,16 @@ public class PokerServer {
 			}
 		};
 	};
+	
+	private void DisplayLoggingInfo(Object msg) {
+    	Log.d("justPoker - server", "entered DisplayLoggingInfo");
+    	//getIntent();
+    	Log.d("justPoker - server", "entered intend is: "+ intent);
+    	getIntent().putExtra("message","lalala");
+    	//intent.putExtra("time", new Date().toLocaleString());
+    	//intent.putExtra("counter", String.valueOf(++counter));
+    	sendBroadcast(getIntent());
+    }
 
 	public synchronized void start() {
 		Log.d("justPoker - Server", "Starting server thread...");
@@ -142,8 +191,9 @@ public class PokerServer {
 		}
 	}
 
-	public void start(ServerTableActivity serverTableActivity) {
-		activity = serverTableActivity;
-		start();
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
