@@ -1,13 +1,15 @@
 package be.infogroep.justpoker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.view.View;
 import fi.harism.curl.CurlPage;
 import fi.harism.curl.CurlView;
 
@@ -51,7 +53,7 @@ public class CurlActivity extends Activity {
 		// Bitmap resources.
 		private int[] mBitmapIds = { R.drawable.card_backside,
 				R.drawable.spades_ace };
-		
+
 		private Bitmap loadBitmap(int width, int height, int index) {
 			Bitmap b = Bitmap.createBitmap(width, height,
 					Bitmap.Config.ARGB_8888);
@@ -113,5 +115,10 @@ public class CurlActivity extends Activity {
 		public int getPageCount() {
 			return 2;
 		}
+	}
+
+	public void createVibrate(View view) {
+		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		v.vibrate(300);
 	}
 }

@@ -62,7 +62,7 @@ public class PokerServer extends Service {
 	private Intent getIntent() {
 		if (intent == null) {
 			Log.d("justPoker - Server", "Creating intent "+BROADCAST_ACTION);
-			intent = new Intent(BROADCAST_ACTION);	
+			intent = new Intent(BROADCAST_ACTION);
 		}
 		return intent;
 	}

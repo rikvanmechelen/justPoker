@@ -2,7 +2,7 @@
     package="be.infogroep.justpoker"
     android:versionCode="1"
     android:versionName="1.0" >
-
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-sdk
         android:minSdkVersion="13"
         android:targetSdkVersion="15" />
