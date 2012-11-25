@@ -20,6 +20,7 @@ import be.infogroep.justpoker.messages.RegisterMessage;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage.KeepAlive;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
@@ -98,8 +99,15 @@ public class PokerServer extends Service {
 					public void received(Connection c, Object msg) {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
-						DisplayLoggingInfo(msg);
-						handler.postDelayed(test, 2000);
+						
+						
+						if (msg instanceof KeepAlive){
+							
+						} else {
+							DisplayLoggingInfo(msg);
+							//handler.postDelayed(test, 2000);
+							handler.post(test);
+						}
 						//activity.printMessage(msg);
 						// if (msg instanceof FutureMessage) {
 						// FutureMessage fm = (FutureMessage) msg;
@@ -135,7 +143,7 @@ public class PokerServer extends Service {
     	Log.d("justPoker - server", "entered DisplayLoggingInfo");
     	//getIntent();
     	Log.d("justPoker - server", "entered intend is: "+ intent);
-    	getIntent().putExtra("message","lalala");
+    	getIntent().putExtra("message", msg.toString());
     	//intent.putExtra("time", new Date().toLocaleString());
     	//intent.putExtra("counter", String.valueOf(++counter));
     	sendBroadcast(getIntent());
