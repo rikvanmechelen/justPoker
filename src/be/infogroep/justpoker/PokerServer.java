@@ -42,7 +42,7 @@ public class PokerServer extends Service {
 	public PokerServer() {
 		deck = new Deck();
 		deck.shuffle();
-		start();
+		//start();
 	}
 	
 	public static PokerServer getInstance() {

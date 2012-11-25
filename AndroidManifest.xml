@@ -79,6 +79,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.MainActivity" />
         </activity>
+        <service android:name="be.infogroep.justpoker.PokerServer"/>
     </application>
 
 </manifest>
