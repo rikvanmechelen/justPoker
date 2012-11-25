@@ -33,43 +33,14 @@ public class ClientActivity extends Activity {
 	private static int myClientID;
 	private static String name = "Rik";
 	
-	private PokerClient client;
-
-	public class ConnectAsyncTask extends AsyncTask<Void, Void, Client> {
-
-		private int port;
-		private String address;
-		private Listener listener;
-
-		public ConnectAsyncTask(String address, int port, Listener listener) {
-			this.address = address;
-			this.port = port;
-			this.listener = listener;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			Log.v("justPoker - Client", "Connecting to " + address + " " + port);
-		}
-
-		@Override
-		protected Client doInBackground(Void... params) {
-			try {
-				return CommLibConnectionInfo.connect(address, port, listener);
-			} catch (IOException e) {
-				Log.d("justPoker - Client", "Could not connect to server", e);
-			}
-			return null;
-		}
-	}
+	//private PokerClient client;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_client);
-		client = PokerClient.getInstance();
-		client.setName("Rik");
+		//client = PokerClient.getInstance();
+		//client.setName("Rik");
 	}
 
 	@Override
@@ -81,9 +52,11 @@ public class ClientActivity extends Activity {
 	public void connectToServer(View view) {
 		final EditText e = (EditText) findViewById(R.id.server_ip);
 		String ip = e.getText().toString();
-		if (handelIpAddressValidation(e) && client.connectToServer(ip)) {
+		if (handelIpAddressValidation(e)) {
+				//Intent intent = new Intent(this, PokerServer.class);
+				//startService(intent);
 				Intent intent = new Intent(this, TapTestActivity.class);
-				//intent.putExtra(connectionID, client);
+				intent.putExtra("ip", ip);
 				startActivity(intent);
 		}
 	}

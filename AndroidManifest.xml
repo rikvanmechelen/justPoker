@@ -80,6 +80,7 @@
                 android:value="be.infogroep.justpoker.MainActivity" />
         </activity>
         <service android:name="be.infogroep.justpoker.PokerServer"/>
+        <service android:name="be.infogroep.justpoker.PokerClient"/>
     </application>
 
 </manifest>
