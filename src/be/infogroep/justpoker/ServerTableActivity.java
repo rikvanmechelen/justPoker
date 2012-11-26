@@ -24,7 +24,8 @@ public class ServerTableActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		intent = new Intent(this, PokerServer.class);
-		cps = PokerServer.getInstance();
+		startService(intent);
+		//cps = PokerServer.getInstance();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class ServerTableActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		startService(intent);
+		//startService(intent);
 		registerReceiver(broadcastReceiver, new IntentFilter(
 				PokerServer.BROADCAST_ACTION));
 	}

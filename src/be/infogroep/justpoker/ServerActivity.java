@@ -13,6 +13,10 @@ public class ServerActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
+        if (PokerServer.getInstance() != null) {
+        	Intent intent = new Intent(this, ServerTableActivity.class);
+    		startActivity(intent);
+        }
     }
 
     @Override

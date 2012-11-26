@@ -2,6 +2,10 @@ package be.infogroep.justpoker;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -9,16 +13,30 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TapTestActivity extends Activity {
 	boolean flippedCard1;
 	boolean flippedCard2;
 	PokerClient client;
+	private Intent intent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		client = PokerClient.getInstance();
-		client.sendHello();
+		//client = PokerClient.getInstance();
+		//client.sendHello();
+		Intent incomingIntent = getIntent();
+		String ip = incomingIntent.getStringExtra("ip");
+		
+		intent = new Intent(this, PokerClient.class);
+		intent.putExtra("ip", ip);
+		startService(intent);
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);
@@ -118,4 +136,37 @@ public class TapTestActivity extends Activity {
 		//fade.start();
 		spin.start();
 	}
+	
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			updateUI(intent);
+		}
+	};
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		//startService(intent);
+		registerReceiver(broadcastReceiver, new IntentFilter(
+				PokerClient.BROADCAST_ACTION));
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		unregisterReceiver(broadcastReceiver);
+		stopService(intent);
+	}
+
+	private void updateUI(Intent intent) {
+		Object msg = intent.getStringExtra("message");
+
+		//TextView log = (TextView) findViewById(R.id.serverLog);
+		//log.append(msg + "\n");
+		Toast.makeText(getApplicationContext(), "received: "+ msg,
+				Toast.LENGTH_LONG).show();
+
+	}
+
 }

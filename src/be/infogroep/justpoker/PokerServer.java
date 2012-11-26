@@ -29,7 +29,7 @@ import edu.vub.at.commlib.UUIDSerializer;
 
 public class PokerServer extends Service {
 	//private static final String TAG = "PokerServer";
-    public static final String BROADCAST_ACTION = "be.infogroep.justpoker.servertableactivity.displayevent";
+    public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerserver.displayevent";
     private static PokerServer SingletonPokerServer;
 
 	int nextClientID = 0;
@@ -43,12 +43,12 @@ public class PokerServer extends Service {
 	public PokerServer() {
 		deck = new Deck();
 		deck.shuffle();
-		//start();
+		start();
 	}
 	
 	public static PokerServer getInstance() {
 		if (SingletonPokerServer == null) {
-			SingletonPokerServer = new PokerServer();
+			//SingletonPokerServer = new PokerServer();
 		}
 		return SingletonPokerServer;
 	}
@@ -70,7 +70,8 @@ public class PokerServer extends Service {
 	@Override
     public void onStart(Intent intent, int startId) {
         handler.removeCallbacks(serverR);
-        handler.postDelayed(serverR, 1000); // 1 second   
+        //handler.postDelayed(serverR, 1000); // 1 second   
+        //start();
     }
 
 	Runnable serverR = new Runnable() {
@@ -155,6 +156,7 @@ public class PokerServer extends Service {
 			serverThread = new Thread(serverR);
 			serverThread.start();
 			// new Thread(gameLoop).start();
+			SingletonPokerServer = this;
 		}
 
 	}
