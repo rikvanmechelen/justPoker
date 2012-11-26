@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.view.View;
+import android.widget.RelativeLayout;
 import fi.harism.curl.CurlPage;
 import fi.harism.curl.CurlView;
 
@@ -116,9 +119,38 @@ public class CurlActivity extends Activity {
 			return 2;
 		}
 	}
-
-	public void createVibrate(View view) {
+	
+	private void vibrate(){
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(300);
+	}
+
+	public void createVibrate(View view) {
+		vibrate();
+	}
+	
+	public void fadeBackground(View view) {
+	    (new Thread(){
+	    	Handler handler = new Handler();
+	    	RelativeLayout screen = (RelativeLayout) findViewById(R.id.screen);
+	        @Override
+	        public void run(){
+	            for(int i=0; i<255; i++){
+	            	final int a = i;
+	                handler.post(new Runnable(){
+	                    public void run(){
+	                        screen.setBackgroundColor(Color.argb(255, 255, 255-a, 255-a));
+		                    if (a==254){
+		        	            vibrate();
+		                        screen.setBackgroundColor(Color.argb(255, 255, 255, 255));
+		                    }
+	                    }
+	                });
+	                // next will pause the thread for some time
+	                try{ sleep(50); }
+	                catch(Exception e) { break; }
+	            }
+	        }
+	    }).start();
 	}
 }
