@@ -7,6 +7,7 @@ import android.util.Log;
 import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
+import be.infogroep.justpoker.messages.SetStateMessage;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -15,6 +16,7 @@ import com.esotericsoftware.kryonet.Listener;
 
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.CommLibConnectionInfo;
+import edu.vub.at.commlib.PlayerState;
 
 public class PokerClient {
     public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
@@ -27,7 +29,16 @@ public class PokerClient {
 	private String name;
 	private String serverIP;
 	private AbstractPokerClientActivity gui;
+	private volatile PlayerState state;
 	
+	public PlayerState getState() {
+		return state;
+	}
+
+	public void setState(PlayerState state) {
+		this.state = state;
+	}
+
 	public PokerClient() {
 		
 	}
@@ -36,6 +47,7 @@ public class PokerClient {
 		this.name = n;
 		this.serverIP = ip;
 		this.gui = c;
+		this.state = PlayerState.Unknown;
 		connectToServer(ip);
 	}
 	
@@ -88,6 +100,10 @@ public class PokerClient {
 
 	public void sendHello() {
 		new SendAsyncMessage(serverConnection, "Owh Yah, Duffman is pounding in the direction!").execute();
+	}
+	
+	public void sendState(PlayerState s){
+		new SendAsyncMessage(serverConnection, new SetStateMessage(s, myClientID)).execute();
 	}
 	
 	public Listener listener = new Listener() {

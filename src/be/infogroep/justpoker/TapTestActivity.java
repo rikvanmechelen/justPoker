@@ -1,5 +1,6 @@
 package be.infogroep.justpoker;
 
+import edu.vub.at.commlib.PlayerState;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
@@ -43,20 +44,16 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			private boolean longPressed = false;
 			@Override
 			public void onBottomToTop() {
+				client.sendState(PlayerState.Fold);
 				fold(cardContainer1);
 				fold(cardContainer2);
 			}
 
-//			@Override
-//			public void onDoubletap() {
-//				if (flippedCard1) {
-//					card1.setImageResource(R.drawable.spades_ace);
-//					flippedCard1 = false;
-//				} else {
-//					card1.setImageResource(R.drawable.card_backside);
-//					flippedCard1 = true;
-//				}
-//			}
+			@Override
+			public void onDoubletap() {
+				client.sendState(PlayerState.Check);
+				check();
+			}
 			@Override
 			public void onLongpress() {
 				cardContainer1.setImageDrawable(getDrawable(card1.toString()));
@@ -76,27 +73,22 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			
 			@Override
 			public void onBottomToTop() {
+				client.sendState(PlayerState.Fold);
 				fold(cardContainer1);
 				fold(cardContainer2);
 			}
 
-//			@Override
-//			public void onDoubletap() {
-//				if (flippedCard2) {
-//					card2.setImageResource(R.drawable.spades_king);
-//					flippedCard2 = false;
-//				} else {
-//					card2.setImageResource(R.drawable.card_backside);
-//					flippedCard2 = true;
-//				}
-//			}
+			@Override
+			public void onDoubletap() {
+				client.sendState(PlayerState.Check);
+				check();
+			}
 			
 			@Override
 			public void onLongpress() {
 				cardContainer2.setImageResource(R.drawable.card_backside);
 			}
 		});
-
 	}
 
 	@Override
@@ -129,6 +121,11 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		move.start();
 		//fade.start();
 		spin.start();
+	}
+	
+	private void check() {
+		Toast.makeText(getApplicationContext(), "You Checked!",
+				Toast.LENGTH_LONG).show();
 	}
 
 	@Override

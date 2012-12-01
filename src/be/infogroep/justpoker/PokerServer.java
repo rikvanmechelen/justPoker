@@ -14,6 +14,7 @@ import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.GameElements.Deck;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
+import be.infogroep.justpoker.messages.SetStateMessage;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
@@ -22,6 +23,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import edu.vub.at.commlib.CommLib;
+import edu.vub.at.commlib.PlayerState;
 import edu.vub.at.commlib.UUIDSerializer;
 
 public class PokerServer {
@@ -166,11 +168,29 @@ public class PokerServer {
 		// handler.postDelayed(test, 2000);
 		if (msg instanceof RegisterMessage) {
 			RegisterMessage rm = (RegisterMessage) msg;
-			connections.get(rm.getClient_id());
+			PokerPlayer p = connections.get(rm.getClient_id());
+			p.setName(rm.getName());
 			gui.displayLogginInfo(rm.getName() + " connected");
 			// gui.displayLogginInfo("someone connected");
 		}
+		if (msg instanceof SetStateMessage) {
+			SetStateMessage st = (SetStateMessage) msg;
+			Log.d("justPoker - server", "received a set state: "+st.getState());
+			parseState(st);
+		}
 		// handler.post(r);
+	}
+
+	private void parseState(SetStateMessage st) {
+		PlayerState state = st.getState();
+		if (state == PlayerState.Fold) {
+			connections.get(st.getClient_id()).setState(state);
+			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" folded");
+		}
+		if (state == PlayerState.Check) {
+			connections.get(st.getClient_id()).setState(state);
+			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
+		}
 	}
 
 	public void dealCards() {
@@ -183,7 +203,7 @@ public class PokerServer {
 				Card card1 = deck.drawFromDeck();
 				Card card2 = deck.drawFromDeck();
 				c.sendTCP(new ReceiveCardsMessage(card1, card2));
-				gui.displayLogginInfo("Dealt cards to " + c.toString());
+				gui.displayLogginInfo("Dealt cards to " + player.getName());
 			}
 		}
 	}
