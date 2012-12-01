@@ -1,13 +1,11 @@
 package be.infogroep.justpoker;
 
 import java.io.IOException;
-import java.io.Serializable;
 
-import android.app.Service;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.IBinder;
 import android.util.Log;
+import be.infogroep.justpoker.GameElements.Card;
+import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
 
 import com.esotericsoftware.kryonet.Client;
@@ -188,6 +186,10 @@ public class PokerClient {
 			myClientID = ((RegisterMessage) m).getClient_id();
 			serverConnection.sendTCP(new RegisterMessage(myClientID, name));
 			gui.displayLoggingInfo(m);
+		}
+		if (m instanceof ReceiveCardsMessage){
+			Card[] cards = ((ReceiveCardsMessage) m).getCards();
+			gui.setCards(cards);
 		}
 		if (m instanceof String) {
 			gui.displayLoggingInfo(m);

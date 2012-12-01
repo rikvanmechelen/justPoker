@@ -2,10 +2,8 @@ package be.infogroep.justpoker;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -14,10 +12,13 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import be.infogroep.justpoker.GameElements.Card;
 
 public class TapTestActivity extends Activity implements AbstractPokerClientActivity {
 	boolean flippedCard1;
 	boolean flippedCard2;
+	Card card1;
+	Card card2;
 	PokerClient client;
 	private Intent intent;
 
@@ -35,15 +36,15 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		setContentView(R.layout.activity_tap_test);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		final ImageView card1 = (ImageView) findViewById(R.id.card1);
-		final ImageView card2 = (ImageView) findViewById(R.id.card2);
+		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
+		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
 
-		card2.setOnTouchListener(new OnFlingGestureListener() {
+		cardContainer2.setOnTouchListener(new OnFlingGestureListener() {
 			private boolean longPressed = false;
 			@Override
 			public void onBottomToTop() {
-				fold(card1);
-				fold(card2);
+				fold(cardContainer1);
+				fold(cardContainer2);
 			}
 
 //			@Override
@@ -58,25 +59,25 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 //			}
 			@Override
 			public void onLongpress() {
-				card1.setImageResource(R.drawable.spades_ace);
-				card2.setImageResource(R.drawable.spades_king);
+				cardContainer1.setImageDrawable(getDrawable(card1.toString()));
+				cardContainer2.setImageDrawable(getDrawable(card2.toString()));
 				longPressed = true;
 			}
 			
 			public void onTouchevent(MotionEvent e){
 				if (longPressed && e.getAction() == MotionEvent.ACTION_UP) {
-					card1.setImageResource(R.drawable.card_backside);
-					card2.setImageResource(R.drawable.card_backside);
+					cardContainer1.setImageResource(R.drawable.card_backside);
+					cardContainer2.setImageResource(R.drawable.card_backside);
 					longPressed = false;
 				}
 			}
 		});
-		card1.setOnTouchListener(new OnFlingGestureListener() {
+		cardContainer1.setOnTouchListener(new OnFlingGestureListener() {
 			
 			@Override
 			public void onBottomToTop() {
-				fold(card1);
-				fold(card2);
+				fold(cardContainer1);
+				fold(cardContainer2);
 			}
 
 //			@Override
@@ -92,7 +93,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			
 			@Override
 			public void onLongpress() {
-				card2.setImageResource(R.drawable.card_backside);
+				cardContainer2.setImageResource(R.drawable.card_backside);
 			}
 		});
 
@@ -147,11 +148,21 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 						Toast.LENGTH_LONG).show();
 			}
 		});
-		
 	}
 	
 	protected void runOnNotUiThread(Runnable runnable) {
 		new Thread(runnable).start();
+	}
+
+	public void setCards(Card[] cards) {
+		card1 = cards[0];
+		card2 = cards[1];
+	}
+	
+	private Drawable getDrawable(String s){
+		String s2 = "drawable/"+s;
+		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
+		return getResources().getDrawable(imageResource);
 	}
 
 }

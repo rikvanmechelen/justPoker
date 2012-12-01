@@ -19,7 +19,12 @@
         android:layout_alignBaseline="@+id/nickname_label"
         android:layout_alignBottom="@+id/nickname_label"
         android:layout_alignParentRight="true"
-        android:ems="10" />
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="19dp"
+        android:layout_marginTop="18dp"
+        android:ems="10"
+        android:inputType="text|numberDecimal"
+        android:text="192.168.0.110" />
 
     <TextView
         android:id="@+id/server_ip_label"
@@ -46,6 +51,8 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/server_ip"
         android:layout_below="@+id/server_ip"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
