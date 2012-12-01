@@ -183,7 +183,8 @@ public class PokerServer {
 				Card card1 = deck.drawFromDeck();
 				Card card2 = deck.drawFromDeck();
 				c.sendTCP(new ReceiveCardsMessage(card1, card2));
-				gui.displayLogginInfo("Dealt cards to " + c.toString());
+				player.setCards(card1, card2);
+				gui.displayLogginInfo("Dealt cards to " + player.getName());
 			}
 		}
 	}
