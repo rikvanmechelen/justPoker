@@ -28,7 +28,8 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		//client.sendHello();
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
-		client = PokerClient.getInstance(TapTestActivity.this ,"Rik", ip);
+		String name = incomingIntent.getStringExtra("name");
+		client = PokerClient.getInstance(TapTestActivity.this ,name, ip);
 				
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
