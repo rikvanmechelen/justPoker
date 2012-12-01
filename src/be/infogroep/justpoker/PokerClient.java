@@ -18,7 +18,7 @@ import com.esotericsoftware.kryonet.Listener;
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.CommLibConnectionInfo;
 
-public class PokerClient extends Service implements Serializable {
+public class PokerClient {
     public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
 
 	private static PokerClient SingletonPokerClient;
@@ -26,36 +26,32 @@ public class PokerClient extends Service implements Serializable {
 	private Connection serverConnection;
 	private String connectionID = "connectionID";
 	private int myClientID;
-	private String name = "Rik";
+	private String name;
+	private String serverIP;
+	private AbstractPokerClientActivity gui;
 	
-	Intent intent;
-
-	@Override
-    public void onCreate() {
-        super.onCreate();
-        getIntent();	
-    }
-	
-	private Intent getIntent() {
-		if (intent == null) {
-			Log.d("justPoker - Server", "Creating intent "+BROADCAST_ACTION);
-			intent = new Intent(BROADCAST_ACTION);
-		}
-		return intent;
+	public PokerClient() {
+		
 	}
 	
-	@Override
-	public void onStart(Intent intent, int startId) {
-        intent.getStringExtra("ip");
-        Log.d("justPoker - client", "about to start client conneciton");
-        connectToServer(intent.getStringExtra("ip"));
-        //handler.postDelayed(serverR, 1000); // 1 second   
-        //start();
-    }
+	public PokerClient(AbstractPokerClientActivity c, String n, String ip) {
+		this.name = n;
+		this.serverIP = ip;
+		this.gui = c;
+		connectToServer(ip);
+	}
+	
 
 	public static PokerClient getInstance() {
 		if (SingletonPokerClient == null) {
-			//SingletonPokerClient = new PokerClient();
+			SingletonPokerClient = new PokerClient();
+		}
+		return SingletonPokerClient;
+	}
+	
+	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String ip) {
+		if (SingletonPokerClient == null) {
+			SingletonPokerClient = new PokerClient(c, n, ip);
 		}
 		return SingletonPokerClient;
 	}
@@ -117,15 +113,15 @@ public class PokerClient extends Service implements Serializable {
 		}
 	};
 	
-	private void DisplayLoggingInfo(Object msg) {
-    	Log.d("justPoker - client", "entered DisplayLoggingInfo");
+	//private void DisplayLoggingInfo(Object msg) {
+    	//Log.d("justPoker - client", "entered DisplayLoggingInfo");
     	//getIntent();
-    	Log.d("justPoker - client", "entered intend is: "+ intent);
-    	getIntent().putExtra("message", msg.toString());
+    	//Log.d("justPoker - client", "entered intend is: "+ intent);
+    	//getIntent().putExtra("message", msg.toString());
     	//intent.putExtra("time", new Date().toLocaleString());
     	//intent.putExtra("counter", String.valueOf(++counter));
-    	sendBroadcast(getIntent());
-    }
+    	//sendBroadcast(getIntent());
+    //}
 
 	public boolean connectToServer(String ip) {
 		new ConnectAsyncTask(ip, CommLib.SERVER_PORT, listener).execute();
@@ -184,12 +180,6 @@ public class PokerClient extends Service implements Serializable {
 			return null;
 		}
 	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	private void messageParser(Connection c, Object m){
 		//DisplayLoggingInfo(msg);
@@ -197,10 +187,10 @@ public class PokerClient extends Service implements Serializable {
 		if (m instanceof RegisterMessage) {
 			myClientID = ((RegisterMessage) m).getClient_id();
 			serverConnection.sendTCP(new RegisterMessage(myClientID, name));
-			DisplayLoggingInfo(m);
+			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof String) {
-			DisplayLoggingInfo(m);
+			gui.displayLoggingInfo(m);
 		}
 	}
 }

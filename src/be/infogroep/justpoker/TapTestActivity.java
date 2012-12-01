@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TapTestActivity extends Activity {
+public class TapTestActivity extends Activity implements AbstractPokerClientActivity {
 	boolean flippedCard1;
 	boolean flippedCard2;
 	PokerClient client;
@@ -27,16 +27,8 @@ public class TapTestActivity extends Activity {
 		//client.sendHello();
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
-		
-		intent = new Intent(this, PokerClient.class);
-		intent.putExtra("ip", ip);
-		startService(intent);
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		client = PokerClient.getInstance(TapTestActivity.this ,"Rik", ip);
+				
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);
@@ -136,37 +128,29 @@ public class TapTestActivity extends Activity {
 		//fade.start();
 		spin.start();
 	}
-	
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			updateUI(intent);
-		}
-	};
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		//startService(intent);
-		registerReceiver(broadcastReceiver, new IntentFilter(
-				PokerClient.BROADCAST_ACTION));
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		unregisterReceiver(broadcastReceiver);
-		stopService(intent);
 	}
-
-	private void updateUI(Intent intent) {
-		Object msg = intent.getStringExtra("message");
-
-		//TextView log = (TextView) findViewById(R.id.serverLog);
-		//log.append(msg + "\n");
-		Toast.makeText(getApplicationContext(), "received: "+ msg,
-				Toast.LENGTH_LONG).show();
-
+	
+	public void displayLoggingInfo(final Object m) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(getApplicationContext(), "received: "+ m,
+						Toast.LENGTH_LONG).show();
+			}
+		});
+		
+	}
+	
+	protected void runOnNotUiThread(Runnable runnable) {
+		new Thread(runnable).start();
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.io.IOException;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -28,7 +29,7 @@ import com.esotericsoftware.kryonet.Server;
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.UUIDSerializer;
 
-public class PokerServer extends Service {
+public class PokerServer {
 	//private static final String TAG = "PokerServer";
     public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerserver.displayevent";
     private static PokerServer SingletonPokerServer;
@@ -38,42 +39,36 @@ public class PokerServer extends Service {
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
-	private final Handler handler = new Handler();
-	Intent intent;
-
+	//private final Handler handler = new Handler();
+	//Intent intent;
+	private ServerTableActivity gui;
+	private String ipAddress;
+	
 	public PokerServer() {
 		deck = new Deck();
 		deck.shuffle();
 		start();
 	}
 	
+	public PokerServer(ServerTableActivity serverTableActivity, String ip) {
+		this.gui = serverTableActivity;
+		this.ipAddress = ip;
+	}
+
 	public static PokerServer getInstance() {
 		if (SingletonPokerServer == null) {
-			//SingletonPokerServer = new PokerServer();
+			SingletonPokerServer = new PokerServer();
 		}
 		return SingletonPokerServer;
 	}
 	
-	@Override
-    public void onCreate() {
-        super.onCreate();
-        getIntent();	
-    }
-	
-	private Intent getIntent() {
-		if (intent == null) {
-			Log.d("justPoker - Server", "Creating intent "+BROADCAST_ACTION);
-			intent = new Intent(BROADCAST_ACTION);
+	public static PokerServer getInstance(ServerTableActivity serverTableActivity, String ipAddress) {
+		// TODO Auto-generated method stub
+		if (SingletonPokerServer == null) {
+			SingletonPokerServer = new PokerServer(serverTableActivity, ipAddress);
 		}
-		return intent;
+		return SingletonPokerServer;
 	}
-	
-	@Override
-    public void onStart(Intent intent, int startId) {
-        handler.removeCallbacks(serverR);
-        //handler.postDelayed(serverR, 1000); // 1 second   
-        //start();
-    }
 
 	Runnable serverR = new Runnable() {
 		public void run() {
@@ -101,7 +96,7 @@ public class PokerServer extends Service {
 					public void received(Connection c, Object msg) {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
-						
+						Log.d("justPoker - server", "the gui is: " + gui);
 						if (!(msg instanceof KeepAlive)){
 							messageParser(c, msg, test);
 						}
@@ -119,24 +114,14 @@ public class PokerServer extends Service {
 			}
 		};
 	};
-	
-	private void DisplayLoggingInfo(Object msg) {
-    	Log.d("justPoker - server", "entered DisplayLoggingInfo");
-    	//getIntent();
-    	Log.d("justPoker - server", "entered intend is: "+ intent);
-    	getIntent().putExtra("message", msg.toString());
-    	//intent.putExtra("time", new Date().toLocaleString());
-    	//intent.putExtra("counter", String.valueOf(++counter));
-    	sendBroadcast(getIntent());
-    }
 
 	public synchronized void start() {
 		Log.d("justPoker - Server", "Starting server thread...");
 		if (serverThread == null) {
 			serverThread = new Thread(serverR);
 			serverThread.start();
-			// new Thread(gameLoop).start();
-			SingletonPokerServer = this;
+			//new Thread(gameLoop).start();
+			//SingletonPokerServer = this;
 		}
 
 	}
@@ -180,12 +165,6 @@ public class PokerServer extends Service {
 			}
 		}
 	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	private void messageParser(Connection c, Object msg, Runnable r){
 		//DisplayLoggingInfo(msg);
@@ -193,22 +172,20 @@ public class PokerServer extends Service {
 		if (msg instanceof RegisterMessage){
 			RegisterMessage rm = (RegisterMessage) msg;
 			connections.get(rm.getClient_id());
-			DisplayLoggingInfo(rm.getName()+" connected");
+			gui.displayLogginInfo(rm.getName()+" connected");
+			//gui.displayLogginInfo("someone connected"); 
 		}
-		handler.post(r);
+		//handler.post(r);
 	}
 	
 	public void startGame() {
-		DisplayLoggingInfo("Starting a game!!!!");
+		//DisplayLoggingInfo("Starting a game!!!!");
 		Log.d("justPoker - server", "starting game");
 		for (Iterator iterator = connections.values().iterator(); iterator.hasNext();) {
 			Connection c = (Connection) iterator.next();
 			if (c.isConnected()){
-				//c.sendTCP("Starting the game!");	
 				Log.d("justPoker - server", "sending to "+c.toString());
-				RegisterMessage m = new RegisterMessage("Jos");
-
-				c.sendTCP(m);
+				c.sendTCP("Starting the game!");	
 			}
 		}
 	}

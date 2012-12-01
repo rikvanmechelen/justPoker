@@ -21,7 +21,7 @@
         android:layout_marginTop="18dp"
         android:ems="10"
         android:inputType="text|numberDecimal"
-        android:text="192.168.1.3" />
+        android:text="192.168.1.187" />
 
     <TextView
         android:id="@+id/server_ip_label"
