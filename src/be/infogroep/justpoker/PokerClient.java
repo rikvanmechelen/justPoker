@@ -12,6 +12,7 @@ import be.infogroep.justpoker.messages.RegisterMessage;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage.KeepAlive;
 import com.esotericsoftware.kryonet.Listener;
 
 import edu.vub.at.commlib.CommLib;
@@ -110,17 +111,9 @@ public class PokerClient extends Service implements Serializable {
 
 			Log.v("justPoker - Client", "Received message " + m.toString());
 
-			if (m instanceof RegisterMessage) {
-				myClientID = ((RegisterMessage) m).getClient_id();
-				serverConnection.sendTCP(new RegisterMessage(name));
-				DisplayLoggingInfo(m);
+			if (!(m instanceof KeepAlive)){
+				messageParser(c, m);
 			}
-			// serverConnection.sendTCP("OMG, this is sooo cool");
-			// if (m instanceof String) {
-			// // Client view
-			// Log.v("wePoker - Client", "Procesing state message " +
-			// m.toString());
-			// }
 		}
 	};
 	
@@ -196,5 +189,18 @@ public class PokerClient extends Service implements Serializable {
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private void messageParser(Connection c, Object m){
+		//DisplayLoggingInfo(msg);
+		//handler.postDelayed(test, 2000);
+		if (m instanceof RegisterMessage) {
+			myClientID = ((RegisterMessage) m).getClient_id();
+			serverConnection.sendTCP(new RegisterMessage(myClientID, name));
+			DisplayLoggingInfo(m);
+		}
+		if (m instanceof String) {
+			DisplayLoggingInfo(m);
+		}
 	}
 }

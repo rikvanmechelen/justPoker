@@ -4,6 +4,7 @@
 
 package be.infogroep.justpoker;
 
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.io.IOException;
@@ -101,30 +102,9 @@ public class PokerServer extends Service {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
 						
-						
-						if (msg instanceof KeepAlive){
-							
-						} else {
-							DisplayLoggingInfo(msg);
-							//handler.postDelayed(test, 2000);
-							handler.post(test);
+						if (!(msg instanceof KeepAlive)){
+							messageParser(c, msg, test);
 						}
-						//activity.printMessage(msg);
-						// if (msg instanceof FutureMessage) {
-						// FutureMessage fm = (FutureMessage) msg;
-						// Log.d("justPoker - Server", "Resolving future " +
-						// fm.futureId + "(" + CommLib.futures.get(fm.futureId)
-						// + ") with value " + fm.futureValue);
-						// CommLib.resolveFuture(fm.futureId, fm.futureValue);
-						// }
-						// if (msg instanceof SetClientParameterMessage) {
-						// SetClientParameterMessage cm =
-						// (SetClientParameterMessage) msg;
-						// Log.d("wePoker - Server",
-						// "Got SetIDReplyMessage: "+cm.toString());
-						// registerClient(c, cm.nickname, cm.avatar, cm.money);
-						// gameLoop.broadcast(cm);
-						// }
 					}
 
 					@Override
@@ -205,5 +185,31 @@ public class PokerServer extends Service {
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private void messageParser(Connection c, Object msg, Runnable r){
+		//DisplayLoggingInfo(msg);
+		//handler.postDelayed(test, 2000);
+		if (msg instanceof RegisterMessage){
+			RegisterMessage rm = (RegisterMessage) msg;
+			connections.get(rm.getClient_id());
+			DisplayLoggingInfo(rm.getName()+" connected");
+		}
+		handler.post(r);
+	}
+	
+	public void startGame() {
+		DisplayLoggingInfo("Starting a game!!!!");
+		Log.d("justPoker - server", "starting game");
+		for (Iterator iterator = connections.values().iterator(); iterator.hasNext();) {
+			Connection c = (Connection) iterator.next();
+			if (c.isConnected()){
+				//c.sendTCP("Starting the game!");	
+				Log.d("justPoker - server", "sending to "+c.toString());
+				RegisterMessage m = new RegisterMessage("Jos");
+
+				c.sendTCP(m);
+			}
+		}
 	}
 }

@@ -80,5 +80,9 @@ public class ServerTableActivity extends Activity {
 		cps.stop();
 		startActivity(intent);
 	}
+	
+	public void startGame(View v){
+		PokerServer.getInstance().startGame();
+	}
 
 }

@@ -14,6 +14,11 @@ public class RegisterMessage extends Message{
 	public RegisterMessage(Integer c){
 		client_id = c;
 	}
+	
+	public RegisterMessage(Integer c, String n){
+		client_id = c;
+		name = n;
+	}
 
 	public String getName() {
 		return name;
