@@ -4,43 +4,51 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/nickname_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/client_hello"
-        tools:context=".ClientActivity" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="17dp"
+        android:text="Nickname"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/server_ip"
+        android:id="@+id/nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/nickname_label"
+        android:layout_alignBottom="@+id/nickname_label"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="19dp"
-        android:layout_marginTop="18dp"
-        android:ems="10"
-        android:inputType="text|numberDecimal"
-        android:text="192.168.1.187" />
+        android:ems="10" />
 
     <TextView
         android:id="@+id/server_ip_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/server_ip"
-        android:layout_alignBottom="@+id/server_ip"
-        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/nickname_label"
+        android:layout_below="@+id/nickname"
+        android:layout_marginTop="35dp"
         android:text="Server IP"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/server_ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/server_ip_label"
+        android:layout_alignBottom="@+id/server_ip_label"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:inputType="text|numberDecimal"
+        android:text="192.168.1.187" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/server_ip"
         android:layout_below="@+id/server_ip"
-        android:layout_marginLeft="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
         android:onClick="connectToServer"
         android:text="connect" />
 
