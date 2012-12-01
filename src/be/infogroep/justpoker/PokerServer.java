@@ -174,9 +174,10 @@ public class PokerServer {
 	}
 
 	public void dealCards() {
-		for (Iterator iterator = connections.values().iterator(); iterator
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
-			Connection c = (Connection) iterator.next();
+			PokerPlayer player = iterator.next();
+			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "Dealing cards to " + c.toString());
 				Card card1 = deck.drawFromDeck();
@@ -190,9 +191,9 @@ public class PokerServer {
 	public void startGame() {
 		// DisplayLoggingInfo("Starting a game!!!!");
 		Log.d("justPoker - server", "starting game");
-		for (Iterator iterator = connections.values().iterator(); iterator
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
-			PokerPlayer player = (PokerPlayer) iterator.next();
+			PokerPlayer player = iterator.next();
 			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());
