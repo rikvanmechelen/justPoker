@@ -1,6 +1,7 @@
 package be.infogroep.justpoker.messages;
 
 public class RegisterMessage extends Message{
+	private static final long serialVersionUID = 8725638069945077184L;
 	private String name;
 	private Integer client_id;
 	

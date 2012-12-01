@@ -78,9 +78,6 @@ public class ServerTableActivity extends Activity {
 				PokerServer.getInstance().startGame();
 			}
 		});
-		
-		
-		
 	}
 
 	public void displayLogginInfo(final String string) {

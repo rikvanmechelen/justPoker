@@ -4,20 +4,15 @@
 
 package be.infogroep.justpoker;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.io.IOException;
 
-import android.app.Activity;
-import android.app.Service;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
-import android.widget.TextView;
+import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.GameElements.Deck;
-import be.infogroep.justpoker.messages.Message;
+import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -30,29 +25,27 @@ import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.UUIDSerializer;
 
 public class PokerServer {
-	//private static final String TAG = "PokerServer";
-    public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerserver.displayevent";
-    private static PokerServer SingletonPokerServer;
+	// private static final String TAG = "PokerServer";
+	public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerserver.displayevent";
+	private static PokerServer SingletonPokerServer;
 
 	int nextClientID = 0;
 	private ConcurrentSkipListMap<Integer, Connection> connections = new ConcurrentSkipListMap<Integer, Connection>();
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
-	//private final Handler handler = new Handler();
-	//Intent intent;
+	// private final Handler handler = new Handler();
+	// Intent intent;
 	private ServerTableActivity gui;
 	private String ipAddress;
-	
-	public PokerServer() {
-		deck = new Deck();
-		deck.shuffle();
-		start();
-	}
-	
+
+	public PokerServer() {}
+
 	public PokerServer(ServerTableActivity serverTableActivity, String ip) {
 		this.gui = serverTableActivity;
 		this.ipAddress = ip;
+		deck = new Deck();
+		deck.shuffle();
 	}
 
 	public static PokerServer getInstance() {
@@ -61,11 +54,13 @@ public class PokerServer {
 		}
 		return SingletonPokerServer;
 	}
-	
-	public static PokerServer getInstance(ServerTableActivity serverTableActivity, String ipAddress) {
+
+	public static PokerServer getInstance(
+			ServerTableActivity serverTableActivity, String ipAddress) {
 		// TODO Auto-generated method stub
 		if (SingletonPokerServer == null) {
-			SingletonPokerServer = new PokerServer(serverTableActivity, ipAddress);
+			SingletonPokerServer = new PokerServer(serverTableActivity,
+					ipAddress);
 		}
 		return SingletonPokerServer;
 	}
@@ -97,7 +92,7 @@ public class PokerServer {
 						super.received(c, msg);
 						Log.d("justPoker - Server", "Message received " + msg);
 						Log.d("justPoker - server", "the gui is: " + gui);
-						if (!(msg instanceof KeepAlive)){
+						if (!(msg instanceof KeepAlive)) {
 							messageParser(c, msg, test);
 						}
 					}
@@ -120,8 +115,8 @@ public class PokerServer {
 		if (serverThread == null) {
 			serverThread = new Thread(serverR);
 			serverThread.start();
-			//new Thread(gameLoop).start();
-			//SingletonPokerServer = this;
+			// new Thread(gameLoop).start();
+			// SingletonPokerServer = this;
 		}
 
 	}
@@ -165,27 +160,43 @@ public class PokerServer {
 			}
 		}
 	}
-	
-	private void messageParser(Connection c, Object msg, Runnable r){
-		//DisplayLoggingInfo(msg);
-		//handler.postDelayed(test, 2000);
-		if (msg instanceof RegisterMessage){
+
+	private void messageParser(Connection c, Object msg, Runnable r) {
+		// DisplayLoggingInfo(msg);
+		// handler.postDelayed(test, 2000);
+		if (msg instanceof RegisterMessage) {
 			RegisterMessage rm = (RegisterMessage) msg;
 			connections.get(rm.getClient_id());
-			gui.displayLogginInfo(rm.getName()+" connected");
-			//gui.displayLogginInfo("someone connected"); 
+			gui.displayLogginInfo(rm.getName() + " connected");
+			// gui.displayLogginInfo("someone connected");
 		}
-		//handler.post(r);
+		// handler.post(r);
 	}
-	
-	public void startGame() {
-		//DisplayLoggingInfo("Starting a game!!!!");
-		Log.d("justPoker - server", "starting game");
-		for (Iterator iterator = connections.values().iterator(); iterator.hasNext();) {
+
+	public void dealCards() {
+		for (Iterator iterator = connections.values().iterator(); iterator
+				.hasNext();) {
 			Connection c = (Connection) iterator.next();
-			if (c.isConnected()){
-				Log.d("justPoker - server", "sending to "+c.toString());
-				c.sendTCP("Starting the game!");	
+			if (c.isConnected()) {
+				Log.d("justPoker - server", "Dealing cards to " + c.toString());
+				Card card1 = deck.drawFromDeck();
+				Card card2 = deck.drawFromDeck();
+				c.sendTCP(new ReceiveCardsMessage(card1, card2));
+				gui.displayLogginInfo("Dealt cards to " + c.toString());
+			}
+		}
+	}
+
+	public void startGame() {
+		// DisplayLoggingInfo("Starting a game!!!!");
+		Log.d("justPoker - server", "starting game");
+		for (Iterator iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			Connection c = (Connection) iterator.next();
+			if (c.isConnected()) {
+				Log.d("justPoker - server", "sending to " + c.toString());
+				c.sendTCP("Starting the game!");
+				dealCards();
 			}
 		}
 	}
