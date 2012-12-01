@@ -1,5 +1,7 @@
 package be.infogroep.justpoker;
 
+import be.infogroep.justpoker.GameElements.Card;
+
 import com.esotericsoftware.kryonet.Connection;
 
 import edu.vub.at.commlib.PlayerState;
@@ -9,6 +11,7 @@ public class PokerPlayer {
 	private Connection connection;
 	private int id;
 	private volatile PlayerState state;
+	private Card[] cards;
 	
 	public PlayerState getState() {
 		return state;
@@ -22,6 +25,7 @@ public class PokerPlayer {
 		this.id = i;
 		this.connection = c;
 		this.state = PlayerState.Unknown;
+		this.cards = new Card[2];
 	}
 
 	public String getName() {
@@ -38,6 +42,15 @@ public class PokerPlayer {
 
 	public int getId() {
 		return id;
+	}
+
+	public Card[] getCards() {
+		return cards;
+	}
+
+	public void setCards(Card card1, Card card2) {
+		this.cards[0] = card1;
+		this.cards[1] = card2;
 	}
 	
 }
