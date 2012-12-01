@@ -35,7 +35,7 @@ public class PokerServer {
     private static PokerServer SingletonPokerServer;
 
 	int nextClientID = 0;
-	private ConcurrentSkipListMap<Integer, Connection> connections = new ConcurrentSkipListMap<Integer, Connection>();
+	private ConcurrentSkipListMap<Integer, PokerPlayer> connections = new ConcurrentSkipListMap<Integer, PokerPlayer>();
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
@@ -139,7 +139,7 @@ public class PokerServer {
 
 	public void addClient(Connection c) {
 		Log.d("justPoker - Server", "Adding client " + c.getRemoteAddressTCP());
-		connections.put(nextClientID, c);
+		connections.put(nextClientID, new PokerPlayer(nextClientID,c));
 		RegisterMessage m = new RegisterMessage(nextClientID);
 		c.sendTCP(m);
 		nextClientID++;
@@ -148,7 +148,7 @@ public class PokerServer {
 	public void registerClient(Connection c, String nickname, int avatar,
 			int money) {
 		for (Integer i : connections.keySet()) {
-			if (connections.get(i) == c) {
+			if (connections.get(i).getConnection() == c) {
 				// gameLoop.addPlayer(c, i, nickname, avatar, money);
 				return;
 			}
@@ -158,7 +158,7 @@ public class PokerServer {
 	public void removeClient(Connection c) {
 		// Log.d("wePoker - Server", "Client removed: " + c);
 		for (Integer i : connections.keySet()) {
-			if (connections.get(i) == c) {
+			if (connections.get(i).getConnection() == c) {
 				// gameLoop.removePlayer(i);
 				connections.remove(i);
 				return;
@@ -171,7 +171,7 @@ public class PokerServer {
 		//handler.postDelayed(test, 2000);
 		if (msg instanceof RegisterMessage){
 			RegisterMessage rm = (RegisterMessage) msg;
-			connections.get(rm.getClient_id());
+			connections.get(rm.getClient_id()).setName(rm.getName());
 			gui.displayLogginInfo(rm.getName()+" connected");
 			//gui.displayLogginInfo("someone connected"); 
 		}
@@ -182,7 +182,8 @@ public class PokerServer {
 		//DisplayLoggingInfo("Starting a game!!!!");
 		Log.d("justPoker - server", "starting game");
 		for (Iterator iterator = connections.values().iterator(); iterator.hasNext();) {
-			Connection c = (Connection) iterator.next();
+			PokerPlayer player = (PokerPlayer) iterator.next();
+			Connection c = player.getConnection();
 			if (c.isConnected()){
 				Log.d("justPoker - server", "sending to "+c.toString());
 				c.sendTCP("Starting the game!");	
