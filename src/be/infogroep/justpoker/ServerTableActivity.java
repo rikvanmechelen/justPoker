@@ -22,7 +22,7 @@ import android.support.v4.app.NavUtils;
 public class ServerTableActivity extends Activity {
 
 	private PokerServer cps;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,7 +74,7 @@ public class ServerTableActivity extends Activity {
 		//cps.stop();
 		//startActivity(intent);
 	}
-	
+
 	public void startGame(View v){
 		runOnNotUiThread(new Runnable() {
 			public void run() {
@@ -90,9 +90,9 @@ public class ServerTableActivity extends Activity {
 				log.append(string + "\n");
 			}
 		});
-		
+
 	}
-	
+
 	protected void runOnNotUiThread(Runnable runnable) {
 		new Thread(runnable).start();
 	}
@@ -104,9 +104,9 @@ public class ServerTableActivity extends Activity {
 				setPlayerName(index, p.getName());
 			}
 		});
-		
+
 	}
-	
+
 	// State
 	public void setTurn(final PokerPlayer p, final int index) {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_turn);
@@ -117,18 +117,18 @@ public class ServerTableActivity extends Activity {
 	public void setFolded(final PokerPlayer p, final int index) {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
 	}
-	
+
 	// Buttons
 	public void setBigBlind(final PokerPlayer p, final int index) {
-		setPlayerButtonUIThread(p, index, R.drawable.dealer_button);
+		setPlayerButtonUIThread(p, index, R.drawable.bigblind_button);
 	}
 	public void setSmallBlind(final PokerPlayer p, final int index) {
-		setPlayerButtonUIThread(p, index, R.drawable.avatar_playing);
+		setPlayerButtonUIThread(p, index, R.drawable.smallblind_button);
 	}
 	public void setDealer(final PokerPlayer p, final int index) {
 		setPlayerButtonUIThread(p, index, R.drawable.dealer_button);
 	}
-	
+
 	// Actions
 	public void setCall(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_call);
@@ -139,15 +139,15 @@ public class ServerTableActivity extends Activity {
 	public void setBet(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_bet);
 	}
-	
+
 	public void setFold(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_fold);
 	}
 	public void setCheck(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_check);
 	}
-	
-	
+
+
 	// Run Set content on UI thread
 	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
 		runOnUiThread(new Runnable() {
@@ -156,7 +156,7 @@ public class ServerTableActivity extends Activity {
 			}
 		});
 	}
-	
+
 	private void setPlayerActionUIThread(final PokerPlayer p, final int index, final int drawable){
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -164,7 +164,7 @@ public class ServerTableActivity extends Activity {
 			}
 		});
 	}
-	
+
 	private void setPlayerButtonUIThread(final PokerPlayer p, final int index, final int drawable){
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -172,37 +172,41 @@ public class ServerTableActivity extends Activity {
 			}
 		});
 	}
-	
+
 	// Helper function
 	private void setPlayerAvater(int index, int drawable){
 		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)));
 		seat.setImageResource(drawable);
 	}
-	
+
 	private void setPlayerAction(int index, int drawable){
 		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_action"));
 		seat.setImageResource(drawable);
 	}
-	
+
 	private void setPlayerButton(int index, int drawable){
 		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_button"));
 		seat.setImageResource(drawable);
 	}
-	
+
 	private void setPlayerName(int index, String name){
 		TextView name_field = (TextView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_name"));
 		name_field.setText(name);
 	}
 
-	public void showFlop(Card[] flop) {
-		ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
-		ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
-		ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
-		card0.setImageDrawable(getDrawable(flop[0].toString()));
-		card1.setImageDrawable(getDrawable(flop[1].toString()));
-		card2.setImageDrawable(getDrawable(flop[2].toString()));
+	public void showFlop(final Card[] flop) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
+				ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
+				ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
+				card0.setImageDrawable(getDrawable(flop[0].toString()));
+				card1.setImageDrawable(getDrawable(flop[1].toString()));
+				card2.setImageDrawable(getDrawable(flop[2].toString()));
+			}
+		});
 	}
-	
+
 	private Drawable getDrawable(String s){
 		String s2 = "drawable/"+s;
 		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
