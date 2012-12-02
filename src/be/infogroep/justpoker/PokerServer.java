@@ -16,6 +16,7 @@ import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
 import be.infogroep.justpoker.messages.SetButtonMessage;
 import be.infogroep.justpoker.messages.SetStateMessage;
+import be.infogroep.justpoker.messages.SetYourTurn;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
@@ -217,10 +218,13 @@ public class PokerServer {
 		}
 	}
 	
-	private void gameSetup() {
-		game = new PokerGame();
-		//connections.size();
-		PokerPlayer tmp = connections.getFirst();
+	private void setTurn(PokerPlayer p){
+		p.setMyTurn(true);
+		p.getConnection().sendTCP(new SetYourTurn(true, p.getId()));
+		gui.setTurn(p, connections.indexOfKey(p.getId()));
+	}
+	
+	private void roundSetup(PokerPlayer tmp) {
 		game.setDealer(tmp.getId());
 		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, tmp.getId()));
 		tmp = connections.nextFrom(tmp.getId());
@@ -242,11 +246,14 @@ public class PokerServer {
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());
 				c.sendTCP("Starting the game!");
-				
-				
+				gui.setPlaying(player, connections.indexOfKey(player.getId()));
 			}
 		}
-		gameSetup();
+		game = new PokerGame();
+		roundSetup(connections.getFirst());
 		dealCards();
-	}	
+		setTurn(connections.nextFrom(game.getSmallBlind()));
+	}
+	
+	
 }

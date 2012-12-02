@@ -9,6 +9,7 @@ import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
 import be.infogroep.justpoker.messages.SetButtonMessage;
 import be.infogroep.justpoker.messages.SetStateMessage;
+import be.infogroep.justpoker.messages.SetYourTurn;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -32,9 +33,10 @@ public class PokerClient {
 	private String serverIP;
 	private AbstractPokerClientActivity gui;
 	private volatile PlayerState state;
-	private Boolean dealer = false;
-	private Boolean smallBlind = false;
-	private Boolean bigBlind = false;
+	private volatile Boolean dealer = false;
+	private volatile Boolean smallBlind = false;
+	private volatile Boolean bigBlind = false;
+	private volatile Boolean myTurn = false;
 	
 	public PlayerState getState() {
 		return state;
@@ -103,6 +105,14 @@ public class PokerClient {
 		name = n;
 	}
 
+	public Boolean getMyTurn() {
+		return myTurn;
+	}
+
+	public void setMyTurn(Boolean myTurn) {
+		this.myTurn = myTurn;
+	}
+	
 	public void sendHello() {
 		new SendAsyncMessage(serverConnection, "Owh Yah, Duffman is pounding in the direction!").execute();
 	}
@@ -227,8 +237,14 @@ public class PokerClient {
 			}
 			gui.setBlind(b);
 		}
+		if (m instanceof SetYourTurn){
+			setMyTurn(((SetYourTurn) m).getTurn());
+			gui.displayLoggingInfo("It is your turn!");
+		}
 		if (m instanceof String) {
 			gui.displayLoggingInfo(m);
 		}
 	}
+
+	
 }

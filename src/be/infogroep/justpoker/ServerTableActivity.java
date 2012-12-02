@@ -105,6 +105,24 @@ public class ServerTableActivity extends Activity {
 		
 	}
 	
+	public void setTurn(final PokerPlayer p, final int index) {
+		setPlayerStatusUIThread(p, index, R.drawable.avatar_turn);
+	}
+	public void setPlaying(final PokerPlayer p, final int index) {
+		setPlayerStatusUIThread(p, index, R.drawable.avatar_playing);
+	}
+	public void setFolded(final PokerPlayer p, final int index) {
+		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
+	}
+	
+	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAvater(index, drawable);
+			}
+		});
+	}
+	
 	private void setPlayerAvater(int index, int drawable){
 		java.lang.reflect.Field f;
 		try {
