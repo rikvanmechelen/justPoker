@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/client_background" >
+    android:background="@drawable/client_background"
+    android:id="@+id/tap_test_layout" >
 
     <ImageView
         android:id="@+id/button"
@@ -35,13 +36,25 @@
         android:src="@drawable/card_backside" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/betChip"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
-        android:src="@drawable/avatar" />
+        android:src="@drawable/chips_red" />
+
+    <TextView
+        android:id="@+id/betChipText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/betChip"
+        android:layout_alignTop="@+id/betChip"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="18dp"
+        android:text="Bet"
+        android:textColor="#ffffff"
+        android:textSize="25sp" />
 
 </RelativeLayout>
