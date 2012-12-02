@@ -9,8 +9,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/dealer_button" />
+        android:layout_alignParentTop="true"/>
 
     <ImageView
         android:id="@+id/card2"
