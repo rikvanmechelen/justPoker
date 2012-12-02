@@ -5,6 +5,14 @@
     android:background="@drawable/client_background" >
 
     <ImageView
+        android:id="@+id/button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/dealer_button" />
+
+    <ImageView
         android:id="@+id/card2"
         android:layout_width="195dp"
         android:layout_height="292dp"
