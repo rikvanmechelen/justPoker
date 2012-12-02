@@ -255,5 +255,10 @@ public class PokerServer {
 		setTurn(connections.nextFrom(game.getSmallBlind()));
 	}
 	
+	private boolean roundFinished(){
+		
+		return false;
+	}
+	
 	
 }

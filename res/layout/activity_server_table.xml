@@ -62,7 +62,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="11" /> 
+            android:layout_weight="11" />
 
         <RelativeLayout
             android:id="@+id/player2_container"
@@ -123,14 +123,53 @@
             android:id="@+id/serverLog"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="15"
             android:scrollbars="vertical"
             tools:context=".ServerTableActivity" />
 
+        <LinearLayout
+            android:id="@+id/cards"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="65"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/card0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20" />
+
+            <ImageView
+                android:id="@+id/card1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20" />
+
+            <ImageView
+                android:id="@+id/card2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20" />
+
+            <ImageView
+                android:id="@+id/card3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20" />
+
+            <ImageView
+                android:id="@+id/card4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/button1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="15"
             android:onClick="startGame"
             android:text="Start Game" />
     </LinearLayout>
