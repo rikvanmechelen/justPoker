@@ -32,7 +32,7 @@ public class PokerServer {
 	private static PokerServer SingletonPokerServer;
 
 	int nextClientID = 0;
-	private ConcurrentSkipListMap<Integer, PokerPlayer> connections = new ConcurrentSkipListMap<Integer, PokerPlayer>();
+	private PokerPlayerMap<Integer, PokerPlayer> connections = new PokerPlayerMap<Integer, PokerPlayer>();
 	private volatile Thread serverThread;
 	private Server server;
 	private Deck deck;
@@ -170,6 +170,7 @@ public class PokerServer {
 			RegisterMessage rm = (RegisterMessage) msg;
 			PokerPlayer p = connections.get(rm.getClient_id());
 			p.setName(rm.getName());
+			connections.move(rm.getClient_id(), 3);
 			gui.displayLogginInfo(rm.getName() + " connected");
 			// gui.displayLogginInfo("someone connected");
 		}
@@ -215,6 +216,7 @@ public class PokerServer {
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
 			PokerPlayer player = iterator.next();
+			Log.d("justPoker - server", "got PokerPlayer from connections "+player);
 			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());
