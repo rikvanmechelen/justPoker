@@ -98,9 +98,20 @@ public class ServerTableActivity extends Activity {
 	public void addPlayer(final PokerPlayer p, final int index) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				//java.lang.reflect.Field f = R.id.class.getField(Integer.toString(index));
-				//int id = f == null ? -1 : (Integer)f.get(null);
-				ImageView steat = (ImageView) findViewById(R.id.player5);
+				java.lang.reflect.Field f;
+				try {
+					f = R.id.class.getField("player"+Integer.toString(index));
+					int id = f == null ? -1 : (Integer)f.get(null);
+					ImageView seat = (ImageView) findViewById(id);
+					seat.setImageResource(R.drawable.avatar_folded);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				}
+				
 			}
 		});
 		
