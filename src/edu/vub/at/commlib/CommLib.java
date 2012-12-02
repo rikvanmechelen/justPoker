@@ -12,6 +12,7 @@ import java.util.UUID;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import be.infogroep.justpoker.R;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -41,6 +42,22 @@ public class CommLib {
  		append((addr >>>= 8) & 0xff).append('.').
  		append((addr >>>= 8) & 0xff);
 		return buf.toString();
+	}
+	
+	public static int getViewID(String string){
+		java.lang.reflect.Field f;
+		int id = -1;
+		try {
+			f = R.id.class.getField(string);
+			id = f == null ? -1 : (Integer)f.get(null);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 	public static String getIpAddress(Context ctx) {
