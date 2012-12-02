@@ -22,23 +22,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player0"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player0_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text="guest_23"
-                android:textColor="#ffffff"
-                android:textSize="20dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player0_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
@@ -52,29 +46,23 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player1"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player1_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player1_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="11" />
+            android:layout_weight="11" /> 
 
         <RelativeLayout
             android:id="@+id/player2_container"
@@ -82,23 +70,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player2_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player2_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
@@ -112,23 +94,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player3"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player3_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player3_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
@@ -176,23 +152,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player7"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player7_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player7_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
@@ -206,23 +176,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player6"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player6_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player6_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
@@ -236,23 +200,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player5"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player5_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player5_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
@@ -266,23 +224,17 @@
             android:layout_height="fill_parent"
             android:layout_weight="11" >
 
-            <ImageView
+            <include
                 android:id="@+id/player4"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:contentDescription="@string/description"
-                android:src="@drawable/empty_seat" />
+                layout="@layout/player_image" />
 
-            <TextView
+            <include
                 android:id="@+id/player4_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10dp" />
+                layout="@layout/player_name" />
+
+            <include
+                android:id="@+id/player4_action"
+                layout="@layout/player_action" />
         </RelativeLayout>
 
         <TextView
