@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
 import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
@@ -108,9 +109,17 @@ public class PokerClient {
 	public Boolean getMyTurn() {
 		return myTurn;
 	}
-
+	
 	public void setMyTurn(Boolean myTurn) {
 		this.myTurn = myTurn;
+	}
+	
+	public void endMyTurn() {
+		this.myTurn = false;
+	}
+	
+	public void startMyTurn() {
+		this.myTurn = true;
 	}
 	
 	public void sendHello() {
@@ -141,16 +150,6 @@ public class PokerClient {
 			}
 		}
 	};
-	
-	//private void DisplayLoggingInfo(Object msg) {
-    	//Log.d("justPoker - client", "entered DisplayLoggingInfo");
-    	//getIntent();
-    	//Log.d("justPoker - client", "entered intend is: "+ intent);
-    	//getIntent().putExtra("message", msg.toString());
-    	//intent.putExtra("time", new Date().toLocaleString());
-    	//intent.putExtra("counter", String.valueOf(++counter));
-    	//sendBroadcast(getIntent());
-    //}
 
 	public boolean connectToServer(String ip) {
 		new ConnectAsyncTask(ip, CommLib.SERVER_PORT, listener).execute();
@@ -210,6 +209,38 @@ public class PokerClient {
 		}
 	}
 
+	public void fold(ImageView cardContainer1, ImageView cardContainer2) {
+		if (getMyTurn()){
+			sendState(PlayerState.Fold);
+			gui.fold(cardContainer1, cardContainer2);
+			endMyTurn();
+		} else {
+			gui.displayLoggingInfo("It is not your turn yet!");
+		}		
+	}
+
+	public void check(ImageView cardContainer1, ImageView cardContainer2) {
+		if (getMyTurn()){
+			sendState(PlayerState.Check);
+			gui.check(cardContainer1, cardContainer2);
+			endMyTurn();
+		} else {
+			gui.displayLoggingInfo("It is not your turn yet!");
+		}
+		
+	}
+	
+	public void bet(ImageView cardContainer1, ImageView cardContainer2) {
+		if (getMyTurn()){
+			sendState(PlayerState.Bet);
+			gui.bet(cardContainer1, cardContainer2);
+			endMyTurn();
+		} else {
+			gui.displayLoggingInfo("It is not your turn yet!");
+		}
+		
+	}
+	
 	private void messageParser(Connection c, Object m){
 		//DisplayLoggingInfo(msg);
 		//handler.postDelayed(test, 2000);
@@ -245,6 +276,4 @@ public class PokerClient {
 			gui.displayLoggingInfo(m);
 		}
 	}
-
-	
 }

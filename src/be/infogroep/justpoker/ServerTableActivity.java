@@ -115,6 +115,34 @@ public class ServerTableActivity extends Activity {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
 	}
 	
+	public void setBigBlind(final PokerPlayer p, final int index) {
+		setPlayerStatusUIThread(p, index, R.drawable.avatar_turn);
+	}
+	public void setSmallBlind(final PokerPlayer p, final int index) {
+		setPlayerStatusUIThread(p, index, R.drawable.avatar_playing);
+	}
+	public void setDealer(final PokerPlayer p, final int index) {
+		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
+	}
+	
+	
+	public void setCall(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_call);
+	}
+	public void setRaise(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_raise);
+	}
+	public void setBet(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_bet);
+	}
+	
+	public void setFold(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_fold);
+	}
+	public void setCheck(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_check);
+	}
+	
 	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -123,37 +151,27 @@ public class ServerTableActivity extends Activity {
 		});
 	}
 	
+	private void setPlayerActionUIThread(final PokerPlayer p, final int index, final int drawable){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(index, drawable);
+			}
+		});
+	}
+	
 	private void setPlayerAvater(int index, int drawable){
-		java.lang.reflect.Field f;
-		try {
-			Log.d("justPoker - server", "setting atavar player"+index+" on the table");
-			f = R.id.class.getField("player"+Integer.toString(index));
-			int id = f == null ? -1 : (Integer)f.get(null);
-			ImageView seat = (ImageView) findViewById(id);
-			seat.setImageResource(drawable);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		}
+		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)));
+		seat.setImageResource(drawable);
+	}
+	
+	private void setPlayerAction(int index, int drawable){
+		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_action"));
+		seat.setImageResource(drawable);
 	}
 	
 	private void setPlayerName(int index, String name){
-		java.lang.reflect.Field f;
-		try {
-			f = R.id.class.getField("player"+Integer.toString(index)+"_name");
-			int id = f == null ? -1 : (Integer)f.get(null);
-			TextView name_field = (TextView) findViewById(id);
-			name_field.setText(name);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		}
+		TextView name_field = (TextView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_name"));
+		name_field.setText(name);
 	}
 
 }
