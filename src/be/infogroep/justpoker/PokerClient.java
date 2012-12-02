@@ -23,7 +23,7 @@ import edu.vub.at.commlib.PlayerState;
 import edu.vub.at.commlib.PokerButton;
 
 public class PokerClient {
-	public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
+    public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
 
 	private static PokerClient SingletonPokerClient;
 
@@ -40,7 +40,7 @@ public class PokerClient {
 	private volatile Boolean myTurn = false;
 	private Card card1;
 	private Card card2;
-
+	
 	public PlayerState getState() {
 		return state;
 	}
@@ -50,9 +50,9 @@ public class PokerClient {
 	}
 
 	public PokerClient() {
-
+		
 	}
-
+	
 	public PokerClient(AbstractPokerClientActivity c, String n, String ip) {
 		this.name = n;
 		this.serverIP = ip;
@@ -60,6 +60,7 @@ public class PokerClient {
 		this.state = PlayerState.Unknown;
 		connectToServer(ip);
 	}
+	
 
 	public static PokerClient getInstance() {
 		if (SingletonPokerClient == null) {
@@ -67,12 +68,11 @@ public class PokerClient {
 		}
 		return SingletonPokerClient;
 	}
-
-	public static PokerClient getInstance(AbstractPokerClientActivity c,
-			String n, String ip) {
-		if (SingletonPokerClient == null) {
+	
+	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String ip) {
+		//if (SingletonPokerClient == null) {
 			SingletonPokerClient = new PokerClient(c, n, ip);
-		}
+		//}
 		return SingletonPokerClient;
 	}
 
@@ -111,29 +111,27 @@ public class PokerClient {
 	public Boolean getMyTurn() {
 		return myTurn;
 	}
-
+	
 	public void setMyTurn(Boolean myTurn) {
 		this.myTurn = myTurn;
 	}
-
+	
 	public void endMyTurn() {
 		this.myTurn = false;
 	}
-
+	
 	public void startMyTurn() {
 		this.myTurn = true;
 	}
-
+	
 	public void sendHello() {
-		new SendAsyncMessage(serverConnection,
-				"Owh Yah, Duffman is pounding in the direction!").execute();
+		new SendAsyncMessage(serverConnection, "Owh Yah, Duffman is pounding in the direction!").execute();
 	}
-
-	public void sendState(PlayerState s) {
-		new SendAsyncMessage(serverConnection, new SetStateMessage(s,
-				myClientID)).execute();
+	
+	public void sendState(PlayerState s){
+		new SendAsyncMessage(serverConnection, new SetStateMessage(s, myClientID)).execute();
 	}
-
+	
 	public Listener listener = new Listener() {
 
 		@Override
@@ -149,7 +147,7 @@ public class PokerClient {
 
 			Log.v("justPoker - Client", "Received message " + m.toString());
 
-			if (!(m instanceof KeepAlive)) {
+			if (!(m instanceof KeepAlive)){
 				messageParser(c, m);
 			}
 		}
@@ -170,20 +168,18 @@ public class PokerClient {
 		// "SENDING CLIENT MESSAGE! Owh Yah :)").execute();
 	}
 
-	public class SendAsyncMessage extends AsyncTask<Void, Void, Client> {
+	public class SendAsyncMessage extends AsyncTask<Void, Void, Client> {		
 		private Connection c;
 		private Object o;
-
 		public SendAsyncMessage(Connection co, Object obj) {
 			this.c = co;
 			this.o = obj;
 		}
-
 		@Override
 		protected Client doInBackground(Void... params) {
 			c.sendTCP(o);
 			return null;
-		}
+		}	
 	}
 
 	public class ConnectAsyncTask extends AsyncTask<Void, Void, Client> {
@@ -216,13 +212,13 @@ public class PokerClient {
 	}
 
 	public void fold(ImageView cardContainer1, ImageView cardContainer2) {
-		if (getMyTurn()) {
+		if (getMyTurn()){
 			sendState(PlayerState.Fold);
 			gui.fold(cardContainer1, cardContainer2);
 			endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
-		}
+		}		
 	}
 
 	public void bet() {
@@ -236,31 +232,32 @@ public class PokerClient {
 	}
 
 	public void check(ImageView cardContainer1, ImageView cardContainer2) {
-		if (getMyTurn()) {
+		if (getMyTurn()){
 			sendState(PlayerState.Check);
 			gui.check(cardContainer1, cardContainer2);
 			endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
 		}
-
+		
 	}
 
-	private void messageParser(Connection c, Object m) {
-		// DisplayLoggingInfo(msg);
-		// handler.postDelayed(test, 2000);
+	
+	private void messageParser(Connection c, Object m){
+		//DisplayLoggingInfo(msg);
+		//handler.postDelayed(test, 2000);
 		if (m instanceof RegisterMessage) {
 			myClientID = ((RegisterMessage) m).getClient_id();
 			serverConnection.sendTCP(new RegisterMessage(myClientID, name));
 			gui.displayLoggingInfo(m);
 		}
-		if (m instanceof ReceiveCardsMessage) {
+		if (m instanceof ReceiveCardsMessage){
 			Card[] cards = ((ReceiveCardsMessage) m).getCards();
 			gui.setCards(cards);
 		}
-		if (m instanceof SetButtonMessage) {
+		if (m instanceof SetButtonMessage){
 			PokerButton b = ((SetButtonMessage) m).getButton();
-			switch (b) {
+			switch(b) {
 			case BigBlind:
 				bigBlind = true;
 				break;
@@ -273,7 +270,7 @@ public class PokerClient {
 			}
 			gui.setBlind(b);
 		}
-		if (m instanceof SetYourTurn) {
+		if (m instanceof SetYourTurn){
 			setMyTurn(((SetYourTurn) m).getTurn());
 			gui.displayLoggingInfo("It is your turn!");
 		}

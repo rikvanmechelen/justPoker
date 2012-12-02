@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import android.util.Log;
+import be.infogroep.justpoker.PokerGame.Round;
 import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.GameElements.Deck;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
@@ -64,10 +65,10 @@ public class PokerServer {
 	public static PokerServer getInstance(
 			ServerTableActivity serverTableActivity, String ipAddress) {
 		// TODO Auto-generated method stub
-		if (SingletonPokerServer == null) {
+		//if (SingletonPokerServer == null) {
 			SingletonPokerServer = new PokerServer(serverTableActivity,
 					ipAddress);
-		}
+		//}
 		return SingletonPokerServer;
 	}
 
@@ -288,8 +289,22 @@ public class PokerServer {
 			SetStateMessage st = (SetStateMessage) msg;
 			Log.d("justPoker - server", "received a set state: "+st.getState());
 			parseState(st);
+			roundCheck(st.getClient_id());
 		}
 		// handler.post(r);
+	}
+
+	private void roundCheck(int client_id) {
+		// TODO Auto-generated method stub
+		if (roundFinished()){
+			if (game.getRound() == Round.PreFlopBet){
+				setTurn(connections.nextUnfoldedFrom(game.getDealer()));
+				showFlop();
+			}
+			
+		} else{
+			setTurn(connections.nextFrom(client_id));
+		}
 	}
 
 	private void parseState(SetStateMessage st) {
