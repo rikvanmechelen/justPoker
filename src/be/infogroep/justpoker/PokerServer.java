@@ -167,16 +167,16 @@ public class PokerServer {
 		}
 	}
 	
-	public Card[] showFlop() {
-		return game.getFlop();
+	public void showFlop() {
+		gui.showFlop(game.getFlop());
 	}
 	
-	public Card showTurn() {
-		return game.getTurn();
+	public void showTurn() {
+		game.getTurn();
 	}
 	
-	public Card showRiver() {
-		return game.getRiver();
+	public void showRiver() {
+		game.getRiver();
 	}
 
 	public void dealCards() {

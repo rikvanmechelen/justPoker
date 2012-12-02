@@ -1,5 +1,6 @@
 package be.infogroep.justpoker;
 
+import be.infogroep.justpoker.GameElements.Card;
 import edu.vub.at.commlib.CommLib;
 import android.os.Bundle;
 import android.app.Activity;
@@ -172,6 +173,11 @@ public class ServerTableActivity extends Activity {
 	private void setPlayerName(int index, String name){
 		TextView name_field = (TextView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_name"));
 		name_field.setText(name);
+	}
+
+	public void showFlop(Card[] flop) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
