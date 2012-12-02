@@ -18,10 +18,12 @@ public class PokerGame {
 	private Card[] flop;
 	private Card turn;
 	private Card river;
+	private Round round;
 	
 	public PokerGame() {
-		deck = new Deck();
+		this.deck = new Deck();
 		deck.shuffle();
+		this.round = Round.PreFlopBet;
 	}
 
 	public Integer getDealer() {
@@ -92,5 +94,26 @@ public class PokerGame {
 		return river;
 	}
 	
+	public Round nextRound() {
+		round = round.getNext();
+		return round;
+	}
 	
+	public Round newRound() {
+		round = Round.PreFlopBet;
+		return round;
+	}
+
+	public Round getRound() {
+		return round;
+	}
+	
+	public enum Round {
+		PreFlopBet, FlopBet, TurnBet, RiverBet;
+		public Round getNext() {
+			return values()[(ordinal()+1) % values().length];
+		}
+
+	}
+
 }

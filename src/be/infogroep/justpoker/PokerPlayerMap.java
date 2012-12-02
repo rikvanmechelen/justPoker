@@ -10,17 +10,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import edu.vub.at.commlib.PlayerState;
+
 import android.util.Log;
 
-public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
+public class PokerPlayerMap<K, V> implements Map<K, V> {
 
 	private Vector<K> keys;
 	private int amount;
-	private Vector<PokerPlayer> values;
+	private Vector<V> values;
 
 	public PokerPlayerMap() {
 		keys = new Vector<K>(9);
-		values = new Vector<PokerPlayer>(9);
+		values = new Vector<V>(9);
 		keys.setSize(9);
 		values.setSize(9);
 	}
@@ -38,7 +40,7 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		return values.contains(value);
 	}
 
-	public Set<java.util.Map.Entry<K, PokerPlayer>> entrySet() {
+	public Set<java.util.Map.Entry<K, V>> entrySet() {
 		if (keys.size() != values.size() && values.size() != amount)
 			throw new IllegalStateException("InternalError: keys and values out of sync");
 		ArrayList al = new ArrayList();
@@ -49,7 +51,7 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		return new CustomSortMapSet(al);
 	}
 
-	public PokerPlayer get(Object key) {
+	public V get(Object key) {
 		int index = keys.indexOf(key);
 		if (index == -1)
 			return null;
@@ -73,7 +75,7 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		return set;
 	}
 
-	public PokerPlayer put(K key, PokerPlayer value) {
+	public V put(K key, V value) {
 		int i = keys.indexOf(null);
 		if (i == -1)
 			return null;
@@ -83,20 +85,20 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		return value;
 	}
 
-	public void putAll(Map<? extends K, ? extends PokerPlayer> oldMap) {
+	public void putAll(Map<? extends K, ? extends V> oldMap) {
 		Iterator<? extends K> keysIter = oldMap.keySet().iterator();
 		while (keysIter.hasNext()) {
 			K k = keysIter.next();
-			PokerPlayer v = oldMap.get(k);
+			V v = oldMap.get(k);
 			put(k, v);
 		}
 	}
 	
-	public PokerPlayer remove(Object key) {
+	public V remove(Object key) {
 		int i = keys.indexOf(key);
 		if (i == -1)
 			return null;
-		PokerPlayer old = values.get(i);
+		V old = values.get(i);
 		keys.set(i, null);
 		values.set(i, null);
 		amount--;
@@ -117,9 +119,9 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		return false;
 	}
 
-	public PokerPlayer getFirst() {
-		PokerPlayer player = null;
-		for (PokerPlayer p : values)
+	public V getFirst() {
+		V player = null;
+		for (V p : values)
 		{
 			if (p != null) {
 				player = p;
@@ -129,10 +131,10 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		return player;
 	}
 	
-	public PokerPlayer nextFrom(K k){
+	public V nextFrom(K k){
 		int start = keys.indexOf(k);
 		int i = start+1;
-		PokerPlayer p = null;
+		V p = null;
 		Boolean keep_going = true;
 		while(keep_going){
 			if (i == keys.size())
@@ -148,10 +150,35 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 	public int size() {
 		return amount;
 	}
+	
+	public int indexOfKey(int client_id) {
+		return keys.indexOf(client_id);
+	}
 
-	public Collection<PokerPlayer> values() {
-		ArrayList<PokerPlayer> l = new ArrayList<PokerPlayer>();
-		for (PokerPlayer p : values)
+	public V nextUnfoldedFrom(K k) {
+		int start = keys.indexOf(k);
+		int i = start+1;
+		V p = null;
+		Boolean keep_going = true;
+		while(keep_going){
+			if (i == keys.size())
+				i = 0;
+			p = values.get(i);
+			if (p != null) {
+				if (((PokerPlayer) p).getState() != PlayerState.Fold) {
+					keep_going = false;
+				}
+			}
+			if (i == start)
+				keep_going = false;
+			i++;
+		}
+		return p;
+	}
+
+	public Collection<V> values() {
+		ArrayList<V> l = new ArrayList<V>();
+		for (V p : values)
 		{
 			if (p != null) {
 				l.add(p);
@@ -207,10 +234,6 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		public int size() {
 			return list.size();
 		}
-	}
-
-	public int indexOfKey(int client_id) {
-		return keys.indexOf(client_id);
-	}
+	}	
 
 }
