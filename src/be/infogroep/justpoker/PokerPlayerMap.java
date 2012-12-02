@@ -74,8 +74,11 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 	}
 
 	public PokerPlayer put(K key, PokerPlayer value) {
-		keys.add(key);
-		values.add(value);
+		int i = keys.indexOf(null);
+		if (i == -1)
+			return null;
+ 		keys.add(i,key);
+		values.add(i,value);
 		amount++;
 		return value;
 	}
@@ -128,11 +131,11 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 	
 	public PokerPlayer nextFrom(K k){
 		int start = keys.indexOf(k);
-		int i = start;
+		int i = start+1;
 		PokerPlayer p = null;
 		Boolean keep_going = true;
 		while(keep_going){
-			if (i == keys.capacity())
+			if (i == keys.size())
 				i = 0;
 			p = values.get(i);
 			if (p != null || i == start) 

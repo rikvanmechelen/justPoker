@@ -1,6 +1,7 @@
 package be.infogroep.justpoker;
 
 import edu.vub.at.commlib.PlayerState;
+import edu.vub.at.commlib.PokerButton;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
@@ -31,7 +32,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
 		client = PokerClient.getInstance(TapTestActivity.this ,name, ip);
-				
+
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);
@@ -60,7 +61,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 				cardContainer2.setImageDrawable(getDrawable(card2.toString()));
 				longPressed = true;
 			}
-			
+
 			public void onTouchevent(MotionEvent e){
 				if (longPressed && e.getAction() == MotionEvent.ACTION_UP) {
 					cardContainer1.setImageResource(R.drawable.card_backside);
@@ -70,7 +71,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			}
 		});
 		cardContainer1.setOnTouchListener(new OnFlingGestureListener() {
-			
+
 			@Override
 			public void onBottomToTop() {
 				client.sendState(PlayerState.Fold);
@@ -83,7 +84,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 				client.sendState(PlayerState.Check);
 				check();
 			}
-			
+
 			@Override
 			public void onLongpress() {
 				cardContainer2.setImageResource(R.drawable.card_backside);
@@ -122,7 +123,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		//fade.start();
 		spin.start();
 	}
-	
+
 	private void check() {
 		Toast.makeText(getApplicationContext(), "You Checked!",
 				Toast.LENGTH_LONG).show();
@@ -137,7 +138,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 	public void onPause() {
 		super.onPause();
 	}
-	
+
 	public void displayLoggingInfo(final Object m) {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -146,7 +147,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			}
 		});
 	}
-	
+
 	protected void runOnNotUiThread(Runnable runnable) {
 		new Thread(runnable).start();
 	}
@@ -155,11 +156,20 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		card1 = cards[0];
 		card2 = cards[1];
 	}
-	
+
 	private Drawable getDrawable(String s){
 		String s2 = "drawable/"+s;
 		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
 		return getResources().getDrawable(imageResource);
+	}
+ 
+	public void setBlind(final PokerButton b) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(getApplicationContext(), "You are the "+b,
+						Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 }

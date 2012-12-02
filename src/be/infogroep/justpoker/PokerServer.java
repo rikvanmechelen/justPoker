@@ -14,6 +14,7 @@ import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.GameElements.Deck;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
+import be.infogroep.justpoker.messages.SetButtonMessage;
 import be.infogroep.justpoker.messages.SetStateMessage;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -24,6 +25,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.PlayerState;
+import edu.vub.at.commlib.PokerButton;
 import edu.vub.at.commlib.UUIDSerializer;
 
 public class PokerServer {
@@ -40,12 +42,16 @@ public class PokerServer {
 	// Intent intent;
 	private ServerTableActivity gui;
 	private String ipAddress;
+	
+	//game specific stuff
+	private PokerGame game;
 
 	public PokerServer() {}
 
 	public PokerServer(ServerTableActivity serverTableActivity, String ip) {
 		this.gui = serverTableActivity;
 		this.ipAddress = ip;
+		this.game = new PokerGame();
 		deck = new Deck();
 		deck.shuffle();
 	}
@@ -195,6 +201,7 @@ public class PokerServer {
 	}
 
 	public void dealCards() {
+		Log.d("justPoker - server", "amount of players in values " + connections.values().size());
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
 			PokerPlayer player = iterator.next();
@@ -209,6 +216,20 @@ public class PokerServer {
 			}
 		}
 	}
+	
+	private void gameSetup() {
+		game = new PokerGame();
+		//connections.size();
+		PokerPlayer tmp = connections.getFirst();
+		game.setDealer(tmp.getId());
+		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, tmp.getId()));
+		tmp = connections.nextFrom(tmp.getId());
+		game.setSmallBlind(tmp.getId());
+		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, tmp.getId()));
+		tmp = connections.nextFrom(tmp.getId());
+		game.setBigBlind(tmp.getId());
+		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, tmp.getId()));
+	}
 
 	public void startGame() {
 		// DisplayLoggingInfo("Starting a game!!!!");
@@ -221,8 +242,11 @@ public class PokerServer {
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());
 				c.sendTCP("Starting the game!");
-				dealCards();
+				
+				
 			}
 		}
+		gameSetup();
+		dealCards();
 	}
 }

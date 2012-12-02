@@ -7,6 +7,7 @@ import android.util.Log;
 import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
+import be.infogroep.justpoker.messages.SetButtonMessage;
 import be.infogroep.justpoker.messages.SetStateMessage;
 
 import com.esotericsoftware.kryonet.Client;
@@ -17,6 +18,7 @@ import com.esotericsoftware.kryonet.Listener;
 import edu.vub.at.commlib.CommLib;
 import edu.vub.at.commlib.CommLibConnectionInfo;
 import edu.vub.at.commlib.PlayerState;
+import edu.vub.at.commlib.PokerButton;
 
 public class PokerClient {
     public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
@@ -30,6 +32,9 @@ public class PokerClient {
 	private String serverIP;
 	private AbstractPokerClientActivity gui;
 	private volatile PlayerState state;
+	private Boolean dealer = false;
+	private Boolean smallBlind = false;
+	private Boolean bigBlind = false;
 	
 	public PlayerState getState() {
 		return state;
@@ -194,7 +199,7 @@ public class PokerClient {
 			return null;
 		}
 	}
-	
+
 	private void messageParser(Connection c, Object m){
 		//DisplayLoggingInfo(msg);
 		//handler.postDelayed(test, 2000);
@@ -206,6 +211,21 @@ public class PokerClient {
 		if (m instanceof ReceiveCardsMessage){
 			Card[] cards = ((ReceiveCardsMessage) m).getCards();
 			gui.setCards(cards);
+		}
+		if (m instanceof SetButtonMessage){
+			PokerButton b = ((SetButtonMessage) m).getButton();
+			switch(b) {
+			case BigBlind:
+				bigBlind = true;
+				break;
+			case SmallBlind:
+				smallBlind = true;
+				break;
+			case Dealer:
+				dealer = true;
+				break;
+			}
+			gui.setBlind(b);
 		}
 		if (m instanceof String) {
 			gui.displayLoggingInfo(m);
