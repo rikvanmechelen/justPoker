@@ -54,7 +54,9 @@
         </activity>
         <activity
             android:name=".ServerTableActivity"
-            android:label="@string/title_activity_server_table" >
+            android:label="@string/title_activity_server_table"
+            android:screenOrientation="landscape"
+    		android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.ServerActivity" />

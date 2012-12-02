@@ -1,29 +1,93 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/poker_table" >
 
     <TextView
         android:id="@+id/serverLog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/button1"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="42dp"
+        android:layout_width="365dp"
+        android:layout_height="80dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="85dp"
         android:scrollbars="vertical"
         tools:context=".ServerTableActivity" />
+
+    <ImageView
+        android:id="@+id/player1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="23dp"
+        android:src="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/player2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/serverLog"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="94dp"
+        android:src="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/player8"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/player1"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/player7"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/player2"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/avatar" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:onClick="startGame"
         android:text="Start Game" />
+
+    <ImageView
+        android:id="@+id/player3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="54dp"
+        android:layout_toLeftOf="@+id/button1"
+        android:src="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/player6"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/player3"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/player5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/avatar" />
+
+    <ImageView
+        android:id="@+id/player4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/player5"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/avatar" />
 
 </RelativeLayout>
