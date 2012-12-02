@@ -99,6 +99,7 @@ public class ServerTableActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAvater(index, R.drawable.avatar_folded);
+				setPlayerName(index, p.getName());
 			}
 		});
 		
@@ -112,6 +113,22 @@ public class ServerTableActivity extends Activity {
 			int id = f == null ? -1 : (Integer)f.get(null);
 			ImageView seat = (ImageView) findViewById(id);
 			seat.setImageResource(drawable);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setPlayerName(int index, String name){
+		java.lang.reflect.Field f;
+		try {
+			f = R.id.class.getField("player"+Integer.toString(index)+"_name");
+			int id = f == null ? -1 : (Integer)f.get(null);
+			TextView name_field = (TextView) findViewById(id);
+			name_field.setText(name);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

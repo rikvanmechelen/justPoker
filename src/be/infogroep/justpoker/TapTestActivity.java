@@ -71,7 +71,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			}
 		});
 		cardContainer1.setOnTouchListener(new OnFlingGestureListener() {
-
+			private boolean longPressed = false;
 			@Override
 			public void onBottomToTop() {
 				client.sendState(PlayerState.Fold);
@@ -84,10 +84,19 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 				client.sendState(PlayerState.Check);
 				check();
 			}
-
 			@Override
 			public void onLongpress() {
-				cardContainer2.setImageResource(R.drawable.card_backside);
+				cardContainer1.setImageDrawable(getDrawable(card1.toString()));
+				cardContainer2.setImageDrawable(getDrawable(card2.toString()));
+				longPressed = true;
+			}
+
+			public void onTouchevent(MotionEvent e){
+				if (longPressed && e.getAction() == MotionEvent.ACTION_UP) {
+					cardContainer1.setImageResource(R.drawable.card_backside);
+					cardContainer2.setImageResource(R.drawable.card_backside);
+					longPressed = false;
+				}
 			}
 		});
 	}
