@@ -196,43 +196,6 @@ public class PokerServer {
 		}
 	}
 	
-	private void setTurn(PokerPlayer p){
-		p.setMyTurn(true);
-		p.getConnection().sendTCP(new SetYourTurn(true, p.getId()));
-		gui.setTurn(p, connections.indexOfKey(p.getId()));
-	}
-	
-	private void roundSetup(PokerPlayer tmp) {
-		game.setDealer(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, tmp.getId()));
-		tmp = connections.nextFrom(tmp.getId());
-		game.setSmallBlind(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, tmp.getId()));
-		tmp = connections.nextFrom(tmp.getId());
-		game.setBigBlind(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, tmp.getId()));
-	}
-
-	public void startGame() {
-		// DisplayLoggingInfo("Starting a game!!!!");
-		Log.d("justPoker - server", "starting game");
-		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
-				.hasNext();) {
-			PokerPlayer player = iterator.next();
-			Log.d("justPoker - server", "got PokerPlayer from connections "+player);
-			Connection c = player.getConnection();
-			if (c.isConnected()) {
-				Log.d("justPoker - server", "sending to " + c.toString());
-				c.sendTCP("Starting the game!");
-				gui.setPlaying(player, connections.indexOfKey(player.getId()));
-			}
-		}
-		game = new PokerGame();
-		roundSetup(connections.getFirst());
-		dealCards();
-		setTurn(connections.nextFrom(game.getSmallBlind()));
-	}
-	
 	private boolean roundFinished(){
 		boolean betted = false;
 		boolean checked = false;
@@ -268,6 +231,46 @@ public class PokerServer {
 			result = false;
 		}
 		return result;
+	}
+	
+	private void setTurn(PokerPlayer p){
+		p.setMyTurn(true);
+		p.getConnection().sendTCP(new SetYourTurn(true, p.getId()));
+		gui.setTurn(p, connections.indexOfKey(p.getId()));
+	}
+	
+	private void roundSetup(PokerPlayer tmp) {
+		game.setDealer(tmp.getId());
+		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, tmp.getId()));
+		gui.setDealer(tmp, connections.indexOfKey(tmp.getId()));
+		tmp = connections.nextFrom(tmp.getId());
+		game.setSmallBlind(tmp.getId());
+		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, tmp.getId()));
+		gui.setSmallBlind(tmp, connections.indexOfKey(tmp.getId()));
+		tmp = connections.nextFrom(tmp.getId());
+		game.setBigBlind(tmp.getId());
+		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, tmp.getId()));
+		gui.setBigBlind(tmp, connections.indexOfKey(tmp.getId()));
+	}
+
+	public void startGame() {
+		// DisplayLoggingInfo("Starting a game!!!!");
+		Log.d("justPoker - server", "starting game");
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			PokerPlayer player = iterator.next();
+			Log.d("justPoker - server", "got PokerPlayer from connections "+player);
+			Connection c = player.getConnection();
+			if (c.isConnected()) {
+				Log.d("justPoker - server", "sending to " + c.toString());
+				c.sendTCP("Starting the game!");
+				gui.setPlaying(player, connections.indexOfKey(player.getId()));
+			}
+		}
+		game = new PokerGame();
+		roundSetup(connections.getFirst());
+		dealCards();
+		setTurn(connections.nextFrom(game.getSmallBlind()));
 	}
 	
 	private void messageParser(Connection c, Object msg, Runnable r) {

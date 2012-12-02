@@ -106,6 +106,7 @@ public class ServerTableActivity extends Activity {
 		
 	}
 	
+	// State
 	public void setTurn(final PokerPlayer p, final int index) {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_turn);
 	}
@@ -116,17 +117,18 @@ public class ServerTableActivity extends Activity {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
 	}
 	
+	// Buttons
 	public void setBigBlind(final PokerPlayer p, final int index) {
-		setPlayerStatusUIThread(p, index, R.drawable.avatar_turn);
+		setPlayerButtonUIThread(p, index, R.drawable.dealer_button);
 	}
 	public void setSmallBlind(final PokerPlayer p, final int index) {
-		setPlayerStatusUIThread(p, index, R.drawable.avatar_playing);
+		setPlayerButtonUIThread(p, index, R.drawable.avatar_playing);
 	}
 	public void setDealer(final PokerPlayer p, final int index) {
-		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
+		setPlayerButtonUIThread(p, index, R.drawable.dealer_button);
 	}
 	
-	
+	// Actions
 	public void setCall(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_call);
 	}
@@ -144,6 +146,8 @@ public class ServerTableActivity extends Activity {
 		setPlayerActionUIThread(p, index, R.drawable.action_check);
 	}
 	
+	
+	// Run Set content on UI thread
 	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -160,6 +164,15 @@ public class ServerTableActivity extends Activity {
 		});
 	}
 	
+	private void setPlayerButtonUIThread(final PokerPlayer p, final int index, final int drawable){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(index, drawable);
+			}
+		});
+	}
+	
+	// Helper function
 	private void setPlayerAvater(int index, int drawable){
 		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)));
 		seat.setImageResource(drawable);
@@ -167,6 +180,11 @@ public class ServerTableActivity extends Activity {
 	
 	private void setPlayerAction(int index, int drawable){
 		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_action"));
+		seat.setImageResource(drawable);
+	}
+	
+	private void setPlayerButton(int index, int drawable){
+		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_button"));
 		seat.setImageResource(drawable);
 	}
 	
