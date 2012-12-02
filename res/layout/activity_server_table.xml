@@ -7,61 +7,89 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:orientation="horizontal" >
 
-
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11" />
-        
-        <ImageView
-            android:id="@+id/player1"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
 
-        <ImageView
-            android:id="@+id/player2"
+        <RelativeLayout
+            android:id="@+id/player0_container"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player0"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
 
-        <ImageView
-            android:id="@+id/player3"
+        <RelativeLayout
+            android:id="@+id/player1_container"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
 
-        <ImageView
-            android:id="@+id/player4"
+        <RelativeLayout
+            android:id="@+id/player2_container"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="11" />
+
+        <RelativeLayout
+            android:id="@+id/player3_container"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
     </LinearLayout>
 
@@ -69,70 +97,96 @@
         android:id="@+id/serverLog"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_centerVertical="true"
+        android:layout_weight="60"
         android:scrollbars="vertical"
         tools:context=".ServerTableActivity" />
 
     <LinearLayout
+        android:layout_weight="20"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="horizontal" >
 
-
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11" />
-        
-        <ImageView
-            android:id="@+id/player8"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
 
-        <ImageView
-            android:id="@+id/player7"
+        <RelativeLayout
+            android:id="@+id/player7_container"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player7"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
 
-        <ImageView
-            android:id="@+id/player6"
+        <RelativeLayout
+            android:id="@+id/player6_container"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
 
-        <ImageView
-            android:id="@+id/player5"
+        <RelativeLayout
+            android:id="@+id/player5_container"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="11"
-            android:src="@drawable/avatar" />
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player5"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="11" />
+
+        <RelativeLayout
+            android:id="@+id/player4_container"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="11" >
+
+            <ImageView
+                android:id="@+id/player4"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/description"
+                android:src="@drawable/avatar_playing" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
             android:layout_weight="11" />
     </LinearLayout>
-
 
 </LinearLayout>

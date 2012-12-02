@@ -24,5 +24,6 @@
     <string name="click_me">click me</string>
     <string name="open_curl_btn">curl</string>
     <string name="title_activity_curl">CurlActivity</string>
+    <string name="description">test</string>
 
 </resources>
