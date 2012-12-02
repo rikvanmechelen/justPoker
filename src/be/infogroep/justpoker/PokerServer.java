@@ -176,7 +176,6 @@ public class PokerServer {
 			RegisterMessage rm = (RegisterMessage) msg;
 			PokerPlayer p = connections.get(rm.getClient_id());
 			p.setName(rm.getName());
-			connections.move(rm.getClient_id(), 3);
 			gui.displayLogginInfo(rm.getName() + " connected");
 			gui.addPlayer(p, connections.indexOfKey(rm.getClient_id()));
 			// gui.displayLogginInfo("someone connected");
@@ -249,5 +248,5 @@ public class PokerServer {
 		}
 		gameSetup();
 		dealCards();
-	}
+	}	
 }
