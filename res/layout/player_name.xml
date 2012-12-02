@@ -5,4 +5,5 @@
     android:layout_alignParentRight="true"
     android:gravity="center_horizontal"
     android:textColor="#ffffff"
-    android:textSize="20dp" />
+    android:background="@layout/rounded"
+    android:textSize="20dp"/>

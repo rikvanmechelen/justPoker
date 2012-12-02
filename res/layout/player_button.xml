@@ -2,5 +2,4 @@
     android:layout_width="35dp"
     android:layout_height="35dp"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentTop="true"
-    android:src="@drawable/dealer_button" />
+    android:layout_alignParentTop="true"/>
