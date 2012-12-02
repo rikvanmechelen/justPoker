@@ -11,7 +11,8 @@ public class PokerPlayer {
 	private Connection connection;
 	private int id;
 	private volatile PlayerState state;
-	private Card[] cards;
+	private volatile Card[] cards;
+	private volatile Boolean myTurn = false;
 	
 	public PlayerState getState() {
 		return state;
@@ -51,6 +52,14 @@ public class PokerPlayer {
 	public void setCards(Card card1, Card card2) {
 		this.cards[0] = card1;
 		this.cards[1] = card2;
+	}
+
+	public Boolean getMyTurn() {
+		return myTurn;
+	}
+
+	public void setMyTurn(Boolean myTurn) {
+		this.myTurn = myTurn;
 	}
 	
 }
