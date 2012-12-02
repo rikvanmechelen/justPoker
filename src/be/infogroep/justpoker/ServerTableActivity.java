@@ -98,23 +98,27 @@ public class ServerTableActivity extends Activity {
 	public void addPlayer(final PokerPlayer p, final int index) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				java.lang.reflect.Field f;
-				try {
-					f = R.id.class.getField("player"+Integer.toString(index));
-					int id = f == null ? -1 : (Integer)f.get(null);
-					ImageView seat = (ImageView) findViewById(id);
-					seat.setImageResource(R.drawable.avatar_folded);
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
-				}
-				
+				setPlayerAvater(index, R.drawable.avatar_folded);
 			}
 		});
 		
+	}
+	
+	private void setPlayerAvater(int index, int drawable){
+		java.lang.reflect.Field f;
+		try {
+			Log.d("justPoker - server", "setting atavar player"+index+" on the table");
+			f = R.id.class.getField("player"+Integer.toString(index));
+			int id = f == null ? -1 : (Integer)f.get(null);
+			ImageView seat = (ImageView) findViewById(id);
+			seat.setImageResource(drawable);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
