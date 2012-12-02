@@ -234,8 +234,40 @@ public class PokerServer {
 	}
 	
 	private boolean roundFinished(){
-		
-		return false;
+		boolean betted = false;
+		boolean checked = false;
+		boolean called = false;
+		boolean result = true;
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			PokerPlayer player = iterator.next();
+			PlayerState state = player.getState();
+			if (state == PlayerState.Unknown) {
+				result = false;
+				break;
+			}
+			if (state == PlayerState.Check) {
+				if (betted) {
+					result = false;
+					break;
+				}
+				checked = true;
+			}
+			if (state == PlayerState.Bet || state == PlayerState.Raise) {
+				if (betted || checked) {
+					result = false;
+					break;
+				}
+				betted = true;
+			}
+			if (state == PlayerState.Call) {
+				called = true;
+			}
+		}
+		if (called && !betted){
+			result = false;
+		}
+		return result;
 	}
 	
 	private void messageParser(Connection c, Object msg, Runnable r) {
