@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
@@ -92,6 +93,17 @@ public class ServerTableActivity extends Activity {
 	
 	protected void runOnNotUiThread(Runnable runnable) {
 		new Thread(runnable).start();
+	}
+
+	public void addPlayer(final PokerPlayer p, final int index) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				//java.lang.reflect.Field f = R.id.class.getField(Integer.toString(index));
+				//int id = f == null ? -1 : (Integer)f.get(null);
+				ImageView steat = (ImageView) findViewById(R.id.player5);
+			}
+		});
+		
 	}
 
 }

@@ -209,4 +209,8 @@ public class PokerPlayerMap<K, PokerPlayer> implements Map<K, PokerPlayer> {
 		}
 	}
 
+	public int indexOfKey(int client_id) {
+		return keys.indexOf(client_id);
+	}
+
 }
