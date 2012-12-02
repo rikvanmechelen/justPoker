@@ -173,11 +173,11 @@ public class PokerServer {
 	}
 	
 	public void showTurn() {
-		game.getTurn();
+		gui.showTurn(game.getTurn());
 	}
 	
 	public void showRiver() {
-		game.getRiver();
+		gui.showRiver(game.getRiver());
 	}
 
 	public void dealCards() {
@@ -240,18 +240,53 @@ public class PokerServer {
 		gui.setTurn(p, connections.indexOfKey(p.getId()));
 	}
 	
-	private void roundSetup(PokerPlayer tmp) {
-		game.setDealer(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, tmp.getId()));
-		gui.setDealer(tmp, connections.indexOfKey(tmp.getId()));
-		tmp = connections.nextFrom(tmp.getId());
-		game.setSmallBlind(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, tmp.getId()));
-		gui.setSmallBlind(tmp, connections.indexOfKey(tmp.getId()));
-		tmp = connections.nextFrom(tmp.getId());
-		game.setBigBlind(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, tmp.getId()));
-		gui.setBigBlind(tmp, connections.indexOfKey(tmp.getId()));
+	private void roundSetup(PokerPlayer dealer) {
+		game.setDealer(dealer.getId());
+		PokerPlayer smallBlind = connections.nextFrom(dealer.getId());
+		game.setSmallBlind(smallBlind.getId());
+		PokerPlayer bigBlind = connections.nextFrom(smallBlind.getId());
+		game.setBigBlind(smallBlind.getId());
+
+		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, smallBlind.getId()));
+		gui.setBigBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
+		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, smallBlind.getId()));
+		gui.setSmallBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
+		dealer.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, dealer.getId()));
+		gui.setDealer(dealer, connections.indexOfKey(dealer.getId()));
+	}
+	
+	private void roundCheck(int client_id) {
+		// TODO Auto-generated method stub
+		if (roundFinished()){
+			endRoundCleanup();
+			setTurn(connections.nextUnfoldedFrom(game.getDealer()));
+			if (game.getRound() == Round.PreFlopBet){	
+				showFlop();
+			}
+			if (game.getRound() == Round.FlopBet){
+				showTurn();
+			}
+			if (game.getRound() == Round.TurnBet){
+				showRiver();
+			}
+			if (game.getRound() == Round.RiverBet){
+				//showFlop();
+			}
+			game.nextRound();
+			
+		} else{
+			setTurn(connections.nextFrom(client_id));
+		}
+	}
+	
+	private void endRoundCleanup(){
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			PokerPlayer player = iterator.next();
+			if (player.getState() != PlayerState.Fold) {
+				player.resetState();
+			}
+		}
 	}
 
 	public void startGame() {
@@ -294,39 +329,26 @@ public class PokerServer {
 		// handler.post(r);
 	}
 
-	private void roundCheck(int client_id) {
-		// TODO Auto-generated method stub
-		if (roundFinished()){
-			if (game.getRound() == Round.PreFlopBet){
-				setTurn(connections.nextUnfoldedFrom(game.getDealer()));
-				showFlop();
-			}
-			
-		} else{
-			setTurn(connections.nextFrom(client_id));
-		}
-	}
+	
 
 	private void parseState(SetStateMessage st) {
 		PlayerState state = st.getState();
 		Integer client_id = st.getClient_id();
 		PokerPlayer player = connections.get(client_id);
+		player.endMyTurn();
 		if (state == PlayerState.Fold) {
 			player.setState(state);
 			gui.displayLogginInfo(player.getName()+" folded");
-			setTurn(connections.nextFrom(client_id));
 			gui.setFolded(player, connections.indexOfKey(client_id));
 		}
 		if (state == PlayerState.Check) {
 			connections.get(st.getClient_id()).setState(state);
 			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			setTurn(connections.nextFrom(client_id));
 			gui.setPlaying(player, connections.indexOfKey(client_id));
 		}
 		if (state == PlayerState.Bet) {
 			connections.get(st.getClient_id()).setState(state);
 			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			setTurn(connections.nextFrom(client_id));
 			gui.setPlaying(player, connections.indexOfKey(client_id));
 		}
 	}

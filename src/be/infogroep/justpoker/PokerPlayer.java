@@ -21,6 +21,10 @@ public class PokerPlayer {
 	public void setState(PlayerState state) {
 		this.state = state;
 	}
+	
+	public void resetState() {
+		this.state = PlayerState.Unknown;
+	}
 
 	public PokerPlayer(int i, Connection c){
 		this.id = i;
@@ -60,6 +64,10 @@ public class PokerPlayer {
 
 	public void setMyTurn(Boolean myTurn) {
 		this.myTurn = myTurn;
+	}
+	
+	public void endMyTurn() {
+		this.myTurn = false;
 	}
 	
 }

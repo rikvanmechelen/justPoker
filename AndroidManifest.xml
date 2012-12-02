@@ -63,7 +63,8 @@
         </activity>
         <activity
             android:name=".TapTestActivity"
-            android:label="@string/title_activity_tap_test" >
+            android:label="@string/title_activity_tap_test"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.infogroep.justpoker.ClientActivity" />

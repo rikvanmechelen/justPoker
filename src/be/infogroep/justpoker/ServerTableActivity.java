@@ -200,23 +200,43 @@ public class ServerTableActivity extends Activity {
 		name_field.setText(name);
 	}
 
-	public void showFlop(final Card[] flop) {
+	public void showFlop(final Card[] card) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
 				ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
 				ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
-				card0.setImageDrawable(getDrawable(flop[0].toString()));
-				card1.setImageDrawable(getDrawable(flop[1].toString()));
-				card2.setImageDrawable(getDrawable(flop[2].toString()));
+				card0.setImageDrawable(getDrawable(card[0].toString()));
+				card1.setImageDrawable(getDrawable(card[1].toString()));
+				card2.setImageDrawable(getDrawable(card[2].toString()));
 			}
 		});
 	}
 
+	public void showTurn(final Card card) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView card3 = (ImageView) findViewById(CommLib.getViewID("card3"));
+				card3.setImageDrawable(getDrawable(card.toString()));
+			}
+		});
+	}
+
+	public void showRiver(final Card card) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView card4 = (ImageView) findViewById(CommLib.getViewID("card4"));
+				card4.setImageDrawable(getDrawable(card.toString()));
+			}
+		});
+	}
+	
 	private Drawable getDrawable(String s){
 		String s2 = "drawable/"+s;
 		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
 		return getResources().getDrawable(imageResource);
 	}
+
+	
 
 }
