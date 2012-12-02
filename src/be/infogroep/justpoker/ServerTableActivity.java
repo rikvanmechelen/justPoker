@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -194,8 +195,18 @@ public class ServerTableActivity extends Activity {
 	}
 
 	public void showFlop(Card[] flop) {
-		// TODO Auto-generated method stub
-		
+		ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
+		ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
+		ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
+		card0.setImageDrawable(getDrawable(flop[0].toString()));
+		card1.setImageDrawable(getDrawable(flop[1].toString()));
+		card2.setImageDrawable(getDrawable(flop[2].toString()));
+	}
+	
+	private Drawable getDrawable(String s){
+		String s2 = "drawable/"+s;
+		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
+		return getResources().getDrawable(imageResource);
 	}
 
 }
