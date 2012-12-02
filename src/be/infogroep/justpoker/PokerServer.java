@@ -170,37 +170,6 @@ public class PokerServer {
 		}
 	}
 
-	private void messageParser(Connection c, Object msg, Runnable r) {
-		// DisplayLoggingInfo(msg);
-		// handler.postDelayed(test, 2000);
-		if (msg instanceof RegisterMessage) {
-			RegisterMessage rm = (RegisterMessage) msg;
-			PokerPlayer p = connections.get(rm.getClient_id());
-			p.setName(rm.getName());
-			gui.displayLogginInfo(rm.getName() + " connected");
-			gui.addPlayer(p, connections.indexOfKey(rm.getClient_id()));
-			// gui.displayLogginInfo("someone connected");
-		}
-		if (msg instanceof SetStateMessage) {
-			SetStateMessage st = (SetStateMessage) msg;
-			Log.d("justPoker - server", "received a set state: "+st.getState());
-			parseState(st);
-		}
-		// handler.post(r);
-	}
-
-	private void parseState(SetStateMessage st) {
-		PlayerState state = st.getState();
-		if (state == PlayerState.Fold) {
-			connections.get(st.getClient_id()).setState(state);
-			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" folded");
-		}
-		if (state == PlayerState.Check) {
-			connections.get(st.getClient_id()).setState(state);
-			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-		}
-	}
-
 	public void dealCards() {
 		Log.d("justPoker - server", "amount of players in values " + connections.values().size());
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
@@ -260,5 +229,46 @@ public class PokerServer {
 		return false;
 	}
 	
-	
+	private void messageParser(Connection c, Object msg, Runnable r) {
+		// DisplayLoggingInfo(msg);
+		// handler.postDelayed(test, 2000);
+		if (msg instanceof RegisterMessage) {
+			RegisterMessage rm = (RegisterMessage) msg;
+			PokerPlayer p = connections.get(rm.getClient_id());
+			p.setName(rm.getName());
+			gui.displayLogginInfo(rm.getName() + " connected");
+			gui.addPlayer(p, connections.indexOfKey(rm.getClient_id()));
+			// gui.displayLogginInfo("someone connected");
+		}
+		if (msg instanceof SetStateMessage) {
+			SetStateMessage st = (SetStateMessage) msg;
+			Log.d("justPoker - server", "received a set state: "+st.getState());
+			parseState(st);
+		}
+		// handler.post(r);
+	}
+
+	private void parseState(SetStateMessage st) {
+		PlayerState state = st.getState();
+		Integer client_id = st.getClient_id();
+		PokerPlayer player = connections.get(client_id);
+		if (state == PlayerState.Fold) {
+			player.setState(state);
+			gui.displayLogginInfo(player.getName()+" folded");
+			setTurn(connections.nextFrom(client_id));
+			gui.setFolded(player, connections.indexOfKey(client_id));
+		}
+		if (state == PlayerState.Check) {
+			connections.get(st.getClient_id()).setState(state);
+			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
+			setTurn(connections.nextFrom(client_id));
+			gui.setPlaying(player, connections.indexOfKey(client_id));
+		}
+		if (state == PlayerState.Bet) {
+			connections.get(st.getClient_id()).setState(state);
+			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
+			setTurn(connections.nextFrom(client_id));
+			gui.setPlaying(player, connections.indexOfKey(client_id));
+		}
+	}
 }

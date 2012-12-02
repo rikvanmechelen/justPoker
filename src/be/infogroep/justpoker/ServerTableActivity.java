@@ -125,6 +125,24 @@ public class ServerTableActivity extends Activity {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
 	}
 	
+	
+	public void setCall(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_call);
+	}
+	public void setRaise(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_raise);
+	}
+	public void setBet(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_bet);
+	}
+	
+	public void setFold(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_fold);
+	}
+	public void setCheck(final PokerPlayer p, final int index) {
+		setPlayerActionUIThread(p, index, R.drawable.action_check);
+	}
+	
 	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
 		runOnUiThread(new Runnable() {
 			public void run() {

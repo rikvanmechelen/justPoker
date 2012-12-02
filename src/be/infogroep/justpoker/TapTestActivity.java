@@ -41,19 +41,16 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
 		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
 
-		cardContainer2.setOnTouchListener(new OnFlingGestureListener() {
+		OnFlingGestureListener cardListener = new OnFlingGestureListener() {
 			private boolean longPressed = false;
 			@Override
 			public void onBottomToTop() {
-				client.sendState(PlayerState.Fold);
-				fold(cardContainer1);
-				fold(cardContainer2);
+				client.fold(cardContainer1, cardContainer2);
 			}
 
 			@Override
 			public void onDoubletap() {
-				client.sendState(PlayerState.Check);
-				check();
+				client.check(cardContainer1, cardContainer2);
 			}
 			@Override
 			public void onLongpress() {
@@ -69,36 +66,10 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 					longPressed = false;
 				}
 			}
-		});
-		cardContainer1.setOnTouchListener(new OnFlingGestureListener() {
-			private boolean longPressed = false;
-			@Override
-			public void onBottomToTop() {
-				client.sendState(PlayerState.Fold);
-				fold(cardContainer1);
-				fold(cardContainer2);
-			}
-
-			@Override
-			public void onDoubletap() {
-				client.sendState(PlayerState.Check);
-				check();
-			}
-			@Override
-			public void onLongpress() {
-				cardContainer1.setImageDrawable(getDrawable(card1.toString()));
-				cardContainer2.setImageDrawable(getDrawable(card2.toString()));
-				longPressed = true;
-			}
-
-			public void onTouchevent(MotionEvent e){
-				if (longPressed && e.getAction() == MotionEvent.ACTION_UP) {
-					cardContainer1.setImageResource(R.drawable.card_backside);
-					cardContainer2.setImageResource(R.drawable.card_backside);
-					longPressed = false;
-				}
-			}
-		});
+		};
+		
+		cardContainer2.setOnTouchListener(cardListener);
+		cardContainer1.setOnTouchListener(cardListener);
 	}
 
 	@Override
@@ -121,7 +92,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		t.setText(s);
 	}
 
-	private void fold(ImageView card) {
+	private void doFold(ImageView card) {
 		ObjectAnimator move = ObjectAnimator.ofFloat(card, "y", -225);
 		ObjectAnimator fade = ObjectAnimator.ofFloat(card, "alpha", 0);
 		ObjectAnimator spin = ObjectAnimator.ofFloat(card, "rotation", 180);
@@ -133,8 +104,13 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		spin.start();
 	}
 
-	private void check() {
+	private void doCheck() {
 		Toast.makeText(getApplicationContext(), "You Checked!",
+				Toast.LENGTH_LONG).show();
+	}
+	
+	private void doBet() {
+		Toast.makeText(getApplicationContext(), "You Bet!",
 				Toast.LENGTH_LONG).show();
 	}
 
@@ -171,7 +147,7 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
 		return getResources().getDrawable(imageResource);
 	}
- 
+
 	public void setBlind(final PokerButton b) {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -179,6 +155,31 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 						Toast.LENGTH_LONG).show();
 			}
 		});
+	}
+
+	public void fold(final ImageView card1, final ImageView card2) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				doFold(card1);
+				doFold(card2);
+			}
+		});
+	}
+
+	public void check(ImageView cardContainer1, ImageView cardContainer2) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				doCheck();
+			}
+		});	
+	}
+
+	public void bet(ImageView cardContainer1, ImageView cardContainer2) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				doBet();
+			}
+		});	
 	}
 
 }
