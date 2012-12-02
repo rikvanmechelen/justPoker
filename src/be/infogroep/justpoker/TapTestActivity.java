@@ -3,9 +3,11 @@ package be.infogroep.justpoker;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,12 +25,18 @@ public class TapTestActivity extends Activity implements
 	boolean flippedCard2;
 
 	PokerClient client;
-	private Intent intent;
+	private PowerManager pm;
+	private PowerManager.WakeLock wl;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// client = PokerClient.getInstance();
 		// client.sendHello();
+		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
+				 "be.infogroep.justpoker.ServerTableActivity");
+		wl.acquire();
+		
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
@@ -151,6 +159,12 @@ public class TapTestActivity extends Activity implements
 	@Override
 	public void onPause() {
 		super.onPause();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		wl.release();
 	}
 
 	public void displayLoggingInfo(final Object m) {

@@ -3,6 +3,7 @@ package be.infogroep.justpoker;
 import be.infogroep.justpoker.GameElements.Card;
 import edu.vub.at.commlib.CommLib;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,8 @@ import android.support.v4.app.NavUtils;
 public class ServerTableActivity extends Activity {
 
 	private PokerServer cps;
+	private PowerManager pm;
+	private PowerManager.WakeLock wl;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,10 @@ public class ServerTableActivity extends Activity {
 		//intent = new Intent(this, PokerServer.class);
 		//startService(intent);
 		//cps = PokerServer.getInstance();
+		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
+				 "be.infogroep.justpoker.ServerTableActivity");
+		wl.acquire();
 		String ipAddress = CommLib.getIpAddress(this);
 		cps = PokerServer.getInstance(ServerTableActivity.this, ipAddress);
 		cps.start();
@@ -73,6 +80,7 @@ public class ServerTableActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		cps.stop();
+		wl.release();
 	}
 
 	public void stopServer(MenuItem m) {

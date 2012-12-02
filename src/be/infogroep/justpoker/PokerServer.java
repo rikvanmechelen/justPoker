@@ -45,14 +45,14 @@ public class PokerServer {
 	private String ipAddress;
 	
 	//game specific stuff
-	private PokerGame game;
+	private PokerGame match;
 
 	public PokerServer() {}
 
 	public PokerServer(ServerTableActivity serverTableActivity, String ip) {
 		this.gui = serverTableActivity;
 		this.ipAddress = ip;
-		this.game = new PokerGame();
+		this.match = new PokerGame();
 	}
 
 	public static PokerServer getInstance() {
@@ -169,15 +169,15 @@ public class PokerServer {
 	}
 	
 	public void showFlop() {
-		gui.showFlop(game.getFlop());
+		gui.showFlop(match.getFlop());
 	}
 	
 	public void showTurn() {
-		gui.showTurn(game.getTurn());
+		gui.showTurn(match.getTurn());
 	}
 	
 	public void showRiver() {
-		gui.showRiver(game.getRiver());
+		gui.showRiver(match.getRiver());
 	}
 
 	public void dealCards() {
@@ -188,8 +188,8 @@ public class PokerServer {
 			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "Dealing cards to " + c.toString());
-				Card card1 = game.getDeck().drawFromDeck();
-				Card card2 = game.getDeck().drawFromDeck();
+				Card card1 = match.getDeck().drawFromDeck();
+				Card card2 = match.getDeck().drawFromDeck();
 				c.sendTCP(new ReceiveCardsMessage(card1, card2));
 				player.setCards(card1, card2);
 				gui.displayLogginInfo("Dealt cards to " + player.getName());
@@ -241,11 +241,11 @@ public class PokerServer {
 	}
 	
 	private void roundSetup(PokerPlayer dealer) {
-		game.setDealer(dealer.getId());
+		match.setDealer(dealer.getId());
 		PokerPlayer smallBlind = connections.nextFrom(dealer.getId());
-		game.setSmallBlind(smallBlind.getId());
+		match.setSmallBlind(smallBlind.getId());
 		PokerPlayer bigBlind = connections.nextFrom(smallBlind.getId());
-		game.setBigBlind(smallBlind.getId());
+		match.setBigBlind(smallBlind.getId());
 
 		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, smallBlind.getId()));
 		gui.setBigBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
@@ -259,20 +259,20 @@ public class PokerServer {
 		// TODO Auto-generated method stub
 		if (roundFinished()){
 			endRoundCleanup();
-			setTurn(connections.nextUnfoldedFrom(game.getDealer()));
-			if (game.getRound() == Round.PreFlopBet){	
+			setTurn(connections.nextUnfoldedFrom(match.getDealer()));
+			if (match.getRound() == Round.PreFlopBet){	
 				showFlop();
 			}
-			if (game.getRound() == Round.FlopBet){
+			if (match.getRound() == Round.FlopBet){
 				showTurn();
 			}
-			if (game.getRound() == Round.TurnBet){
+			if (match.getRound() == Round.TurnBet){
 				showRiver();
 			}
-			if (game.getRound() == Round.RiverBet){
-				//showFlop();
+			if (match.getRound() == Round.RiverBet){
+				gui.displayLogginInfo("Game ended, get ready for the next game :)");
 			}
-			game.nextRound();
+			match.nextRound();
 			
 		} else{
 			setTurn(connections.nextFrom(client_id));
@@ -303,10 +303,10 @@ public class PokerServer {
 				gui.setPlaying(player, connections.indexOfKey(player.getId()));
 			}
 		}
-		game = new PokerGame();
+		match = new PokerGame();
 		roundSetup(connections.getFirst());
 		dealCards();
-		setTurn(connections.nextFrom(game.getSmallBlind()));
+		setTurn(connections.nextFrom(match.getSmallBlind()));
 	}
 	
 	private void messageParser(Connection c, Object msg, Runnable r) {
