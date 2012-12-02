@@ -19,8 +19,7 @@ import be.infogroep.justpoker.GameElements.Card;
 public class TapTestActivity extends Activity implements AbstractPokerClientActivity {
 	boolean flippedCard1;
 	boolean flippedCard2;
-	Card card1;
-	Card card2;
+	
 	PokerClient client;
 	private Intent intent;
 
@@ -54,8 +53,8 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 			}
 			@Override
 			public void onLongpress() {
-				cardContainer1.setImageDrawable(getDrawable(card1.toString()));
-				cardContainer2.setImageDrawable(getDrawable(card2.toString()));
+				cardContainer1.setImageDrawable(getDrawable(client.getCard1().toString()));
+				cardContainer2.setImageDrawable(getDrawable(client.getCard2().toString()));
 				longPressed = true;
 			}
 
@@ -138,8 +137,8 @@ public class TapTestActivity extends Activity implements AbstractPokerClientActi
 	}
 
 	public void setCards(Card[] cards) {
-		card1 = cards[0];
-		card2 = cards[1];
+		client.setCard1(cards[0]);
+		client.setCard2(cards[1]);
 	}
 
 	private Drawable getDrawable(String s){

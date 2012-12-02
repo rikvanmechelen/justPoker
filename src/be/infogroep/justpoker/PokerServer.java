@@ -38,7 +38,6 @@ public class PokerServer {
 	private PokerPlayerMap<Integer, PokerPlayer> connections = new PokerPlayerMap<Integer, PokerPlayer>();
 	private volatile Thread serverThread;
 	private Server server;
-	private Deck deck;
 	// private final Handler handler = new Handler();
 	// Intent intent;
 	private ServerTableActivity gui;
@@ -53,8 +52,6 @@ public class PokerServer {
 		this.gui = serverTableActivity;
 		this.ipAddress = ip;
 		this.game = new PokerGame();
-		deck = new Deck();
-		deck.shuffle();
 	}
 
 	public static PokerServer getInstance() {
@@ -169,6 +166,18 @@ public class PokerServer {
 			}
 		}
 	}
+	
+	public Card[] showFlop() {
+		return game.getFlop();
+	}
+	
+	public Card showTurn() {
+		return game.getTurn();
+	}
+	
+	public Card showRiver() {
+		return game.getRiver();
+	}
 
 	public void dealCards() {
 		Log.d("justPoker - server", "amount of players in values " + connections.values().size());
@@ -178,8 +187,8 @@ public class PokerServer {
 			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "Dealing cards to " + c.toString());
-				Card card1 = deck.drawFromDeck();
-				Card card2 = deck.drawFromDeck();
+				Card card1 = game.getDeck().drawFromDeck();
+				Card card2 = game.getDeck().drawFromDeck();
 				c.sendTCP(new ReceiveCardsMessage(card1, card2));
 				player.setCards(card1, card2);
 				gui.displayLogginInfo("Dealt cards to " + player.getName());

@@ -1,5 +1,8 @@
 package be.infogroep.justpoker;
 
+import be.infogroep.justpoker.GameElements.Card;
+import be.infogroep.justpoker.GameElements.Deck;
+
 public class PokerGame {
 
 	private Integer dealer;
@@ -10,8 +13,15 @@ public class PokerGame {
 	
 	private Integer PlayerTurn;
 	
+	private Deck deck;
+	
+	private Card[] flop;
+	private Card turn;
+	private Card river;
+	
 	public PokerGame() {
-		// TODO Auto-generated constructor stub
+		deck = new Deck();
+		deck.shuffle();
 	}
 
 	public Integer getDealer() {
@@ -53,6 +63,34 @@ public class PokerGame {
 	public void setPlayerTurn(Integer playerTurn) {
 		PlayerTurn = playerTurn;
 	}
+	
+	public Deck getDeck() {
+		return deck;
+	}
+	
+	public Deck resetDeck() {
+		this.deck = new Deck();
+		deck.shuffle();
+		this.flop = null;
+		this.turn = null;
+		this.river = null;
+		return deck;
+	}
 
+	public Card[] getFlop() {
+		this.flop = deck.drawCards(3);
+		return flop;
+	}
+
+	public Card getTurn() {
+		this.turn = deck.drawFromDeck();
+		return turn;
+	}
+
+	public Card getRiver() {
+		this.river = deck.drawFromDeck();
+		return river;
+	}
+	
 	
 }

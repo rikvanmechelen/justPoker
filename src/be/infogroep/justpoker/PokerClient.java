@@ -38,6 +38,8 @@ public class PokerClient {
 	private volatile Boolean smallBlind = false;
 	private volatile Boolean bigBlind = false;
 	private volatile Boolean myTurn = false;
+	private Card card1;
+	private Card card2;
 	
 	public PlayerState getState() {
 		return state;
@@ -275,5 +277,21 @@ public class PokerClient {
 		if (m instanceof String) {
 			gui.displayLoggingInfo(m);
 		}
+	}
+
+	public Card getCard1() {
+		return card1;
+	}
+
+	public void setCard1(Card card1) {
+		this.card1 = card1;
+	}
+
+	public Card getCard2() {
+		return card2;
+	}
+
+	public void setCard2(Card card2) {
+		this.card2 = card2;
 	}
 }
