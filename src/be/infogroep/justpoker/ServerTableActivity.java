@@ -68,10 +68,16 @@ public class ServerTableActivity extends Activity {
 		//unregisterReceiver(broadcastReceiver);
 		//stopService(intent);
 	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		cps.stop();
+	}
 
 	public void stopServer(MenuItem m) {
 		//Intent intent = new Intent(this, ServerActivity.class);
-		//cps.stop();
+		cps.stop();
 		//startActivity(intent);
 	}
 

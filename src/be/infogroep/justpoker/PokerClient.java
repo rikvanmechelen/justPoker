@@ -70,9 +70,9 @@ public class PokerClient {
 	}
 	
 	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String ip) {
-		if (SingletonPokerClient == null) {
+		//if (SingletonPokerClient == null) {
 			SingletonPokerClient = new PokerClient(c, n, ip);
-		}
+		//}
 		return SingletonPokerClient;
 	}
 

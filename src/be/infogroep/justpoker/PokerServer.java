@@ -65,10 +65,10 @@ public class PokerServer {
 	public static PokerServer getInstance(
 			ServerTableActivity serverTableActivity, String ipAddress) {
 		// TODO Auto-generated method stub
-		if (SingletonPokerServer == null) {
+		//if (SingletonPokerServer == null) {
 			SingletonPokerServer = new PokerServer(serverTableActivity,
 					ipAddress);
-		}
+		//}
 		return SingletonPokerServer;
 	}
 
