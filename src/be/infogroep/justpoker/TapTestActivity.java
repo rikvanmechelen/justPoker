@@ -242,11 +242,8 @@ public class TapTestActivity extends Activity implements
 		v.vibrate(len);
 	}
 
-	@Override
 	public void startTurn() {
 		runOnUiThread(new Runnable() {
-			
-			@Override
 			public void run() {
 				vibrate(500);
 			}
