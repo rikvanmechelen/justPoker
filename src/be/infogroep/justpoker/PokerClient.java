@@ -276,6 +276,27 @@ public class PokerClient {
 		if (m instanceof SetStateMessage) {
 			state = ((SetStateMessage) m).getState();
 			gui.displayLoggingInfo(m);
+			switch(state){
+			case Fold:
+				gui.setFold();
+				break;
+			case Check:
+				gui.setCheck();
+				break;
+			case Bet:
+				gui.setBet();
+				break;
+			case Call:
+				gui.setCall();
+				break;
+			case Raise:
+				gui.setRaise();
+				break;
+			case ReRaise:
+				gui.setReRaise();
+				break;
+			}
+			//gui.setState(state);
 		}
 		if (m instanceof StartNewGameMessage) {
 			state = PlayerState.Unknown;
@@ -285,6 +306,7 @@ public class PokerClient {
 			myTurn = false;
 			card1 = null;
 			card2 = null;
+			gui.resetPlayerAction();
 			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof String) {
