@@ -91,7 +91,7 @@
             android:layout_height="match_parent"
             android:layout_weight="40"
             android:paddingLeft="10dp"
-            android:src="@drawable/speak_button" />
+            android:src="@drawable/chips_red" />
 
         <View
             android:layout_width="0dp"
