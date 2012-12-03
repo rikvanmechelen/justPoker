@@ -92,7 +92,7 @@ public class ServerTableActivity extends Activity {
 	public void startGame(View v){
 		runOnNotUiThread(new Runnable() {
 			public void run() {
-				PokerServer.getInstance().startGame();
+				PokerServer.getInstance().startMatch();
 			}
 		});
 	}

@@ -39,9 +39,9 @@ public class TapTestActivity extends Activity implements
 		// client.sendHello();
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
-				"be.infogroep.justpoker.ServerTableActivity");
+				 "be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
-
+		
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
@@ -142,7 +142,7 @@ public class TapTestActivity extends Activity implements
 	private void doBet() {
 		RelativeLayout layout = (RelativeLayout) findViewById(R.id.tap_test_layout);
 		ImageView button = (ImageView) findViewById(R.id.betChip);
-
+		
 		ImageView button2 = cloneImageView(button);
 		layout.addView(button2);
 		ObjectAnimator move = ObjectAnimator.ofFloat(button2, "y", -225);
@@ -165,7 +165,7 @@ public class TapTestActivity extends Activity implements
 	public void onPause() {
 		super.onPause();
 	}
-
+	
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -285,7 +285,6 @@ public class TapTestActivity extends Activity implements
 
 	@Override
 	public void startTurn() {
-		// });
 		vibrate(500);
 		fadeBackground();
 
