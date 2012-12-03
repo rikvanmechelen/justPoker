@@ -178,13 +178,25 @@
                 android:layout_weight="20" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button1"
+        <LinearLayout android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="15"
+            android:layout_weight="15">
+            
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:onClick="startMatch"
             android:text="Start Match" />
+        <Button android:id="@+id/flop_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="showFlop"
+            android:text="ShowFlop"
+            />
+        </LinearLayout>
+        
     </LinearLayout>
 
     <LinearLayout

@@ -2,29 +2,25 @@ package be.infogroep.justpoker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import be.infogroep.justpoker.GameElements.Card;
-import edu.vub.at.commlib.CommLib;
-import android.os.Bundle;
-import android.os.PowerManager;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
+import be.infogroep.justpoker.GameElements.Card;
+import edu.vub.at.commlib.CommLib;
 
 public class ServerTableActivity extends Activity {
 
@@ -38,14 +34,14 @@ public class ServerTableActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_server_table);
-		//getActionBar().setDisplayHomeAsUpEnabled(true);
+		// getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		//intent = new Intent(this, PokerServer.class);
-		//startService(intent);
-		//cps = PokerServer.getInstance();
+		// intent = new Intent(this, PokerServer.class);
+		// startService(intent);
+		// cps = PokerServer.getInstance();
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
-				 "be.infogroep.justpoker.ServerTableActivity");
+				"be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
 		String ipAddress = CommLib.getIpAddress(this);
 		cps = PokerServer.getInstance(ServerTableActivity.this, ipAddress);
@@ -56,18 +52,21 @@ public class ServerTableActivity extends Activity {
 			public void onLeftToRight() {
 				runOnNotUiThread(new Runnable() {
 					public void run() {
-						cps.startNewGame();
+						clearTable();
+						// cps.startNewGame();
 					}
 				});
-				
+
 			}
+
 			@Override
 			public void onRightToLeft() {
 				runOnNotUiThread(new Runnable() {
 					public void run() {
-						cps.startNewGame();
+						clearTable();
+						// cps.startNewGame();
 					}
-				});			
+				});
 			}
 		};
 	}
@@ -92,18 +91,18 @@ public class ServerTableActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		//startService(intent);
-		//registerReceiver(broadcastReceiver, new IntentFilter(
-		//		PokerServer.BROADCAST_ACTION));
+		// startService(intent);
+		// registerReceiver(broadcastReceiver, new IntentFilter(
+		// PokerServer.BROADCAST_ACTION));
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		//unregisterReceiver(broadcastReceiver);
-		//stopService(intent);
+		// unregisterReceiver(broadcastReceiver);
+		// stopService(intent);
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -112,12 +111,12 @@ public class ServerTableActivity extends Activity {
 	}
 
 	public void stopServer(MenuItem m) {
-		//Intent intent = new Intent(this, ServerActivity.class);
+		// Intent intent = new Intent(this, ServerActivity.class);
 		cps.stop();
-		//startActivity(intent);
+		// startActivity(intent);
 	}
 
-	public void startMatch(View v){
+	public void startMatch(View v) {
 		runOnNotUiThread(new Runnable() {
 			public void run() {
 				PokerServer.getInstance().startMatch();
@@ -153,9 +152,11 @@ public class ServerTableActivity extends Activity {
 	public void setTurn(final PokerPlayer p, final int index) {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_turn);
 	}
+
 	public void setPlaying(final PokerPlayer p, final int index) {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_playing);
 	}
+
 	public void setFolded(final PokerPlayer p, final int index) {
 		setPlayerStatusUIThread(p, index, R.drawable.avatar_folded);
 	}
@@ -164,9 +165,11 @@ public class ServerTableActivity extends Activity {
 	public void setBigBlind(final PokerPlayer p, final int index) {
 		setPlayerButtonUIThread(p, index, R.drawable.bigblind_button);
 	}
+
 	public void setSmallBlind(final PokerPlayer p, final int index) {
 		setPlayerButtonUIThread(p, index, R.drawable.smallblind_button);
 	}
+
 	public void setDealer(final PokerPlayer p, final int index) {
 		setPlayerButtonUIThread(p, index, R.drawable.dealer_button);
 	}
@@ -175,9 +178,11 @@ public class ServerTableActivity extends Activity {
 	public void setCall(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_call);
 	}
+
 	public void setRaise(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_raise);
 	}
+
 	public void setBet(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_bet);
 	}
@@ -185,10 +190,11 @@ public class ServerTableActivity extends Activity {
 	public void setFold(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_fold);
 	}
+
 	public void setCheck(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_check);
 	}
-	
+
 	public void resetAction(PokerPlayer player, int index) {
 		setPlayerActionUIThread(player, index, -1);
 	}
@@ -200,7 +206,8 @@ public class ServerTableActivity extends Activity {
 	}
 
 	// Run Set content on UI thread
-	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
+	private void setPlayerStatusUIThread(final PokerPlayer p, final int index,
+			final int drawable) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAvater(index, drawable);
@@ -208,7 +215,8 @@ public class ServerTableActivity extends Activity {
 		});
 	}
 
-	private void setPlayerActionUIThread(final PokerPlayer p, final int index, final int drawable){
+	private void setPlayerActionUIThread(final PokerPlayer p, final int index,
+			final int drawable) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(index, drawable);
@@ -216,7 +224,8 @@ public class ServerTableActivity extends Activity {
 		});
 	}
 
-	private void setPlayerButtonUIThread(final PokerPlayer p, final int index, final int drawable){
+	private void setPlayerButtonUIThread(final PokerPlayer p, final int index,
+			final int drawable) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerButton(index, drawable);
@@ -225,23 +234,27 @@ public class ServerTableActivity extends Activity {
 	}
 
 	// Helper function
-	private void setPlayerAvater(int index, int drawable){
-		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)));
+	private void setPlayerAvater(int index, int drawable) {
+		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"
+				+ Integer.toString(index)));
 		seat.setImageResource(drawable);
 	}
 
-	private void setPlayerAction(int index, int drawable){
-		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_action"));
+	private void setPlayerAction(int index, int drawable) {
+		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"
+				+ Integer.toString(index) + "_action"));
 		seat.setImageResource(drawable);
 	}
 
-	private void setPlayerButton(int index, int drawable){
-		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_button"));
+	private void setPlayerButton(int index, int drawable) {
+		ImageView seat = (ImageView) findViewById(CommLib.getViewID("player"
+				+ Integer.toString(index) + "_button"));
 		seat.setImageResource(drawable);
 	}
 
-	private void setPlayerName(int index, String name){
-		TextView name_field = (TextView) findViewById(CommLib.getViewID("player"+Integer.toString(index)+"_name"));
+	private void setPlayerName(int index, String name) {
+		TextView name_field = (TextView) findViewById(CommLib
+				.getViewID("player" + Integer.toString(index) + "_name"));
 		name_field.setText(name);
 	}
 
@@ -254,7 +267,15 @@ public class ServerTableActivity extends Activity {
 			}
 		});
 	}
-	
+
+	public void showFlop(View view) {
+		short x = 2;
+		short y = 3;
+		setUpCard("card0", new Card(x, y));
+		setUpCard("card1", new Card(x, y));
+		setUpCard("card2", new Card(x, y));
+	}
+
 	public void showTurn(final Card card) {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -270,51 +291,65 @@ public class ServerTableActivity extends Activity {
 			}
 		});
 	}
-	
-	private Drawable getDrawable(String s){
-		String s2 = "drawable/"+s;
-		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
+
+	private Drawable getDrawable(String s) {
+		String s2 = "drawable/" + s;
+		int imageResource = getResources().getIdentifier(s2, null,
+				getPackageName());
 		return getResources().getDrawable(imageResource);
 	}
-	
+
 	private ImageView cloneClearImageView(ImageView view) {
 		ImageView result = new ImageView(this);
 		result.setId(view.getId());
 		result.setLayoutParams(view.getLayoutParams());
-		//result
+		// result
 		return result;
 	}
-	
+
 	public void clearTable() {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				LinearLayout layout = (LinearLayout) findViewById(R.id.cards);
-				ArrayList<ImageView> newCards = new ArrayList<ImageView>();
+				// LinearLayout layout = (LinearLayout)
+				// findViewById(R.id.cards);
+				// ArrayList<ImageView> newCards = new ArrayList<ImageView>();
 				Iterator<ImageView> iter = cards.iterator();
-				while(iter.hasNext()){
+				while (iter.hasNext()) {
 					ImageView card = iter.next();
-					newCards.add(cloneClearImageView(card));
+					// newCards.add(cloneClearImageView(card));
 					doClearCard(card);
-					card.destroyDrawingCache();
 				}
-				iter = newCards.iterator();
-				while(iter.hasNext()){
-					layout.addView(iter.next());
-				}
+				// iter = newCards.iterator();
+				// while(iter.hasNext()){
+				// layout.addView(iter.next());
+				// }
 			}
 		});
 	}
-	
+
 	private void doClearCard(ImageView card) {
-		ObjectAnimator move = ObjectAnimator.ofFloat(card, "x", -225);
-		ObjectAnimator fade = ObjectAnimator.ofFloat(card, "alpha", 0);
+		final ImageView card2 = new ImageView(this);
+		final LinearLayout container = (LinearLayout) findViewById(CommLib
+				.getViewID("cards"));
+		final ScheduledExecutorService worker = Executors
+				.newSingleThreadScheduledExecutor();
+		card2.setX(card.getX());
+		container.addView(card2);
+		card2.setImageDrawable(getDrawable("card_backside"));
+		ObjectAnimator move = ObjectAnimator.ofFloat(card2, "x", -255);
 		move.setDuration(300);
-		fade.setDuration(300);
+		Runnable task = new Runnable() {
+			public void run() {
+				container.removeView(card2);
+			}
+		};
+		//worker.schedule(task, 300, TimeUnit.MILLISECONDS);
+		container.removeView(card2);
 		move.start();
-		// fade.start();
+		card.setImageDrawable(null);
 	}
-	
-	private void setUpCard(String id, Card c){
+
+	private void setUpCard(String id, Card c) {
 		ImageView card = (ImageView) findViewById(CommLib.getViewID(id));
 		card.setImageDrawable(getDrawable(c.toString()));
 		card.setOnTouchListener(cardListener);

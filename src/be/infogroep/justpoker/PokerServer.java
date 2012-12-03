@@ -299,8 +299,12 @@ public class PokerServer {
 		match.resetCurrentState();
 	}
 	
-	public void startNewGame() {
+	public void clearTable(){
 		gui.clearTable();
+	}
+	
+	public void startNewGame() {
+		clearTable();
 		match.newRound();
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
