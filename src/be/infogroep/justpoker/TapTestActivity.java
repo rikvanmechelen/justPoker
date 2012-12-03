@@ -22,10 +22,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.infogroep.justpoker.GameElements.Card;
+import edu.vub.at.commlib.CommLib;
+import edu.vub.at.commlib.PlayerState;
 import edu.vub.at.commlib.PokerButton;
 
 public class TapTestActivity extends Activity implements
-		AbstractPokerClientActivity {
+AbstractPokerClientActivity {
 	boolean flippedCard1;
 	boolean flippedCard2;
 
@@ -40,12 +42,13 @@ public class TapTestActivity extends Activity implements
 		// client.sendHello();
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
-				 "be.infogroep.justpoker.ServerTableActivity");
+				"be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
-		
+
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
+		setTitle("justPoker - "+ name);
 		client = PokerClient.getInstance(TapTestActivity.this, name, ip);
 
 		flippedCard1 = flippedCard2 = false;
@@ -142,7 +145,7 @@ public class TapTestActivity extends Activity implements
 	private void doBet() {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.tap_test_layout);
 		ImageView button = (ImageView) findViewById(R.id.betChip);
-		
+
 		ImageView button2 = cloneImageView(button);
 		layout.addView(button2);
 		ObjectAnimator move = ObjectAnimator.ofFloat(button2, "y", -225);
@@ -153,7 +156,7 @@ public class TapTestActivity extends Activity implements
 		spin.start();
 		layout.removeView(button2);
 		Toast.makeText(getApplicationContext(), "You Bet!", Toast.LENGTH_LONG)
-				.show();
+		.show();
 	}
 
 	@Override
@@ -165,7 +168,7 @@ public class TapTestActivity extends Activity implements
 	public void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -290,5 +293,100 @@ public class TapTestActivity extends Activity implements
 
 	public void endTurn() {
 		stopFadeThread = true;
+	}
+
+	public void setBet() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_bet);
+			}
+		});
+	}
+	public void setCall() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_call);
+			}
+		});
+	}
+	public void setCheck(){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_check);
+			}
+		});
+	}
+	public void setFold(){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_fold);
+			}
+		});
+	}
+	public void setRaise(){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_raise);
+			}
+		});
+	}
+	public void setReRaise(){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_raise);
+			}
+		});
+	}
+
+	public void resetPlayerAction(){
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView seat = (ImageView) findViewById(R.id.action);
+				seat.setImageDrawable(null);
+			}
+		});
+	}
+
+	private void setPlayerAction(int drawable){
+		ImageView seat = (ImageView) findViewById(R.id.action);
+		seat.setImageResource(drawable);
+	}
+
+	public void setBigBlind() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(R.drawable.bigblind_button);
+			}
+		});
+	}
+
+	public void setSmallBlind() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(R.drawable.smallblind_button);
+			}
+		});
+	}
+
+	public void setDealer() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(R.drawable.dealer_button);
+			}
+		});
+	}
+
+	public void resetButton() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView seat = (ImageView) findViewById(R.id.button);
+				seat.setImageDrawable(null);
+			}
+		});
+	}
+	
+	private void setPlayerButton(int drawable){
+		ImageView seat = (ImageView) findViewById(R.id.button);
+		seat.setImageResource(drawable);
 	}
 }

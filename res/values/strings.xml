@@ -9,13 +9,13 @@
     <string name="title_activity_display_message">DisplayMessageActivity</string>
     <string name="open_client_btn">client</string>
     <string name="open_server_btn">server</string>
-    <string name="title_activity_client">JustPokerClient</string>
-    <string name="title_activity_server">JustPokerServer</string>
+    <string name="title_activity_client">JustPoker - Client</string>
+    <string name="title_activity_server">JustPoker - Server</string>
     <string name="client_hello">client hello</string>
     <string name="server_hello">server hello</string>
     <string name="start_server">Start Server</string>
-    <string name="title_activity_server_table">ServerTableActivity</string>
-    <string name="title_activity_tap_test">TapTestActivity</string>
+    <string name="title_activity_server_table">justPoker - Table</string>
+    <string name="title_activity_tap_test">justPoker</string>
     <string name="tap_test">tap_test</string>
     <string name="tap_test_button">test</string>
     <string name="title_activity_change_text">ChangeTextActivity</string>
