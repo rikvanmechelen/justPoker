@@ -331,17 +331,14 @@ public class ServerTableActivity extends Activity {
 		
 		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
-			@TargetApi(16)
 			public void onAnimationEnd(Animation animation) {
 				card.setImageDrawable(null);
 	            Log.d("justPoker - Client", "---- animation end listener called"  );
 			}
 
-			@Override
 			public void onAnimationRepeat(Animation animation) {
 			}
 
-			@Override
 			public void onAnimationStart(Animation animation) {
 				card.setImageDrawable(getDrawable("card_backside"));
 			}

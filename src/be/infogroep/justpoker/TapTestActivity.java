@@ -12,10 +12,14 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -144,17 +148,22 @@ AbstractPokerClientActivity {
 
 	private void doBet() {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.tap_test_layout);
-		ImageView button = (ImageView) findViewById(R.id.betChip);
+		final ImageView button = (ImageView) findViewById(R.id.betChip);
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.moveup);
+		myFadeInAnimation.setAnimationListener(new AnimationListener() {
+			public void onAnimationEnd(Animation animation) {
+				//button.setImageDrawable(null);
+	            //Log.d("justPoker - Client", "---- animation end listener called"  );
+			}
 
-		ImageView button2 = cloneImageView(button);
-		layout.addView(button2);
-		ObjectAnimator move = ObjectAnimator.ofFloat(button2, "y", -225);
-		ObjectAnimator spin = ObjectAnimator.ofFloat(button2, "rotation", 180);
-		move.setDuration(300);
-		spin.setDuration(300);
-		move.start();
-		spin.start();
-		layout.removeView(button2);
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationStart(Animation animation) {
+				//button.setImageDrawable(getDrawable("card_backside"));
+			}
+		});
+		button.startAnimation(myFadeInAnimation);
 		Toast.makeText(getApplicationContext(), "You Bet!", Toast.LENGTH_LONG)
 		.show();
 	}
