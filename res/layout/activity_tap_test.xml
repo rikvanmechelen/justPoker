@@ -19,8 +19,7 @@
             android:layout_weight="20"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:src="@drawable/dealer_button" />
+            android:paddingTop="10dp" />
 
         <View
             android:layout_width="0dp"
@@ -34,8 +33,7 @@
             android:layout_weight="20"
             android:paddingBottom="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:src="@drawable/action_bet" />
+            android:paddingTop="10dp" />
     </LinearLayout>
 
     <LinearLayout

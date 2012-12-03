@@ -350,4 +350,42 @@ AbstractPokerClientActivity {
 		ImageView seat = (ImageView) findViewById(R.id.action);
 		seat.setImageResource(drawable);
 	}
+
+	public void setBigBlind() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(R.drawable.bigblind_button);
+			}
+		});
+	}
+
+	public void setSmallBlind() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(R.drawable.smallblind_button);
+			}
+		});
+	}
+
+	public void setDealer() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerButton(R.drawable.dealer_button);
+			}
+		});
+	}
+
+	public void resetButton() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView seat = (ImageView) findViewById(R.id.button);
+				seat.setImageDrawable(null);
+			}
+		});
+	}
+	
+	private void setPlayerButton(int drawable){
+		ImageView seat = (ImageView) findViewById(R.id.button);
+		seat.setImageResource(drawable);
+	}
 }

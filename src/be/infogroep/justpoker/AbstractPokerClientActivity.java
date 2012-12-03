@@ -31,4 +31,12 @@ public interface AbstractPokerClientActivity {
 	public void setReRaise();
 
 	public void resetPlayerAction();
+
+	public void setBigBlind();
+
+	public void setSmallBlind();
+
+	public void setDealer();
+
+	public void resetButton();
 }

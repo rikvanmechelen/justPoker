@@ -259,12 +259,15 @@ public class PokerClient {
 			switch(b) {
 			case BigBlind:
 				bigBlind = true;
+				gui.setBigBlind();
 				break;
 			case SmallBlind:
 				smallBlind = true;
+				gui.setSmallBlind();
 				break;
 			case Dealer:
 				dealer = true;
+				gui.setDealer();
 				break;
 			}
 			gui.setBlind(b);
@@ -307,6 +310,7 @@ public class PokerClient {
 			card1 = null;
 			card2 = null;
 			gui.resetPlayerAction();
+			gui.resetButton();
 			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof String) {
