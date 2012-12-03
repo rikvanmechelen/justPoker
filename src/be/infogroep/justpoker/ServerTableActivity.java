@@ -89,7 +89,7 @@ public class ServerTableActivity extends Activity {
 		//startActivity(intent);
 	}
 
-	public void startGame(View v){
+	public void startMatch(View v){
 		runOnNotUiThread(new Runnable() {
 			public void run() {
 				PokerServer.getInstance().startMatch();
@@ -161,6 +161,11 @@ public class ServerTableActivity extends Activity {
 		setPlayerActionUIThread(p, index, R.drawable.action_check);
 	}
 
+	public void resetPlayer(PokerPlayer player, int index) {
+		setPlayerStatusUIThread(player, index, R.drawable.avatar_playing);
+		setPlayerButtonUIThread(player, index, -1);
+		setPlayerActionUIThread(player, index, -1);
+	}
 
 	// Run Set content on UI thread
 	private void setPlayerStatusUIThread(final PokerPlayer p, final int index, final int drawable){
@@ -245,6 +250,22 @@ public class ServerTableActivity extends Activity {
 		return getResources().getDrawable(imageResource);
 	}
 
+	public void resetCards() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
+				ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
+				ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
+				ImageView card3 = (ImageView) findViewById(CommLib.getViewID("card3"));
+				ImageView card4 = (ImageView) findViewById(CommLib.getViewID("card4"));		
+				card0.setImageResource(-1);
+				card1.setImageResource(-1);
+				card2.setImageResource(-1);
+				card4.setImageResource(-1);
+				card3.setImageResource(-1);
+			}
+		});
+	}
 	
 
 }

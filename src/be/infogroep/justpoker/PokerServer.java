@@ -18,6 +18,7 @@ import be.infogroep.justpoker.messages.RegisterMessage;
 import be.infogroep.justpoker.messages.SetButtonMessage;
 import be.infogroep.justpoker.messages.SetStateMessage;
 import be.infogroep.justpoker.messages.SetYourTurn;
+import be.infogroep.justpoker.messages.StartNewGameMessage;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
@@ -295,11 +296,13 @@ public class PokerServer {
 				.hasNext();) {
 			PokerPlayer player = iterator.next();
 			Connection c = player.getConnection();
+			int index = connections.indexOfKey(player.getId());
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());
 				player.resetState();
-				c.sendTCP(new SetStateMessage(player.getState(), player.getId()));
-				gui.setPlaying(player, connections.indexOfKey(player.getId()));
+				c.sendTCP(new StartNewGameMessage());
+				gui.resetPlayer(player, index);
+				gui.resetCards();
 			}
 		}
 	}
