@@ -130,7 +130,8 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="60"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:clipChildren="false">
 
         <TextView
             android:id="@+id/serverLog"
