@@ -45,14 +45,14 @@ public class PokerServer {
 	private String ipAddress;
 	
 	//game specific stuff
-	private PokerGame game;
+	private PokerGame match;
 
 	public PokerServer() {}
 
 	public PokerServer(ServerTableActivity serverTableActivity, String ip) {
 		this.gui = serverTableActivity;
 		this.ipAddress = ip;
-		this.game = new PokerGame();
+		this.match = new PokerGame();
 	}
 
 	public static PokerServer getInstance() {
@@ -169,15 +169,15 @@ public class PokerServer {
 	}
 	
 	public void showFlop() {
-		gui.showFlop(game.getFlop());
+		gui.showFlop(match.getFlop());
 	}
 	
 	public void showTurn() {
-		game.getTurn();
+		gui.showTurn(match.getTurn());
 	}
 	
 	public void showRiver() {
-		game.getRiver();
+		gui.showRiver(match.getRiver());
 	}
 
 	public void dealCards() {
@@ -188,8 +188,8 @@ public class PokerServer {
 			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "Dealing cards to " + c.toString());
-				Card card1 = game.getDeck().drawFromDeck();
-				Card card2 = game.getDeck().drawFromDeck();
+				Card card1 = match.getDeck().drawFromDeck();
+				Card card2 = match.getDeck().drawFromDeck();
 				c.sendTCP(new ReceiveCardsMessage(card1, card2));
 				player.setCards(card1, card2);
 				gui.displayLogginInfo("Dealt cards to " + player.getName());
@@ -240,18 +240,53 @@ public class PokerServer {
 		gui.setTurn(p, connections.indexOfKey(p.getId()));
 	}
 	
-	private void roundSetup(PokerPlayer tmp) {
-		game.setDealer(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, tmp.getId()));
-		gui.setDealer(tmp, connections.indexOfKey(tmp.getId()));
-		tmp = connections.nextFrom(tmp.getId());
-		game.setSmallBlind(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, tmp.getId()));
-		gui.setSmallBlind(tmp, connections.indexOfKey(tmp.getId()));
-		tmp = connections.nextFrom(tmp.getId());
-		game.setBigBlind(tmp.getId());
-		tmp.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, tmp.getId()));
-		gui.setBigBlind(tmp, connections.indexOfKey(tmp.getId()));
+	private void roundSetup(PokerPlayer dealer) {
+		match.setDealer(dealer.getId());
+		PokerPlayer smallBlind = connections.nextFrom(dealer.getId());
+		match.setSmallBlind(smallBlind.getId());
+		PokerPlayer bigBlind = connections.nextFrom(smallBlind.getId());
+		match.setBigBlind(smallBlind.getId());
+
+		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, smallBlind.getId()));
+		gui.setBigBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
+		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, smallBlind.getId()));
+		gui.setSmallBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
+		dealer.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, dealer.getId()));
+		gui.setDealer(dealer, connections.indexOfKey(dealer.getId()));
+	}
+	
+	private void roundCheck(int client_id) {
+		// TODO Auto-generated method stub
+		if (roundFinished()){
+			endRoundCleanup();
+			setTurn(connections.nextUnfoldedFrom(match.getDealer()));
+			if (match.getRound() == Round.PreFlopBet){	
+				showFlop();
+			}
+			if (match.getRound() == Round.FlopBet){
+				showTurn();
+			}
+			if (match.getRound() == Round.TurnBet){
+				showRiver();
+			}
+			if (match.getRound() == Round.RiverBet){
+				gui.displayLogginInfo("Game ended, get ready for the next game :)");
+			}
+			match.nextRound();
+			
+		} else{
+			setTurn(connections.nextFrom(client_id));
+		}
+	}
+	
+	private void endRoundCleanup(){
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			PokerPlayer player = iterator.next();
+			if (player.getState() != PlayerState.Fold) {
+				player.resetState();
+			}
+		}
 	}
 
 	public void startGame() {
@@ -268,10 +303,10 @@ public class PokerServer {
 				gui.setPlaying(player, connections.indexOfKey(player.getId()));
 			}
 		}
-		game = new PokerGame();
+		match = new PokerGame();
 		roundSetup(connections.getFirst());
 		dealCards();
-		setTurn(connections.nextFrom(game.getSmallBlind()));
+		setTurn(connections.nextFrom(match.getSmallBlind()));
 	}
 	
 	private void messageParser(Connection c, Object msg, Runnable r) {
@@ -294,39 +329,26 @@ public class PokerServer {
 		// handler.post(r);
 	}
 
-	private void roundCheck(int client_id) {
-		// TODO Auto-generated method stub
-		if (roundFinished()){
-			if (game.getRound() == Round.PreFlopBet){
-				setTurn(connections.nextUnfoldedFrom(game.getDealer()));
-				showFlop();
-			}
-			
-		} else{
-			setTurn(connections.nextFrom(client_id));
-		}
-	}
+	
 
 	private void parseState(SetStateMessage st) {
 		PlayerState state = st.getState();
 		Integer client_id = st.getClient_id();
 		PokerPlayer player = connections.get(client_id);
+		player.endMyTurn();
 		if (state == PlayerState.Fold) {
 			player.setState(state);
 			gui.displayLogginInfo(player.getName()+" folded");
-			setTurn(connections.nextFrom(client_id));
 			gui.setFolded(player, connections.indexOfKey(client_id));
 		}
 		if (state == PlayerState.Check) {
 			connections.get(st.getClient_id()).setState(state);
 			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			setTurn(connections.nextFrom(client_id));
 			gui.setPlaying(player, connections.indexOfKey(client_id));
 		}
 		if (state == PlayerState.Bet) {
 			connections.get(st.getClient_id()).setState(state);
 			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			setTurn(connections.nextFrom(client_id));
 			gui.setPlaying(player, connections.indexOfKey(client_id));
 		}
 	}

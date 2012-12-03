@@ -3,6 +3,7 @@ package be.infogroep.justpoker;
 import be.infogroep.justpoker.GameElements.Card;
 import edu.vub.at.commlib.CommLib;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,8 @@ import android.support.v4.app.NavUtils;
 public class ServerTableActivity extends Activity {
 
 	private PokerServer cps;
+	private PowerManager pm;
+	private PowerManager.WakeLock wl;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,10 @@ public class ServerTableActivity extends Activity {
 		//intent = new Intent(this, PokerServer.class);
 		//startService(intent);
 		//cps = PokerServer.getInstance();
+		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
+				 "be.infogroep.justpoker.ServerTableActivity");
+		wl.acquire();
 		String ipAddress = CommLib.getIpAddress(this);
 		cps = PokerServer.getInstance(ServerTableActivity.this, ipAddress);
 		cps.start();
@@ -73,6 +80,7 @@ public class ServerTableActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		cps.stop();
+		wl.release();
 	}
 
 	public void stopServer(MenuItem m) {
@@ -200,23 +208,43 @@ public class ServerTableActivity extends Activity {
 		name_field.setText(name);
 	}
 
-	public void showFlop(final Card[] flop) {
+	public void showFlop(final Card[] card) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
 				ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
 				ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
-				card0.setImageDrawable(getDrawable(flop[0].toString()));
-				card1.setImageDrawable(getDrawable(flop[1].toString()));
-				card2.setImageDrawable(getDrawable(flop[2].toString()));
+				card0.setImageDrawable(getDrawable(card[0].toString()));
+				card1.setImageDrawable(getDrawable(card[1].toString()));
+				card2.setImageDrawable(getDrawable(card[2].toString()));
 			}
 		});
 	}
 
+	public void showTurn(final Card card) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView card3 = (ImageView) findViewById(CommLib.getViewID("card3"));
+				card3.setImageDrawable(getDrawable(card.toString()));
+			}
+		});
+	}
+
+	public void showRiver(final Card card) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ImageView card4 = (ImageView) findViewById(CommLib.getViewID("card4"));
+				card4.setImageDrawable(getDrawable(card.toString()));
+			}
+		});
+	}
+	
 	private Drawable getDrawable(String s){
 		String s2 = "drawable/"+s;
 		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
 		return getResources().getDrawable(imageResource);
 	}
+
+	
 
 }
