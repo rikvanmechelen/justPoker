@@ -1,60 +1,116 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tap_test_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/client_background"
-    android:id="@+id/tap_test_layout" >
+    android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:orientation="horizontal" >
 
-    <ImageView
-        android:id="@+id/card2"
-        android:layout_width="150dp"
-        android:layout_height="225dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="39dp"
-        android:layout_marginTop="70dp"
-        android:contentDescription="@string/card2"
-        android:scaleType="fitXY"
-        android:src="@drawable/card_backside" />
+        <ImageView
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/dealer_button" />
 
-    <ImageView
-        android:id="@+id/card1"
-        android:layout_width="150dp"
-        android:layout_height="225dp"
-        android:layout_alignTop="@+id/card2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:contentDescription="@string/card1"
-        android:scaleType="fitXY"
-        android:src="@drawable/card_backside" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="60" />
 
-    <ImageView
-        android:id="@+id/betChip"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
-        android:src="@drawable/chips_red" />
+        <ImageView
+            android:id="@+id/action"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/action_bet" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/betChipText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/betChip"
-        android:layout_alignTop="@+id/betChip"
-        android:layout_marginTop="18dp"
-        android:layout_marginRight="18dp"
-        android:text="Bet"
-        android:textColor="#ffffff"
-        android:textSize="25sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60" >
 
-</RelativeLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
+
+        <ImageView
+            android:id="@+id/card1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:contentDescription="@string/card1"
+            android:paddingBottom="50dp"
+            android:src="@drawable/card_backside" />
+
+        <ImageView
+            android:id="@+id/card2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="-100dp"
+            android:layout_weight="40"
+            android:contentDescription="@string/card2"
+            android:paddingTop="50dp"
+            android:src="@drawable/card_backside" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/voiceButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:paddingLeft="10dp"
+            android:src="@drawable/speak_button" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30" />
+
+        <ImageView
+            android:id="@+id/betChip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:paddingRight="10dp"
+            android:src="@drawable/chips_red" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5" >
+    </LinearLayout>
+
+</LinearLayout>
