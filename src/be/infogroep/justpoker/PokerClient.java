@@ -11,6 +11,7 @@ import be.infogroep.justpoker.messages.RegisterMessage;
 import be.infogroep.justpoker.messages.SetButtonMessage;
 import be.infogroep.justpoker.messages.SetStateMessage;
 import be.infogroep.justpoker.messages.SetYourTurn;
+import be.infogroep.justpoker.messages.StartNewGameMessage;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -38,8 +39,8 @@ public class PokerClient {
 	private volatile Boolean smallBlind = false;
 	private volatile Boolean bigBlind = false;
 	private volatile Boolean myTurn = false;
-	private Card card1;
-	private Card card2;
+	private volatile Card card1;
+	private volatile Card card2;
 	
 	public PlayerState getState() {
 		return state;
@@ -272,6 +273,17 @@ public class PokerClient {
 			gui.displayLoggingInfo("It is your turn!");
 		}
 		if (m instanceof SetStateMessage) {
+			state = ((SetStateMessage) m).getState();
+			gui.displayLoggingInfo(m);
+		}
+		if (m instanceof StartNewGameMessage) {
+			state = PlayerState.Unknown;
+			dealer = false;
+			smallBlind = false;
+			bigBlind = false;
+			myTurn = false;
+			card1 = null;
+			card2 = null;
 			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof String) {
