@@ -293,6 +293,7 @@ public class PokerServer {
 			PokerPlayer player = iterator.next();
 			if (player.getState() != PlayerState.Fold) {
 				player.resetState();
+				gui.resetAction(player, connections.indexOfKey(player.getId()));
 			}
 		}
 	}
@@ -361,21 +362,25 @@ public class PokerServer {
 		PlayerState state = st.getState();
 		Integer client_id = st.getClient_id();
 		PokerPlayer player = connections.get(client_id);
+		int index = connections.indexOfKey(client_id);
 		player.endMyTurn();
 		if (state == PlayerState.Fold) {
 			player.setState(state);
 			gui.displayLogginInfo(player.getName()+" folded");
-			gui.setFolded(player, connections.indexOfKey(client_id));
+			gui.setFolded(player, index);
+			gui.setFold(player, index);
 		}
 		if (state == PlayerState.Check) {
 			connections.get(st.getClient_id()).setState(state);
 			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			gui.setPlaying(player, connections.indexOfKey(client_id));
+			gui.setPlaying(player, index);
+			gui.setCheck(player, index);
 		}
 		if (state == PlayerState.Bet) {
 			connections.get(st.getClient_id()).setState(state);
-			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			gui.setPlaying(player, connections.indexOfKey(client_id));
+			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" Bet");
+			gui.setPlaying(player, index);
+			gui.setBet(player, index);
 		}
 	}
 }
