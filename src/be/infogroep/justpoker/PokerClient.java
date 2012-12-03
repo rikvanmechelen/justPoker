@@ -114,14 +114,11 @@ public class PokerClient {
 	
 	public void setMyTurn(Boolean myTurn) {
 		this.myTurn = myTurn;
+		gui.startTurn();
 	}
 	
 	public void endMyTurn() {
 		this.myTurn = false;
-	}
-	
-	public void startMyTurn() {
-		this.myTurn = true;
 	}
 	
 	public void sendHello() {

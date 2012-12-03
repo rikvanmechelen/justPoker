@@ -3,9 +3,11 @@ package be.infogroep.justpoker;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -222,4 +224,20 @@ public class TapTestActivity extends Activity implements
 		return result;
 	}
 
+	private void vibrate(int len){
+		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		v.vibrate(len);
+	}
+
+	@Override
+	public void startTurn() {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				vibrate(500);
+			}
+		});
+		
+	}
 }
