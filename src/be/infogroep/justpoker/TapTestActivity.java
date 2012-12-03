@@ -55,7 +55,7 @@ public class TapTestActivity extends Activity implements
 		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
 		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
 		final ImageView betChip = (ImageView) findViewById(R.id.betChip);
-		final TextView betChipText = (TextView) findViewById(R.id.betChipText);
+		//final TextView betChipText = (TextView) findViewById(R.id.betChipText);
 
 		OnFlingGestureListener cardListener = new OnFlingGestureListener() {
 			private boolean longPressed = false;
@@ -97,7 +97,7 @@ public class TapTestActivity extends Activity implements
 		cardContainer2.setOnTouchListener(cardListener);
 		cardContainer1.setOnTouchListener(cardListener);
 		betChip.setOnTouchListener(chipListener);
-		betChipText.setOnTouchListener(chipListener);
+		//betChipText.setOnTouchListener(chipListener);
 
 	}
 
@@ -282,14 +282,12 @@ public class TapTestActivity extends Activity implements
 		}
 	}
 
-	@Override
 	public void startTurn() {
 		vibrate(500);
 		//fadeBackground();
 
 	}
 
-	@Override
 	public void endTurn() {
 		stopFadeThread = true;
 	}
