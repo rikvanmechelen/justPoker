@@ -1,9 +1,13 @@
 package be.infogroep.justpoker;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import be.infogroep.justpoker.GameElements.Card;
 import edu.vub.at.commlib.CommLib;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,10 +17,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
@@ -25,6 +31,8 @@ public class ServerTableActivity extends Activity {
 	private PokerServer cps;
 	private PowerManager pm;
 	private PowerManager.WakeLock wl;
+	private OnFlingGestureListener cardListener;
+	private ArrayList<ImageView> cards;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,26 @@ public class ServerTableActivity extends Activity {
 		String ipAddress = CommLib.getIpAddress(this);
 		cps = PokerServer.getInstance(ServerTableActivity.this, ipAddress);
 		cps.start();
+		cards = new ArrayList<ImageView>();
+		cardListener = new OnFlingGestureListener() {
+			@Override
+			public void onLeftToRight() {
+				runOnNotUiThread(new Runnable() {
+					public void run() {
+						cps.startNewGame();
+					}
+				});
+				
+			}
+			@Override
+			public void onRightToLeft() {
+				runOnNotUiThread(new Runnable() {
+					public void run() {
+						cps.startNewGame();
+					}
+				});			
+			}
+		};
 	}
 
 	@Override
@@ -220,21 +248,17 @@ public class ServerTableActivity extends Activity {
 	public void showFlop(final Card[] card) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
-				ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
-				ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
-				card0.setImageDrawable(getDrawable(card[0].toString()));
-				card1.setImageDrawable(getDrawable(card[1].toString()));
-				card2.setImageDrawable(getDrawable(card[2].toString()));
+				setUpCard("card0", card[0]);
+				setUpCard("card1", card[1]);
+				setUpCard("card2", card[2]);
 			}
 		});
 	}
-
+	
 	public void showTurn(final Card card) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				ImageView card3 = (ImageView) findViewById(CommLib.getViewID("card3"));
-				card3.setImageDrawable(getDrawable(card.toString()));
+				setUpCard("card3", card);
 			}
 		});
 	}
@@ -242,8 +266,7 @@ public class ServerTableActivity extends Activity {
 	public void showRiver(final Card card) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				ImageView card4 = (ImageView) findViewById(CommLib.getViewID("card4"));
-				card4.setImageDrawable(getDrawable(card.toString()));
+				setUpCard("card4", card);
 			}
 		});
 	}
@@ -253,23 +276,49 @@ public class ServerTableActivity extends Activity {
 		int imageResource = getResources().getIdentifier(s2, null, getPackageName());
 		return getResources().getDrawable(imageResource);
 	}
-
-	public void resetCards() {
+	
+	private ImageView cloneClearImageView(ImageView view) {
+		ImageView result = new ImageView(this);
+		result.setId(view.getId());
+		result.setLayoutParams(view.getLayoutParams());
+		//result
+		return result;
+	}
+	
+	public void clearTable() {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				ImageView card0 = (ImageView) findViewById(CommLib.getViewID("card0"));
-				ImageView card1 = (ImageView) findViewById(CommLib.getViewID("card1"));
-				ImageView card2 = (ImageView) findViewById(CommLib.getViewID("card2"));
-				ImageView card3 = (ImageView) findViewById(CommLib.getViewID("card3"));
-				ImageView card4 = (ImageView) findViewById(CommLib.getViewID("card4"));		
-				card0.setImageResource(-1);
-				card1.setImageResource(-1);
-				card2.setImageResource(-1);
-				card4.setImageResource(-1);
-				card3.setImageResource(-1);
+				LinearLayout layout = (LinearLayout) findViewById(R.id.cards);
+				ArrayList<ImageView> newCards = new ArrayList<ImageView>();
+				Iterator<ImageView> iter = cards.iterator();
+				while(iter.hasNext()){
+					ImageView card = iter.next();
+					newCards.add(cloneClearImageView(card));
+					doClearCard(card);
+					card.destroyDrawingCache();
+				}
+				iter = newCards.iterator();
+				while(iter.hasNext()){
+					layout.addView(iter.next());
+				}
 			}
 		});
 	}
 	
+	private void doClearCard(ImageView card) {
+		ObjectAnimator move = ObjectAnimator.ofFloat(card, "x", -225);
+		ObjectAnimator fade = ObjectAnimator.ofFloat(card, "alpha", 0);
+		move.setDuration(300);
+		fade.setDuration(300);
+		move.start();
+		// fade.start();
+	}
+	
+	private void setUpCard(String id, Card c){
+		ImageView card = (ImageView) findViewById(CommLib.getViewID(id));
+		card.setImageDrawable(getDrawable(c.toString()));
+		card.setOnTouchListener(cardListener);
+		cards.add(card);
+	}
 
 }

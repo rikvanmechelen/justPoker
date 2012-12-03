@@ -279,7 +279,7 @@ public class PokerServer {
 				break;
 			case RiverBet:
 				gui.displayLogginInfo("Game ended, get ready for the next game :)");
-				startNewGame();
+				//startNewGame();
 				break;
 			}
 		} else{
@@ -296,9 +296,11 @@ public class PokerServer {
 				gui.resetAction(player, connections.indexOfKey(player.getId()));
 			}
 		}
+		match.resetCurrentState();
 	}
 	
 	public void startNewGame() {
+		gui.clearTable();
 		match.newRound();
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
@@ -311,7 +313,7 @@ public class PokerServer {
 				gui.resetPlayer(player, index);
 			}
 		}
-		gui.resetCards();
+		//gui.resetCards();
 		roundSetup(connections.nextFrom(match.getDealer()));
 		dealCards();
 		setTurn(connections.nextFrom(match.getSmallBlind()));
@@ -364,23 +366,65 @@ public class PokerServer {
 		PokerPlayer player = connections.get(client_id);
 		int index = connections.indexOfKey(client_id);
 		player.endMyTurn();
-		if (state == PlayerState.Fold) {
+		switch(state){
+		case Fold:
 			player.setState(state);
 			gui.displayLogginInfo(player.getName()+" folded");
 			gui.setFolded(player, index);
 			gui.setFold(player, index);
-		}
-		if (state == PlayerState.Check) {
-			connections.get(st.getClient_id()).setState(state);
-			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" checked");
-			gui.setPlaying(player, index);
-			gui.setCheck(player, index);
-		}
-		if (state == PlayerState.Bet) {
-			connections.get(st.getClient_id()).setState(state);
-			gui.displayLogginInfo(connections.get(st.getClient_id()).getName()+" Bet");
-			gui.setPlaying(player, index);
-			gui.setBet(player, index);
+			break;
+		case Check:		
+			player.setState(state);
+			switch(match.getCurrentState().getState()){
+			case Bet:
+				match.raise(client_id);
+				gui.displayLogginInfo(player.getName()+" Called");
+				gui.setPlaying(player, index);
+				gui.setCall(player, index);
+				break;
+			case Raise:
+				match.raise(client_id);
+				gui.displayLogginInfo(player.getName()+" Called");
+				gui.setPlaying(player, index);
+				gui.setCall(player, index);
+				break;
+			default:
+				//match.bet(client_id);
+				gui.displayLogginInfo(player.getName()+" Called");
+				gui.setPlaying(player, index);
+				gui.setCheck(player, index);
+				break;
+			}
+			break;
+		case Bet:
+			player.setState(state);
+			switch(match.getCurrentState().getState()){
+			case Bet:
+				match.raise(client_id);
+				gui.displayLogginInfo(player.getName()+" Raised");
+				gui.setPlaying(player, index);
+				gui.setRaise(player, index);
+				break;
+			case Check:
+				match.bet(client_id);
+				gui.displayLogginInfo(player.getName()+" Raised");
+				gui.setPlaying(player, index);
+				gui.setBet(player, index);
+				break;
+			case Raise:
+				match.raise(client_id);
+				gui.displayLogginInfo(player.getName()+" Re-Raised "+connections.get(match.getCurrentState().getPlayer()).getName());
+				gui.setPlaying(player, index);
+				gui.setRaise(player, index);
+				break;
+			default:
+				match.bet(client_id);
+				gui.displayLogginInfo(player.getName()+" Raised");
+				gui.setPlaying(player, index);
+				gui.setBet(player, index);
+				break;
+			}
+			break;
 		}
 	}
 }

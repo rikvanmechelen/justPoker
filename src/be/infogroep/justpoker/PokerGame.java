@@ -1,7 +1,9 @@
 package be.infogroep.justpoker;
 
+import edu.vub.at.commlib.PlayerState;
 import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.GameElements.Deck;
+import be.infogroep.justpoker.messages.SetStateMessage;
 
 public class PokerGame {
 
@@ -20,10 +22,12 @@ public class PokerGame {
 	private Card river;
 	private Round round;
 	
+	public State currentState;
+	
 	public PokerGame() {
 		this.deck = new Deck();
 		deck.shuffle();
-		this.round = Round.PreFlopBet;
+		newRound();
 	}
 
 	public Integer getDealer() {
@@ -101,6 +105,7 @@ public class PokerGame {
 	
 	public Round newRound() {
 		round = Round.PreFlopBet;
+		resetCurrentState();
 		return round;
 	}
 
@@ -115,5 +120,50 @@ public class PokerGame {
 		}
 
 	}
-
+	
+	public State resetCurrentState() {
+		this.currentState = new State(null, PlayerState.Check);
+		return currentState;
+	}
+	
+	public State getCurrentState() {
+		// TODO Auto-generated method stub
+		return currentState;
+	}
+	
+	public State bet(Integer id){
+		currentState = new State(id, PlayerState.Bet);
+		return currentState;
+	}
+	
+	public State check(Integer id){
+		currentState = new State(id, PlayerState.Check);
+		return currentState;
+	}
+	public State call(Integer id){
+		currentState = new State(id, PlayerState.Call);
+		return currentState;
+	}
+	
+	public State raise(Integer id){
+		currentState = new State(id, PlayerState.Raise);
+		return currentState;
+	}
+	
+	
+	
+	public class State {
+		private Integer player;
+		private PlayerState state;
+		public State(Integer p, PlayerState s){
+			this.player = p;
+			this.state = s;
+		}
+		public PlayerState getState() {
+			return state;
+		}
+		public Integer getPlayer() {
+			return player;
+		}
+	}
 }
