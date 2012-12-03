@@ -253,8 +253,11 @@ public class TapTestActivity extends Activity implements
 			final int a = i;
 			if (stopFadeThread) {
 				runOnUiThread(new Runnable() {
+
 					public void run() {
+
 						screen.setBackgroundColor(Color.GREEN);
+
 					}
 				});
 				stopFadeThread = false;
@@ -279,12 +282,14 @@ public class TapTestActivity extends Activity implements
 		}
 	}
 
+	@Override
 	public void startTurn() {
 		vibrate(500);
 		//fadeBackground();
 
 	}
 
+	@Override
 	public void endTurn() {
 		stopFadeThread = true;
 	}
