@@ -281,7 +281,7 @@ public class TapTestActivity extends Activity implements
 
 	public void startTurn() {
 		vibrate(500);
-		fadeBackground();
+		//fadeBackground();
 
 	}
 
