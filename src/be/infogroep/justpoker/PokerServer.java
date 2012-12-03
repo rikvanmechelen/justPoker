@@ -271,6 +271,7 @@ public class PokerServer {
 			}
 			if (match.getRound() == Round.RiverBet){
 				gui.displayLogginInfo("Game ended, get ready for the next game :)");
+				startNewGame();
 			}
 			match.nextRound();
 			
@@ -288,14 +289,27 @@ public class PokerServer {
 			}
 		}
 	}
+	
+	public void startNewGame() {
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			PokerPlayer player = iterator.next();
+			Connection c = player.getConnection();
+			if (c.isConnected()) {
+				Log.d("justPoker - server", "sending to " + c.toString());
+				player.resetState();
+				c.sendTCP(new SetStateMessage(player.getState(), player.getId()));
+				gui.setPlaying(player, connections.indexOfKey(player.getId()));
+			}
+		}
+	}
 
-	public void startGame() {
+	public void startMatch() {
 		// DisplayLoggingInfo("Starting a game!!!!");
 		Log.d("justPoker - server", "starting game");
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
 			PokerPlayer player = iterator.next();
-			Log.d("justPoker - server", "got PokerPlayer from connections "+player);
 			Connection c = player.getConnection();
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());

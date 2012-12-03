@@ -183,8 +183,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="15"
-            android:onClick="startGame"
-            android:text="Start Game" />
+            android:onClick="startMatch"
+            android:text="Start Match" />
     </LinearLayout>
 
     <LinearLayout

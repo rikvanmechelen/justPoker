@@ -274,6 +274,9 @@ public class PokerClient {
 			setMyTurn(((SetYourTurn) m).getTurn());
 			gui.displayLoggingInfo("It is your turn!");
 		}
+		if (m instanceof SetStateMessage) {
+			gui.displayLoggingInfo(m);
+		}
 		if (m instanceof String) {
 			gui.displayLoggingInfo(m);
 		}
