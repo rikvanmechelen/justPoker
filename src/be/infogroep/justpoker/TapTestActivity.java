@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -138,9 +139,8 @@ public class TapTestActivity extends Activity implements
 				Toast.LENGTH_LONG).show();
 	}
 
-	@TargetApi(14)
 	private void doBet() {
-		RelativeLayout layout = (RelativeLayout) findViewById(R.id.tap_test_layout);
+		LinearLayout layout = (LinearLayout) findViewById(R.id.tap_test_layout);
 		ImageView button = (ImageView) findViewById(R.id.betChip);
 		
 		ImageView button2 = cloneImageView(button);
@@ -151,7 +151,7 @@ public class TapTestActivity extends Activity implements
 		spin.setDuration(300);
 		move.start();
 		spin.start();
-		button2.destroyDrawingCache();
+		layout.removeView(button2);
 		Toast.makeText(getApplicationContext(), "You Bet!", Toast.LENGTH_LONG)
 				.show();
 	}
