@@ -160,6 +160,10 @@ public class ServerTableActivity extends Activity {
 	public void setCheck(final PokerPlayer p, final int index) {
 		setPlayerActionUIThread(p, index, R.drawable.action_check);
 	}
+	
+	public void resetAction(PokerPlayer player, int index) {
+		setPlayerActionUIThread(player, index, -1);
+	}
 
 	public void resetPlayer(PokerPlayer player, int index) {
 		setPlayerStatusUIThread(player, index, R.drawable.avatar_playing);

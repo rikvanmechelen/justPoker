@@ -282,12 +282,14 @@ public class TapTestActivity extends Activity implements
 		}
 	}
 
+	@Override
 	public void startTurn() {
 		vibrate(500);
-		fadeBackground();
+		//fadeBackground();
 
 	}
 
+	@Override
 	public void endTurn() {
 		stopFadeThread = true;
 	}
