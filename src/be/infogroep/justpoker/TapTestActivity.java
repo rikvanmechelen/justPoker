@@ -5,14 +5,17 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ public class TapTestActivity extends Activity implements
 	PokerClient client;
 	private PowerManager pm;
 	private PowerManager.WakeLock wl;
+	private boolean stopFadeThread = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,9 +39,9 @@ public class TapTestActivity extends Activity implements
 		// client.sendHello();
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
-				 "be.infogroep.justpoker.ServerTableActivity");
+				"be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
-		
+
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
@@ -138,7 +142,7 @@ public class TapTestActivity extends Activity implements
 	private void doBet() {
 		RelativeLayout layout = (RelativeLayout) findViewById(R.id.tap_test_layout);
 		ImageView button = (ImageView) findViewById(R.id.betChip);
-		
+
 		ImageView button2 = cloneImageView(button);
 		layout.addView(button2);
 		ObjectAnimator move = ObjectAnimator.ofFloat(button2, "y", -225);
@@ -161,7 +165,7 @@ public class TapTestActivity extends Activity implements
 	public void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -226,7 +230,8 @@ public class TapTestActivity extends Activity implements
 			}
 		});
 	}
-	private ImageView cloneImageView(ImageView view){
+
+	private ImageView cloneImageView(ImageView view) {
 		ImageView result = new ImageView(this);
 		result.setX(view.getX());
 		result.setY(view.getY());
@@ -237,20 +242,44 @@ public class TapTestActivity extends Activity implements
 		return result;
 	}
 
-	private void vibrate(int len){
+	private void vibrate(int len) {
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(len);
 	}
 
+	public void fadeBackground() {
+		final RelativeLayout screen = (RelativeLayout) findViewById(R.id.tap_test_layout);
+		for (int i = 0; i < 255; i++) {
+			final int a = i;
+			if (stopFadeThread) {
+				screen.setBackgroundColor(Color.GREEN);
+				stopFadeThread = false;
+				break;
+			} else {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						screen.setBackgroundColor(Color.argb(255, a, 255 - a,
+								0));
+						if (a == 254) {
+							vibrate(300);
+							screen.setBackgroundColor(Color.GREEN);
+						}
+					}
+				});
+				try {
+					Thread.sleep(50);
+				} catch (Exception e) {
+					break;
+				}
+			}
+		}
+	}
+
 	@Override
 	public void startTurn() {
-		runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				vibrate(500);
-			}
-		});
-		
+		// });
+		vibrate(500);
+		fadeBackground();
+
 	}
 }
