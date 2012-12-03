@@ -2,22 +2,22 @@ package be.infogroep.justpoker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import be.infogroep.justpoker.GameElements.Card;
 import edu.vub.at.commlib.CommLib;
@@ -327,26 +327,26 @@ public class ServerTableActivity extends Activity {
 		});
 	}
 
-	private void doClearCard(ImageView card) {
-		final ImageView card2 = new ImageView(this);
-		final LinearLayout container = (LinearLayout) findViewById(CommLib
-				.getViewID("cards"));
-		final ScheduledExecutorService worker = Executors
-				.newSingleThreadScheduledExecutor();
-		card2.setX(card.getX());
-		container.addView(card2);
-		card2.setImageDrawable(getDrawable("card_backside"));
-		ObjectAnimator move = ObjectAnimator.ofFloat(card2, "x", -255);
-		move.setDuration(300);
-		Runnable task = new Runnable() {
-			public void run() {
-				container.removeView(card2);
+	private void doClearCard(final ImageView card) {
+		
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+		myFadeInAnimation.setAnimationListener(new AnimationListener() {
+			@TargetApi(16)
+			public void onAnimationEnd(Animation animation) {
+				card.setImageDrawable(null);
+	            Log.d("justPoker - Client", "---- animation end listener called"  );
 			}
-		};
-		//worker.schedule(task, 300, TimeUnit.MILLISECONDS);
-		container.removeView(card2);
-		move.start();
-		card.setImageDrawable(null);
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				card.setImageDrawable(getDrawable("card_backside"));
+			}
+		});
+		card.startAnimation(myFadeInAnimation);
 	}
 
 	private void setUpCard(String id, Card c) {
