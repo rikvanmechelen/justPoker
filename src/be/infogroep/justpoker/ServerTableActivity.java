@@ -52,8 +52,8 @@ public class ServerTableActivity extends Activity {
 			public void onLeftToRight() {
 				runOnNotUiThread(new Runnable() {
 					public void run() {
-						//clearTable();
-						cps.startNewGame();
+						clearTable();
+						//cps.startNewGame();
 					}
 				});
 
@@ -63,8 +63,8 @@ public class ServerTableActivity extends Activity {
 			public void onRightToLeft() {
 				runOnNotUiThread(new Runnable() {
 					public void run() {
-						//clearTable();
-						cps.startNewGame();
+						clearTable();
+						//cps.startNewGame();
 					}
 				});
 			}
@@ -334,7 +334,7 @@ public class ServerTableActivity extends Activity {
 			@TargetApi(16)
 			public void onAnimationEnd(Animation animation) {
 				card.setImageDrawable(null);
-	            Log.d("justPoker - Client", "---- animation end listener called"  );
+	            Log.d("justPoker - Client", "---- animation end listener called" );
 			}
 
 			@Override
