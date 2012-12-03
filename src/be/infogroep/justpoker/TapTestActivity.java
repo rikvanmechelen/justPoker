@@ -48,6 +48,7 @@ AbstractPokerClientActivity {
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
+		setTitle("justPoker - "+ name);
 		client = PokerClient.getInstance(TapTestActivity.this, name, ip);
 
 		flippedCard1 = flippedCard2 = false;
