@@ -19,4 +19,6 @@ public interface AbstractPokerClientActivity {
 	public void bet();
 
 	public void startTurn();
+
+	public void endTurn();
 }

@@ -252,14 +252,22 @@ public class TapTestActivity extends Activity implements
 		for (int i = 0; i < 255; i++) {
 			final int a = i;
 			if (stopFadeThread) {
-				screen.setBackgroundColor(Color.GREEN);
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+
+						screen.setBackgroundColor(Color.GREEN);
+
+					}
+				});
 				stopFadeThread = false;
 				break;
 			} else {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						screen.setBackgroundColor(Color.argb(255, a, 255 - a,
-								0));
+						screen.setBackgroundColor(Color
+								.argb(255, a, 255 - a, 0));
 						if (a == 254) {
 							vibrate(300);
 							screen.setBackgroundColor(Color.GREEN);
@@ -281,5 +289,10 @@ public class TapTestActivity extends Activity implements
 		vibrate(500);
 		fadeBackground();
 
+	}
+
+	@Override
+	public void endTurn() {
+		stopFadeThread = true;
 	}
 }

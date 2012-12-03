@@ -119,6 +119,7 @@ public class PokerClient {
 	
 	public void endMyTurn() {
 		this.myTurn = false;
+		gui.endTurn();
 	}
 	
 	public void sendHello() {
