@@ -248,8 +248,8 @@ public class PokerServer {
 		PokerPlayer bigBlind = connections.nextFrom(smallBlind.getId());
 		match.setBigBlind(bigBlind.getId());
 
-		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, smallBlind.getId()));
-		gui.setBigBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
+		bigBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.BigBlind, bigBlind.getId()));
+		gui.setBigBlind(bigBlind, connections.indexOfKey(bigBlind.getId()));
 		smallBlind.getConnection().sendTCP(new SetButtonMessage(PokerButton.SmallBlind, smallBlind.getId()));
 		gui.setSmallBlind(smallBlind, connections.indexOfKey(smallBlind.getId()));
 		dealer.getConnection().sendTCP(new SetButtonMessage(PokerButton.Dealer, dealer.getId()));
@@ -283,7 +283,7 @@ public class PokerServer {
 				break;
 			}
 		} else {
-			setTurn(connections.nextFrom(client_id));
+			setTurn(connections.nextUnfoldedFrom(client_id));
 		}
 	}
 	
@@ -320,7 +320,7 @@ public class PokerServer {
 		//gui.resetCards();
 		roundSetup(connections.nextFrom(match.getDealer()));
 		dealCards();
-		setTurn(connections.nextFrom(match.getSmallBlind()));
+		setTurn(connections.nextFrom(match.getBigBlind()));
 	}
 
 	public void startMatch() {
@@ -339,7 +339,7 @@ public class PokerServer {
 		match = new PokerGame();
 		roundSetup(connections.getFirst());
 		dealCards();
-		setTurn(connections.nextFrom(match.getSmallBlind()));
+		setTurn(connections.nextFrom(match.getBigBlind()));
 	}
 	
 	private void messageParser(Connection c, Object msg, Runnable r) {

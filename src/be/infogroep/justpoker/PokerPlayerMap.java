@@ -195,13 +195,17 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 			if (i == keys.size())
 				i = 0;
 			p = values.get(i);
-			if (p != null) {
+			if (p != null) {			
 				if (((PokerPlayer) p).getState() != PlayerState.Fold) {
+					Log.d("justPoker - PokerPlayerMap", "he is not folded");
 					keep_going = false;
 				}
 			}
-			if (i == start)
+			if (i == start) {
+				Log.d("justPoker - PokerPlayerMap", "he is not folded, but i == start");
 				keep_going = false;
+			}
+			Log.d("justPoker - PokerPlayerMap", "he is folded");
 			i++;
 		}
 		return p;

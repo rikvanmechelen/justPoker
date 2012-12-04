@@ -236,7 +236,7 @@ public class TapTestActivity extends Activity implements
 			}
 		});
 
-		if (client.getState() == PlayerState.Fold) {
+		if (client.getState() == PlayerState.Fold || client.getState() == PlayerState.Unknown) {
 			card.startAnimation(myFadeInAnimation);
 		} else {
 			card.startAnimation(myFoldInAnimation);
