@@ -152,15 +152,12 @@ AbstractPokerClientActivity {
 		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.moveup);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
 			public void onAnimationEnd(Animation animation) {
-				//button.setImageDrawable(null);
-	            //Log.d("justPoker - Client", "---- animation end listener called"  );
 			}
 
 			public void onAnimationRepeat(Animation animation) {
 			}
 
 			public void onAnimationStart(Animation animation) {
-				//button.setImageDrawable(getDrawable("card_backside"));
 			}
 		});
 		button.startAnimation(myFadeInAnimation);
