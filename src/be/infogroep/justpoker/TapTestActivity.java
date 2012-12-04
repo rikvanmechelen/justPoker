@@ -85,11 +85,13 @@ AbstractPokerClientActivity {
 
 			@Override
 			public void onLongpress() {
-				cardContainer1.setImageDrawable(getDrawable(client.getCard1()
-						.toString()));
-				cardContainer2.setImageDrawable(getDrawable(client.getCard2()
-						.toString()));
-				longPressed = true;
+				if (client.inGame()) {
+					cardContainer1.setImageDrawable(getDrawable(client.getCard1()
+							.toString()));
+					cardContainer2.setImageDrawable(getDrawable(client.getCard2()
+							.toString()));
+					longPressed = true;
+				}
 			}
 
 			public void onTouchevent(MotionEvent e) {

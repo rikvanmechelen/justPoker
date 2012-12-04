@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NavUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,9 @@ public class ServerTableActivity extends Activity {
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
 				"be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
+		
+		((TextView) findViewById(R.id.serverLog)).setMovementMethod(new ScrollingMovementMethod());
+		
 		String ipAddress = CommLib.getIpAddress(this);
 		cps = PokerServer.getInstance(ServerTableActivity.this, ipAddress);
 		cps.start();

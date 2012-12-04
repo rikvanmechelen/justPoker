@@ -41,6 +41,7 @@ public class PokerClient {
 	private volatile Boolean smallBlind = false;
 	private volatile Boolean bigBlind = false;
 	private volatile Boolean myTurn = false;
+	private volatile Boolean inGame = false;
 	private volatile Card card1;
 	private volatile Card card2;
 
@@ -72,7 +73,7 @@ public class PokerClient {
 		}
 		return SingletonPokerClient;
 	}
-
+	
 	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String aid, String ip) {
 		//if (SingletonPokerClient == null) {
 		SingletonPokerClient = new PokerClient(c, n, aid, ip);
@@ -233,6 +234,10 @@ public class PokerClient {
 			return null;
 		}
 	}
+	
+	public Boolean inGame(){
+		return inGame;
+	}
 
 	public void fold(ImageView cardContainer1, ImageView cardContainer2) {
 		if (getMyTurn()){
@@ -275,6 +280,7 @@ public class PokerClient {
 			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof ReceiveCardsMessage){
+			inGame = true;
 			Card[] cards = ((ReceiveCardsMessage) m).getCards();
 			gui.setCards(cards);
 		}
@@ -327,6 +333,7 @@ public class PokerClient {
 			//gui.setState(state);
 		}
 		if (m instanceof StartNewGameMessage) {
+			inGame = false;
 			state = PlayerState.Unknown;
 			dealer = false;
 			smallBlind = false;

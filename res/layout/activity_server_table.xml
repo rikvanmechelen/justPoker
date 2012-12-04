@@ -138,6 +138,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="15"
+            android:maxLines = "25"
             android:scrollbars="vertical"
             tools:context=".ServerTableActivity" />
 
