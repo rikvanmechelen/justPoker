@@ -58,7 +58,7 @@ AbstractPokerClientActivity {
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
 		setTitle("justPoker - "+ name);
-		client = PokerClient.getInstance(TapTestActivity.this, name, android_id, ip);
+		
 
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
@@ -67,8 +67,11 @@ AbstractPokerClientActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
 		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
+		initialCards(cardContainer1, cardContainer2);
 		final ImageView betChip = (ImageView) findViewById(R.id.betChip);
 		//final TextView betChipText = (TextView) findViewById(R.id.betChipText);
+		
+		client = PokerClient.getInstance(TapTestActivity.this, name, android_id, ip, cardContainer1, cardContainer2);
 
 		OnFlingGestureListener cardListener = new OnFlingGestureListener() {
 			private boolean longPressed = false;
@@ -136,16 +139,66 @@ AbstractPokerClientActivity {
 		t.setText(s);
 	}
 
-	private void doFold(ImageView card) {
-		ObjectAnimator move = ObjectAnimator.ofFloat(card, "y", -225);
-		ObjectAnimator fade = ObjectAnimator.ofFloat(card, "alpha", 0);
-		ObjectAnimator spin = ObjectAnimator.ofFloat(card, "rotation", 180);
-		move.setDuration(300);
-		fade.setDuration(300);
-		spin.setDuration(300);
-		move.start();
-		// fade.start();
-		spin.start();
+	private void doFold(final ImageView card) {
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.foldcards);
+		myFadeInAnimation.setAnimationListener(new AnimationListener() {
+			public void onAnimationEnd(Animation animation) {
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationStart(Animation animation) {
+			}
+		});
+		myFadeInAnimation.setFillAfter(true);
+		card.startAnimation(myFadeInAnimation);
+	}
+	
+	private void doInitialCards(final ImageView card) {
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.initialcards);
+		myFadeInAnimation.setAnimationListener(new AnimationListener() {
+			public void onAnimationEnd(Animation animation) {
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationStart(Animation animation) {
+			}
+		});
+		myFadeInAnimation.setFillAfter(true);
+		card.startAnimation(myFadeInAnimation);
+	}
+	
+	private void doDeal(final ImageView card, final ImageView card2) {
+		final Animation myFadeInAnimation2 = AnimationUtils.loadAnimation(this, R.anim.dealcards);
+		myFadeInAnimation2.setAnimationListener(new AnimationListener() {
+			public void onAnimationEnd(Animation animation) {
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationStart(Animation animation) {
+			}
+		});
+		myFadeInAnimation2.setFillAfter(true);
+				
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.dealcards);
+		myFadeInAnimation.setAnimationListener(new AnimationListener() {
+			public void onAnimationEnd(Animation animation) {
+				card2.startAnimation(myFadeInAnimation2);
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationStart(Animation animation) {
+			}
+		});
+		myFadeInAnimation.setFillAfter(true);
+		card.startAnimation(myFadeInAnimation);
 	}
 
 	private void doCheck() {
@@ -154,7 +207,6 @@ AbstractPokerClientActivity {
 	}
 
 	private void doBet() {
-		LinearLayout layout = (LinearLayout) findViewById(R.id.tap_test_layout);
 		final ImageView button = (ImageView) findViewById(R.id.betChip);
 		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.moveup);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
@@ -204,6 +256,9 @@ AbstractPokerClientActivity {
 	public void setCards(Card[] cards) {
 		client.setCard1(cards[0]);
 		client.setCard2(cards[1]);
+		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
+		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
+		deal(cardContainer1, cardContainer2);
 	}
 
 	private Drawable getDrawable(String s) {
@@ -227,6 +282,24 @@ AbstractPokerClientActivity {
 			public void run() {
 				doFold(card1);
 				doFold(card2);
+			}
+		});
+	}
+	
+	public void initialCards(final ImageView card1, final ImageView card2) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				doInitialCards(card1);
+				doInitialCards(card2);
+			}
+		});
+	}
+	
+	public void deal(final ImageView card1, final ImageView card2) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				doDeal(card2, card1);
+				//doDeal(card2);
 			}
 		});
 	}

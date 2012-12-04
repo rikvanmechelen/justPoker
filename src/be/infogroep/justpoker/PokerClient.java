@@ -44,6 +44,8 @@ public class PokerClient {
 	private volatile Boolean inGame = false;
 	private volatile Card card1;
 	private volatile Card card2;
+	private volatile ImageView cardContainer1;
+	private volatile ImageView cardContainer2;
 
 	public PlayerState getState() {
 		return state;
@@ -57,12 +59,14 @@ public class PokerClient {
 
 	}
 
-	public PokerClient(AbstractPokerClientActivity c, String n, String aid, String ip) {
+	public PokerClient(AbstractPokerClientActivity c, String n, String aid, String ip, ImageView c1, ImageView c2) {
 		this.name = n;
 		this.serverIP = ip;
 		this.gui = c;
 		this.state = PlayerState.Unknown;
 		this.android_id = aid;
+		this.cardContainer1 = c1;
+		this.cardContainer2 = c2;
 		connectToServer(ip);
 	}
 
@@ -74,9 +78,9 @@ public class PokerClient {
 		return SingletonPokerClient;
 	}
 	
-	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String aid, String ip) {
+	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String aid, String ip, ImageView cardContainer1, ImageView cardContainer2) {
 		//if (SingletonPokerClient == null) {
-		SingletonPokerClient = new PokerClient(c, n, aid, ip);
+		SingletonPokerClient = new PokerClient(c, n, aid, ip, cardContainer1, cardContainer1);
 		//}
 		return SingletonPokerClient;
 	}
