@@ -3,6 +3,7 @@ package be.infogroep.justpoker;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -19,10 +20,12 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 	private Vector<K> keys;
 	private int amount;
 	private Vector<V> values;
+	private HashMap<String, K> android_id_map;
 
 	public PokerPlayerMap() {
 		keys = new Vector<K>(9);
 		values = new Vector<V>(9);
+		android_id_map = new HashMap<String, K>();
 		keys.setSize(9);
 		values.setSize(9);
 	}
@@ -31,9 +34,34 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void putAndroidID(String aid, K id) {
+		android_id_map.put(aid, id);
+	}
+	
+	public K getClientIDByAndroidID(String aid) {
+		return android_id_map.get(aid);
+	}
 
 	public boolean containsKey(Object arg0) {
 		return keys.contains(arg0);
+	}
+	
+	
+	public void logKeys(){
+		Log.d("JustPoker - map", "Printing out the keys vector");
+		Iterator<K> iter = keys.iterator();
+		while(iter.hasNext()){
+			Log.d("JustPoker - map", "key: "+iter.next());
+		}
+	}
+	
+	public void replaceKey(Object old, K n) {
+		Log.d("JustPoker - replaceKey", "disctruction to keys");
+		int index = keys.indexOf(old);
+		if (index != -1){
+			keys.setElementAt(n, index);
+		}
 	}
 
 	public boolean containsValue(Object value) {
@@ -76,6 +104,7 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 	}
 
 	public V put(K key, V value) {
+		Log.d("JustPoker - put", "disctruction to keys");
 		int i = keys.indexOf(null);
 		if (i == -1)
 			return null;
@@ -95,6 +124,7 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 	}
 	
 	public V remove(Object key) {
+		Log.d("JustPoker - remove", "disctruction to keys");
 		int i = keys.indexOf(key);
 		if (i == -1)
 			return null;
@@ -106,6 +136,7 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 	}
 	
 	public Boolean move(K k, int pos) {
+		Log.d("JustPoker - move", "disctruction to keys");
 		int i = keys.indexOf(k);
 		if (i == -1)
 			return false;
@@ -151,7 +182,7 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 		return amount;
 	}
 	
-	public int indexOfKey(int client_id) {
+	public int indexOfKey(K client_id) {
 		return keys.indexOf(client_id);
 	}
 

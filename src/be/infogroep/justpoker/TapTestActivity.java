@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.provider.Settings.Secure;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,7 @@ AbstractPokerClientActivity {
 	private PowerManager pm;
 	private PowerManager.WakeLock wl;
 	private boolean stopFadeThread = false;
+	private String android_id;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,12 +50,15 @@ AbstractPokerClientActivity {
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
 				"be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
+		
+		android_id = Secure.getString(getBaseContext().getContentResolver(),
+                Secure.ANDROID_ID);
 
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
 		setTitle("justPoker - "+ name);
-		client = PokerClient.getInstance(TapTestActivity.this, name, ip);
+		client = PokerClient.getInstance(TapTestActivity.this, name, android_id, ip);
 
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);

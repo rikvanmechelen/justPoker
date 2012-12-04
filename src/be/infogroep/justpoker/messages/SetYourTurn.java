@@ -3,7 +3,7 @@ package be.infogroep.justpoker.messages;
 import edu.vub.at.commlib.PlayerState;
 
 public class SetYourTurn  extends Message {
-	private Integer client_id;
+	private String client_id;
 	private Boolean turn;
 
 	public Boolean getTurn() {
@@ -14,7 +14,7 @@ public class SetYourTurn  extends Message {
 		this.turn = turn;
 	}
 
-	public SetYourTurn(Boolean t, int id) {
+	public SetYourTurn(Boolean t, String id) {
 		this.setClient_id(id);
 		this.setTurn(t);
 	}
@@ -24,11 +24,11 @@ public class SetYourTurn  extends Message {
 
 	
 
-	public Integer getClient_id() {
+	public String getClient_id() {
 		return client_id;
 	}
 
-	public void setClient_id(Integer client_id) {
+	public void setClient_id(String client_id) {
 		this.client_id = client_id;
 	}
 

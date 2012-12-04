@@ -7,13 +7,13 @@ import be.infogroep.justpoker.messages.SetStateMessage;
 
 public class PokerGame {
 
-	private Integer dealer;
-	private Integer bigBlind;
-	private Integer smallBlind;
+	private String dealer;
+	private String bigBlind;
+	private String smallBlind;
 	
 	private int smallBlindAmount;
 	
-	private Integer PlayerTurn;
+	private String PlayerTurn;
 	
 	private Deck deck;
 	
@@ -30,27 +30,27 @@ public class PokerGame {
 		newRound();
 	}
 
-	public Integer getDealer() {
+	public String getDealer() {
 		return dealer;
 	}
 
-	public void setDealer(Integer dealer) {
+	public void setDealer(String dealer) {
 		this.dealer = dealer;
 	}
 
-	public Integer getBigBlind() {
+	public String getBigBlind() {
 		return bigBlind;
 	}
 
-	public void setBigBlind(Integer bigBlind) {
+	public void setBigBlind(String bigBlind) {
 		this.bigBlind = bigBlind;
 	}
 
-	public Integer getSmallBlind() {
+	public String getSmallBlind() {
 		return smallBlind;
 	}
 
-	public void setSmallBlind(Integer smallBlind) {
+	public void setSmallBlind(String smallBlind) {
 		this.smallBlind = smallBlind;
 	}
 
@@ -62,11 +62,11 @@ public class PokerGame {
 		this.smallBlindAmount = smallBlindAmount;
 	}
 
-	public Integer getPlayerTurn() {
+	public String getPlayerTurn() {
 		return PlayerTurn;
 	}
 
-	public void setPlayerTurn(Integer playerTurn) {
+	public void setPlayerTurn(String playerTurn) {
 		PlayerTurn = playerTurn;
 	}
 	
@@ -131,21 +131,21 @@ public class PokerGame {
 		return currentState;
 	}
 	
-	public State bet(Integer id){
+	public State bet(String id){
 		currentState = new State(id, PlayerState.Bet);
 		return currentState;
 	}
 	
-	public State check(Integer id){
+	public State check(String id){
 		currentState = new State(id, PlayerState.Check);
 		return currentState;
 	}
-	public State call(Integer id){
+	public State call(String id){
 		currentState = new State(id, PlayerState.Call);
 		return currentState;
 	}
 	
-	public State raise(Integer id){
+	public State raise(String id){
 		currentState = new State(id, PlayerState.Raise);
 		return currentState;
 	}
@@ -153,16 +153,16 @@ public class PokerGame {
 	
 	
 	public class State {
-		private Integer player;
+		private String player;
 		private PlayerState state;
-		public State(Integer p, PlayerState s){
+		public State(String p, PlayerState s){
 			this.player = p;
 			this.state = s;
 		}
 		public PlayerState getState() {
 			return state;
 		}
-		public Integer getPlayer() {
+		public String getPlayer() {
 			return player;
 		}
 	}

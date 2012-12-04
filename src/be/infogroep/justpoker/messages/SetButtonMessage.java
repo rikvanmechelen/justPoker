@@ -4,10 +4,10 @@ import edu.vub.at.commlib.PokerButton;
 
 public class SetButtonMessage  extends Message {
 	private static final long serialVersionUID = 1728704905150265306L;
-	private Integer client_id;
+	private String client_id;
 	private PokerButton button;
 
-	public SetButtonMessage(PokerButton s, int id) {
+	public SetButtonMessage(PokerButton s, String id) {
 		this.setButton(s);
 		this.setClient_id(id);
 	}
@@ -23,11 +23,11 @@ public class SetButtonMessage  extends Message {
 		this.button = state;
 	}
 
-	public Integer getClient_id() {
+	public String getClient_id() {
 		return client_id;
 	}
 
-	public void setClient_id(Integer client_id) {
+	public void setClient_id(String client_id) {
 		this.client_id = client_id;
 	}
 

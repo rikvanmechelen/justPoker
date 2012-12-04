@@ -4,10 +4,10 @@ import edu.vub.at.commlib.PlayerState;
 
 public class SetStateMessage  extends Message {
 	private static final long serialVersionUID = 4067126053792155852L;
-	private Integer client_id;
+	private String client_id;
 	private PlayerState state;
 
-	public SetStateMessage(PlayerState s, int id) {
+	public SetStateMessage(PlayerState s, String id) {
 		this.setState(s);
 		this.setClient_id(id);
 	}
@@ -23,11 +23,11 @@ public class SetStateMessage  extends Message {
 		this.state = state;
 	}
 
-	public Integer getClient_id() {
+	public String getClient_id() {
 		return client_id;
 	}
 
-	public void setClient_id(Integer client_id) {
+	public void setClient_id(String client_id) {
 		this.client_id = client_id;
 	}
 

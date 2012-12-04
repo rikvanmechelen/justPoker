@@ -3,6 +3,7 @@ package be.infogroep.justpoker;
 import java.io.IOException;
 
 import android.os.AsyncTask;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.widget.ImageView;
 import be.infogroep.justpoker.GameElements.Card;
@@ -24,13 +25,14 @@ import edu.vub.at.commlib.PlayerState;
 import edu.vub.at.commlib.PokerButton;
 
 public class PokerClient {
-    public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
+	public static final String BROADCAST_ACTION = "be.infogroep.justpoker.pokerclient.displayevent";
 
 	private static PokerClient SingletonPokerClient;
 
-	private Connection serverConnection;
+	private Client serverConnection;
 	private String connectionID = "connectionID";
 	private int myClientID;
+	private String android_id;
 	private String name;
 	private String serverIP;
 	private AbstractPokerClientActivity gui;
@@ -41,7 +43,7 @@ public class PokerClient {
 	private volatile Boolean myTurn = false;
 	private volatile Card card1;
 	private volatile Card card2;
-	
+
 	public PlayerState getState() {
 		return state;
 	}
@@ -51,17 +53,18 @@ public class PokerClient {
 	}
 
 	public PokerClient() {
-		
+
 	}
-	
-	public PokerClient(AbstractPokerClientActivity c, String n, String ip) {
+
+	public PokerClient(AbstractPokerClientActivity c, String n, String aid, String ip) {
 		this.name = n;
 		this.serverIP = ip;
 		this.gui = c;
 		this.state = PlayerState.Unknown;
+		this.android_id = aid;
 		connectToServer(ip);
 	}
-	
+
 
 	public static PokerClient getInstance() {
 		if (SingletonPokerClient == null) {
@@ -69,10 +72,10 @@ public class PokerClient {
 		}
 		return SingletonPokerClient;
 	}
-	
-	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String ip) {
+
+	public static PokerClient getInstance(AbstractPokerClientActivity c, String n, String aid, String ip) {
 		//if (SingletonPokerClient == null) {
-			SingletonPokerClient = new PokerClient(c, n, ip);
+		SingletonPokerClient = new PokerClient(c, n, aid, ip);
 		//}
 		return SingletonPokerClient;
 	}
@@ -81,7 +84,7 @@ public class PokerClient {
 		return serverConnection;
 	}
 
-	public void setServerConnection(Connection c) {
+	public void setServerConnection(Client c) {
 		serverConnection = c;
 	}
 
@@ -112,31 +115,33 @@ public class PokerClient {
 	public Boolean getMyTurn() {
 		return myTurn;
 	}
-	
+
 	public void setMyTurn(Boolean myTurn) {
 		this.myTurn = myTurn;
 		gui.startTurn();
 	}
-	
+
 	public void endMyTurn() {
 		this.myTurn = false;
 		gui.endTurn();
 	}
-	
+
 	public void sendHello() {
+		//new EnsureConnection().execute();
 		new SendAsyncMessage(serverConnection, "Owh Yah, Duffman is pounding in the direction!").execute();
 	}
-	
+
 	public void sendState(PlayerState s){
-		new SendAsyncMessage(serverConnection, new SetStateMessage(s, myClientID)).execute();
+		new EnsureConnection().execute();
+		new SendAsyncMessage(serverConnection, new SetStateMessage(s, android_id)).execute();
 	}
-	
+
 	public Listener listener = new Listener() {
 
 		@Override
 		public void connected(Connection c) {
 			super.connected(c);
-			setServerConnection(c);
+			setServerConnection((Client) c);
 			Log.d("justPoker - Client", "Connected to server!");
 		}
 
@@ -168,15 +173,34 @@ public class PokerClient {
 	}
 
 	public class SendAsyncMessage extends AsyncTask<Void, Void, Client> {		
-		private Connection c;
+		private Client c;
 		private Object o;
-		public SendAsyncMessage(Connection co, Object obj) {
+		public SendAsyncMessage(Client co, Object obj) {
 			this.c = co;
 			this.o = obj;
 		}
 		@Override
 		protected Client doInBackground(Void... params) {
 			c.sendTCP(o);
+			return null;
+		}	
+	}
+
+	public class EnsureConnection extends AsyncTask<Void, Void, Client> {		
+		public EnsureConnection() {
+		}
+		@Override
+		protected Client doInBackground(Void... params) {
+			if (! serverConnection.isConnected()){
+				try {
+					serverConnection.reconnect();
+					Log.d("justPoker - Client", "RECONNECT Succeded");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					Log.d("justPoker - Client", "RECONNECT FAILED");
+				}
+			}
 			return null;
 		}	
 	}
@@ -214,7 +238,7 @@ public class PokerClient {
 		if (getMyTurn()){
 			sendState(PlayerState.Fold);
 			gui.fold(cardContainer1, cardContainer2);
-			endMyTurn();
+			//endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
 		}		
@@ -224,7 +248,7 @@ public class PokerClient {
 		if (getMyTurn()) {
 			sendState(PlayerState.Bet);
 			gui.bet();
-			endMyTurn();
+			//endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
 		}
@@ -234,20 +258,20 @@ public class PokerClient {
 		if (getMyTurn()){
 			sendState(PlayerState.Check);
 			gui.check(cardContainer1, cardContainer2);
-			endMyTurn();
+			//endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
 		}
-		
+
 	}
 
-	
+
 	private void messageParser(Connection c, Object m){
 		//DisplayLoggingInfo(msg);
 		//handler.postDelayed(test, 2000);
 		if (m instanceof RegisterMessage) {
 			myClientID = ((RegisterMessage) m).getClient_id();
-			serverConnection.sendTCP(new RegisterMessage(myClientID, name));
+			serverConnection.sendTCP(new RegisterMessage(myClientID, name, android_id));
 			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof ReceiveCardsMessage){
@@ -277,6 +301,7 @@ public class PokerClient {
 			gui.displayLoggingInfo("It is your turn!");
 		}
 		if (m instanceof SetStateMessage) {
+			endMyTurn();
 			state = ((SetStateMessage) m).getState();
 			gui.displayLoggingInfo(m);
 			switch(state){

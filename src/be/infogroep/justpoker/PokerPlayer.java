@@ -8,8 +8,8 @@ import edu.vub.at.commlib.PlayerState;
 
 public class PokerPlayer {
 	private String name;
-	private Connection connection;
-	private int id;
+	private volatile Connection connection;
+	private String id;
 	private volatile PlayerState state;
 	private volatile Card[] cards;
 	private volatile Boolean myTurn = false;
@@ -26,7 +26,7 @@ public class PokerPlayer {
 		this.state = PlayerState.Unknown;
 	}
 
-	public PokerPlayer(int i, Connection c){
+	public PokerPlayer(String i, Connection c){
 		this.id = i;
 		this.connection = c;
 		this.state = PlayerState.Unknown;
@@ -44,8 +44,12 @@ public class PokerPlayer {
 	public Connection getConnection() {
 		return connection;
 	}
+	
+	public void setConnection(Connection c) {
+		this.connection = c;
+	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 

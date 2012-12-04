@@ -37,7 +37,7 @@ public class PokerServer {
 	private static PokerServer SingletonPokerServer;
 
 	int nextClientID = 0;
-	private PokerPlayerMap<Integer, PokerPlayer> connections = new PokerPlayerMap<Integer, PokerPlayer>();
+	private PokerPlayerMap<String, PokerPlayer> connections = new PokerPlayerMap<String, PokerPlayer>();
 	private volatile Thread serverThread;
 	private Server server;
 	// private final Handler handler = new Handler();
@@ -142,7 +142,7 @@ public class PokerServer {
 
 	public void addClient(Connection c) {
 		Log.d("justPoker - Server", "Adding client " + c.getRemoteAddressTCP());
-		connections.put(nextClientID, new PokerPlayer(nextClientID,c));
+		//connections.put(nextClientID, new PokerPlayer(nextClientID,c));
 		RegisterMessage m = new RegisterMessage(nextClientID);
 		c.sendTCP(m);
 		nextClientID++;
@@ -150,7 +150,7 @@ public class PokerServer {
 
 	public void registerClient(Connection c, String nickname, int avatar,
 			int money) {
-		for (Integer i : connections.keySet()) {
+		for (String i : connections.keySet()) {
 			if (connections.get(i).getConnection() == c) {
 				// gameLoop.addPlayer(c, i, nickname, avatar, money);
 				return;
@@ -160,10 +160,10 @@ public class PokerServer {
 
 	public void removeClient(Connection c) {
 		// Log.d("wePoker - Server", "Client removed: " + c);
-		for (Integer i : connections.keySet()) {
+		for (String i : connections.keySet()) {
 			if (connections.get(i).getConnection() == c) {
 				// gameLoop.removePlayer(i);
-				connections.remove(i);
+				//connections.remove(i);
 				return;
 			}
 		}
@@ -256,7 +256,7 @@ public class PokerServer {
 		gui.setDealer(dealer, connections.indexOfKey(dealer.getId()));
 	}
 	
-	private void roundCheck(int client_id) {
+	private void roundCheck(String client_id) {
 		// TODO Auto-generated method stub
 		if (roundFinished()){
 			endRoundCleanup();
@@ -345,12 +345,21 @@ public class PokerServer {
 	private void messageParser(Connection c, Object msg, Runnable r) {
 		// DisplayLoggingInfo(msg);
 		// handler.postDelayed(test, 2000);
+		connections.logKeys();
 		if (msg instanceof RegisterMessage) {
+			
 			RegisterMessage rm = (RegisterMessage) msg;
-			PokerPlayer p = connections.get(rm.getClient_id());
+			PokerPlayer p = connections.get(rm.getAndroid_id());
+			if (p == null) {
+				p = new PokerPlayer(rm.getAndroid_id(),c);
+				connections.put(rm.getAndroid_id(), p);
+				connections.logKeys();
+			} else {
+				p.setConnection(c);
+			}
 			p.setName(rm.getName());
 			gui.displayLogginInfo(rm.getName() + " connected");
-			gui.addPlayer(p, connections.indexOfKey(rm.getClient_id()));
+			gui.addPlayer(p, connections.indexOfKey(rm.getAndroid_id()));
 			// gui.displayLogginInfo("someone connected");
 		}
 		if (msg instanceof SetStateMessage) {
@@ -366,7 +375,7 @@ public class PokerServer {
 
 	private void parseState(SetStateMessage st) {
 		PlayerState state = st.getState();
-		Integer client_id = st.getClient_id();
+		String client_id = st.getClient_id();
 		PokerPlayer player = connections.get(client_id);
 		int index = connections.indexOfKey(client_id);
 		player.endMyTurn();
