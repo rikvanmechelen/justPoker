@@ -22,10 +22,17 @@
             android:paddingLeft="10dp"
             android:paddingTop="10dp" />
 
-        <View
+        <TextView
+            android:id="@+id/info_area"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="60" />
+            android:layout_weight="60"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:typeface="sans"
+            android:scrollbars="vertical" 
+            android:maxLines = "3" />
 
         <ImageView
             android:id="@+id/action"

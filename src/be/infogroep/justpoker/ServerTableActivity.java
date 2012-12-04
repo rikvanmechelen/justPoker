@@ -133,6 +133,17 @@ public class ServerTableActivity extends Activity {
 			public void run() {
 				TextView log = (TextView) findViewById(R.id.serverLog);
 				log.append(string + "\n");
+				
+				// find the amount we need to scroll.  This works by
+			    // asking the TextView's internal layout for the position
+			    // of the final line and then subtracting the TextView's height
+			    final int scrollAmount = log.getLayout().getLineTop(log.getLineCount())
+			            -log.getHeight();
+			    // if there is no need to scroll, scrollAmount will be <=0
+			    if(scrollAmount>0)
+			    	log.scrollTo(0, scrollAmount);
+			    else
+			    	log.scrollTo(0,0);
 			}
 		});
 

@@ -7,7 +7,7 @@ import be.infogroep.justpoker.GameElements.Card;
 
 
 public interface AbstractPokerClientActivity {
-	public void displayLoggingInfo(final Object m);
+	public void displayLoggingInfo(final String m);
 
 	public void setCards(Card[] cards);
 

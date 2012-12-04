@@ -23,7 +23,7 @@ public class PokerPlayer {
 	}
 	
 	public void resetState() {
-		this.state = PlayerState.Unknown;
+		this.state = PlayerState.Playing;
 	}
 
 	public PokerPlayer(String i, Connection c){

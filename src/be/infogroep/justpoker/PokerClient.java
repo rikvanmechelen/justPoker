@@ -281,7 +281,6 @@ public class PokerClient {
 		if (m instanceof RegisterMessage) {
 			myClientID = ((RegisterMessage) m).getClient_id();
 			serverConnection.sendTCP(new RegisterMessage(myClientID, name, android_id));
-			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof ReceiveCardsMessage){
 			inGame = true;
@@ -311,9 +310,11 @@ public class PokerClient {
 			gui.displayLoggingInfo("It is your turn!");
 		}
 		if (m instanceof SetStateMessage) {
+			gui.resetPlayerAction();
+		}
+		if (m instanceof SetStateMessage) {
 			endMyTurn();
 			state = ((SetStateMessage) m).getState();
-			gui.displayLoggingInfo(m);
 			switch(state){
 			case Fold:
 				gui.setFold();
@@ -347,10 +348,9 @@ public class PokerClient {
 			card2 = null;
 			gui.resetPlayerAction();
 			gui.resetButton();
-			gui.displayLoggingInfo(m);
 		}
 		if (m instanceof String) {
-			gui.displayLoggingInfo(m);
+			gui.displayLoggingInfo((String) m);
 		}
 	}
 

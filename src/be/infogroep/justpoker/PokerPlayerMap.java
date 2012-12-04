@@ -196,7 +196,7 @@ public class PokerPlayerMap<K, V> implements Map<K, V> {
 				i = 0;
 			p = values.get(i);
 			if (p != null) {			
-				if (((PokerPlayer) p).getState() != PlayerState.Fold) {
+				if (! (((PokerPlayer) p).getState() == PlayerState.Fold || ((PokerPlayer) p).getState() == PlayerState.Unknown)) {
 					Log.d("justPoker - PokerPlayerMap", "he is not folded");
 					keep_going = false;
 				}

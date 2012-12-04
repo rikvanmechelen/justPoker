@@ -13,6 +13,7 @@ import android.util.Log;
 import be.infogroep.justpoker.PokerGame.Round;
 import be.infogroep.justpoker.GameElements.Card;
 import be.infogroep.justpoker.GameElements.Deck;
+import be.infogroep.justpoker.messages.NewRoundMessage;
 import be.infogroep.justpoker.messages.ReceiveCardsMessage;
 import be.infogroep.justpoker.messages.RegisterMessage;
 import be.infogroep.justpoker.messages.SetButtonMessage;
@@ -207,7 +208,7 @@ public class PokerServer {
 				.hasNext();) {
 			PokerPlayer player = iterator.next();
 			PlayerState state = player.getState();
-			if (state == PlayerState.Unknown) {
+			if (state == PlayerState.Playing ) {
 				result = false;
 				break;
 			}
@@ -260,19 +261,21 @@ public class PokerServer {
 		// TODO Auto-generated method stub
 		if (roundFinished()){
 			endRoundCleanup();
-			setTurn(connections.nextUnfoldedFrom(match.getDealer()));
 			switch(match.getRound()) {
 			case PreFlopBet:
+				setTurn(connections.nextUnfoldedFrom(match.getDealer()));
 				gui.displayLogginInfo("Pre flop bet is over, going to flop bet");
 				showFlop();
 				match.nextRound();
 				break;
 			case FlopBet:
+				setTurn(connections.nextUnfoldedFrom(match.getDealer()));
 				gui.displayLogginInfo("flop bet is over, going to turn bet");
 				showTurn();
 				match.nextRound();
 				break;
 			case TurnBet:
+				setTurn(connections.nextUnfoldedFrom(match.getDealer()));
 				gui.displayLogginInfo("turn bet is over, going to river bet");				
 				showRiver();
 				match.nextRound();
@@ -287,12 +290,14 @@ public class PokerServer {
 		}
 	}
 	
+	
 	private void endRoundCleanup(){
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
 			PokerPlayer player = iterator.next();
-			if (player.getState() != PlayerState.Fold) {
+			if (! (player.getState() == PlayerState.Fold || player.getState() == PlayerState.Unknown)) {
 				player.resetState();
+				player.getConnection().sendTCP(new NewRoundMessage());
 				gui.resetAction(player, connections.indexOfKey(player.getId()));
 			}
 		}
@@ -333,6 +338,7 @@ public class PokerServer {
 			if (c.isConnected()) {
 				Log.d("justPoker - server", "sending to " + c.toString());
 				c.sendTCP("Starting the game!");
+				player.resetState();
 				gui.setPlaying(player, connections.indexOfKey(player.getId()));
 			}
 		}
@@ -371,7 +377,16 @@ public class PokerServer {
 		// handler.post(r);
 	}
 
-	
+	private void notifyOtherPlayers(String pl_id, String message){
+		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
+				.hasNext();) {
+			PokerPlayer player = iterator.next();
+			Log.d("justPoker - server", "player id = "+player.getId()+" pl_id = "+pl_id);
+			if (! player.getId().equals(pl_id)){
+				player.getConnection().sendTCP(message);
+			}
+		}
+	}
 
 	private void parseState(SetStateMessage st) {
 		PlayerState state = st.getState();
@@ -382,32 +397,38 @@ public class PokerServer {
 		switch(state){
 		case Fold:
 			player.getConnection().sendTCP(new SetStateMessage(PlayerState.Fold, client_id));
+			notifyOtherPlayers(client_id, player.getName()+" Folded");
 			player.setState(state);
-			gui.displayLogginInfo(player.getName()+" folded");
+			gui.displayLogginInfo(player.getName()+" Folded");
 			gui.setFolded(player, index);
 			gui.setFold(player, index);
 			break;
 		case Check:		
-			player.setState(state);
 			switch(match.getCurrentState().getState()){
 			case Bet:
+				player.setState(PlayerState.Call);
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.Call, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Called");
 				match.raise(client_id);
 				gui.displayLogginInfo(player.getName()+" Called");
 				gui.setPlaying(player, index);
 				gui.setCall(player, index);
 				break;
 			case Raise:
+				player.setState(PlayerState.Call);
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.Call, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Called");
 				match.raise(client_id);
 				gui.displayLogginInfo(player.getName()+" Called");
 				gui.setPlaying(player, index);
 				gui.setCall(player, index);
 				break;
 			default:
+				player.setState(state);
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.Check, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Checked");
 				//match.bet(client_id);
-				gui.displayLogginInfo(player.getName()+" Called");
+				gui.displayLogginInfo(player.getName()+" Checked");
 				gui.setPlaying(player, index);
 				gui.setCheck(player, index);
 				break;
@@ -418,6 +439,7 @@ public class PokerServer {
 			switch(match.getCurrentState().getState()){
 			case Bet:
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.Raise, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Raised");
 				match.raise(client_id);
 				gui.displayLogginInfo(player.getName()+" Raised");
 				gui.setPlaying(player, index);
@@ -425,13 +447,15 @@ public class PokerServer {
 				break;
 			case Check:
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.Bet, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Bet");
 				match.bet(client_id);
-				gui.displayLogginInfo(player.getName()+" Raised");
+				gui.displayLogginInfo(player.getName()+" Bet");
 				gui.setPlaying(player, index);
 				gui.setBet(player, index);
 				break;
 			case Raise:
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.ReRaise, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Re-Raised "+connections.get(match.getCurrentState().getPlayer()).getName());
 				match.raise(client_id);
 				gui.displayLogginInfo(player.getName()+" Re-Raised "+connections.get(match.getCurrentState().getPlayer()).getName());
 				gui.setPlaying(player, index);
@@ -439,8 +463,9 @@ public class PokerServer {
 				break;
 			default:
 				player.getConnection().sendTCP(new SetStateMessage(PlayerState.Bet, client_id));
+				notifyOtherPlayers(client_id, player.getName()+" Bet");
 				match.bet(client_id);
-				gui.displayLogginInfo(player.getName()+" Raised");
+				gui.displayLogginInfo(player.getName()+" Bet");
 				gui.setPlaying(player, index);
 				gui.setBet(player, index);
 				break;

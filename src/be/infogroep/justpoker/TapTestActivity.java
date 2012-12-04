@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.provider.Settings.Secure;
 import android.support.v4.app.NavUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,6 +65,8 @@ public class TapTestActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);
 
+		((TextView) findViewById(R.id.info_area)).setMovementMethod(new ScrollingMovementMethod());
+		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
 		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
@@ -245,8 +248,6 @@ public class TapTestActivity extends Activity implements
 	}
 
 	private void doCheck() {
-		Toast.makeText(getApplicationContext(), "You Checked!",
-				Toast.LENGTH_LONG).show();
 	}
 
 	private void doBet() {
@@ -264,8 +265,6 @@ public class TapTestActivity extends Activity implements
 			}
 		});
 		button.startAnimation(myFadeInAnimation);
-		Toast.makeText(getApplicationContext(), "You Bet!", Toast.LENGTH_LONG)
-				.show();
 	}
 
 	@Override
@@ -284,13 +283,28 @@ public class TapTestActivity extends Activity implements
 		wl.release();
 	}
 
-	public void displayLoggingInfo(final Object m) {
+	public void displayLoggingInfo(final String m) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Toast.makeText(getApplicationContext(), "received: " + m,
-						Toast.LENGTH_LONG).show();
+				writeLog(m);
 			}
 		});
+	}
+	
+	private void writeLog(String s){
+		TextView loginfo = (TextView) findViewById(R.id.info_area);
+		loginfo.append(s+"\n");
+		
+		// find the amount we need to scroll.  This works by
+	    // asking the TextView's internal layout for the position
+	    // of the final line and then subtracting the TextView's height
+	    final int scrollAmount = loginfo.getLayout().getLineTop(loginfo.getLineCount())
+	            -loginfo.getHeight();
+	    // if there is no need to scroll, scrollAmount will be <=0
+	    if(scrollAmount>0)
+	    	loginfo.scrollTo(0, scrollAmount);
+	    else
+	    	loginfo.scrollTo(0,0);
 	}
 
 	protected void runOnNotUiThread(Runnable runnable) {
@@ -315,8 +329,7 @@ public class TapTestActivity extends Activity implements
 	public void setBlind(final PokerButton b) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Toast.makeText(getApplicationContext(), "You are the " + b,
-						Toast.LENGTH_LONG).show();
+				writeLog("You are the " + b);
 			}
 		});
 	}
@@ -429,6 +442,7 @@ public class TapTestActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_bet);
+				writeLog("You Bet");
 			}
 		});
 	}
@@ -437,6 +451,7 @@ public class TapTestActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_call);
+				writeLog("You Called");
 			}
 		});
 	}
@@ -445,6 +460,7 @@ public class TapTestActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_check);
+				writeLog("You Checked");
 			}
 		});
 	}
@@ -453,6 +469,7 @@ public class TapTestActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_fold);
+				writeLog("You Folded");
 			}
 		});
 	}
@@ -461,6 +478,7 @@ public class TapTestActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_raise);
+				writeLog("You Raised");
 			}
 		});
 	}
@@ -469,6 +487,7 @@ public class TapTestActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_raise);
+				writeLog("You ReRaised");
 			}
 		});
 	}

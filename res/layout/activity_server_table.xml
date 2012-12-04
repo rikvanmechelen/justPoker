@@ -140,6 +140,7 @@
             android:layout_weight="15"
             android:maxLines = "25"
             android:scrollbars="vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             tools:context=".ServerTableActivity" />
 
         <LinearLayout
