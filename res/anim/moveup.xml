@@ -8,5 +8,9 @@
         android:duration="400"
         android:fromYDelta="0"
         android:toYDelta="-400" />
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="540"
+        android:duration="800" />
 
 </set>
