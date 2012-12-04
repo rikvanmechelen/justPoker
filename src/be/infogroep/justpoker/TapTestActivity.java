@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -32,7 +33,7 @@ import edu.vub.at.commlib.PlayerState;
 import edu.vub.at.commlib.PokerButton;
 
 public class TapTestActivity extends Activity implements
-AbstractPokerClientActivity {
+		AbstractPokerClientActivity {
 	boolean flippedCard1;
 	boolean flippedCard2;
 
@@ -50,15 +51,14 @@ AbstractPokerClientActivity {
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
 				"be.infogroep.justpoker.ServerTableActivity");
 		wl.acquire();
-		
+
 		android_id = Secure.getString(getBaseContext().getContentResolver(),
-                Secure.ANDROID_ID);
+				Secure.ANDROID_ID);
 
 		Intent incomingIntent = getIntent();
 		String ip = incomingIntent.getStringExtra("ip");
 		String name = incomingIntent.getStringExtra("name");
-		setTitle("justPoker - "+ name);
-		
+		setTitle("justPoker - " + name);
 
 		flippedCard1 = flippedCard2 = false;
 		super.onCreate(savedInstanceState);
@@ -69,9 +69,11 @@ AbstractPokerClientActivity {
 		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
 		initialCards(cardContainer1, cardContainer2);
 		final ImageView betChip = (ImageView) findViewById(R.id.betChip);
-		//final TextView betChipText = (TextView) findViewById(R.id.betChipText);
-		
-		client = PokerClient.getInstance(TapTestActivity.this, name, android_id, ip, cardContainer1, cardContainer2);
+		// final TextView betChipText = (TextView)
+		// findViewById(R.id.betChipText);
+
+		client = PokerClient.getInstance(TapTestActivity.this, name,
+				android_id, ip, cardContainer1, cardContainer2);
 
 		OnFlingGestureListener cardListener = new OnFlingGestureListener() {
 			private boolean longPressed = false;
@@ -89,10 +91,10 @@ AbstractPokerClientActivity {
 			@Override
 			public void onLongpress() {
 				if (client.inGame()) {
-					cardContainer1.setImageDrawable(getDrawable(client.getCard1()
-							.toString()));
-					cardContainer2.setImageDrawable(getDrawable(client.getCard2()
-							.toString()));
+					cardContainer1.setImageDrawable(getDrawable(client
+							.getCard1().toString()));
+					cardContainer2.setImageDrawable(getDrawable(client
+							.getCard2().toString()));
 					longPressed = true;
 				}
 			}
@@ -115,7 +117,7 @@ AbstractPokerClientActivity {
 		cardContainer2.setOnTouchListener(cardListener);
 		cardContainer1.setOnTouchListener(cardListener);
 		betChip.setOnTouchListener(chipListener);
-		//betChipText.setOnTouchListener(chipListener);
+		// betChipText.setOnTouchListener(chipListener);
 
 	}
 
@@ -140,7 +142,8 @@ AbstractPokerClientActivity {
 	}
 
 	private void doFold(final ImageView card) {
-		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.foldcards);
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this,
+				R.anim.foldcards);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
 			public void onAnimationEnd(Animation animation) {
 			}
@@ -154,9 +157,10 @@ AbstractPokerClientActivity {
 		myFadeInAnimation.setFillAfter(true);
 		card.startAnimation(myFadeInAnimation);
 	}
-	
+
 	private void doInitialCards(final ImageView card) {
-		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.initialcards);
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this,
+				R.anim.initialcards);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
 			public void onAnimationEnd(Animation animation) {
 			}
@@ -170,9 +174,10 @@ AbstractPokerClientActivity {
 		myFadeInAnimation.setFillAfter(true);
 		card.startAnimation(myFadeInAnimation);
 	}
-	
+
 	private void doDeal(final ImageView card, final ImageView card2) {
-		final Animation myFadeInAnimation2 = AnimationUtils.loadAnimation(this, R.anim.dealcards);
+		final Animation myFadeInAnimation2 = AnimationUtils.loadAnimation(this,
+				R.anim.dealcards);
 		myFadeInAnimation2.setAnimationListener(new AnimationListener() {
 			public void onAnimationEnd(Animation animation) {
 			}
@@ -181,11 +186,13 @@ AbstractPokerClientActivity {
 			}
 
 			public void onAnimationStart(Animation animation) {
+				card2.setImageDrawable(getDrawable("card_backside"));
 			}
 		});
-		myFadeInAnimation2.setFillAfter(true);
-				
-		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.dealcards);
+		// myFadeInAnimation2.setFillAfter(true);
+
+		final Animation myFadeInAnimation = AnimationUtils.loadAnimation(this,
+				R.anim.dealcards);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
 			public void onAnimationEnd(Animation animation) {
 				card2.startAnimation(myFadeInAnimation2);
@@ -195,10 +202,46 @@ AbstractPokerClientActivity {
 			}
 
 			public void onAnimationStart(Animation animation) {
+				card.setImageDrawable(getDrawable("card_backside"));
 			}
 		});
-		myFadeInAnimation.setFillAfter(true);
-		card.startAnimation(myFadeInAnimation);
+		Animation myFoldInAnimation = AnimationUtils.loadAnimation(this,
+				R.anim.foldcards);
+		final Animation myFoldInAnimation2 = AnimationUtils.loadAnimation(this,
+				R.anim.foldcards);
+		myFoldInAnimation.setAnimationListener(new AnimationListener() {
+
+			public void onAnimationStart(Animation animation) {
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationEnd(Animation animation) {
+				card.setImageDrawable(null);
+				card2.startAnimation(myFoldInAnimation2);
+			}
+		});
+		myFoldInAnimation2.setAnimationListener(new AnimationListener() {
+
+			public void onAnimationStart(Animation animation) {
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationEnd(Animation animation) {
+				card2.setImageDrawable(null);
+				card.startAnimation(myFadeInAnimation);
+			}
+		});
+
+		if (client.getState() == PlayerState.Fold) {
+			card.startAnimation(myFadeInAnimation);
+		} else {
+			card.startAnimation(myFoldInAnimation);
+		}
+		// myFadeInAnimation.setFillAfter(true);
 	}
 
 	private void doCheck() {
@@ -208,7 +251,8 @@ AbstractPokerClientActivity {
 
 	private void doBet() {
 		final ImageView button = (ImageView) findViewById(R.id.betChip);
-		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.moveup);
+		Animation myFadeInAnimation = AnimationUtils.loadAnimation(this,
+				R.anim.moveup);
 		myFadeInAnimation.setAnimationListener(new AnimationListener() {
 			public void onAnimationEnd(Animation animation) {
 			}
@@ -221,7 +265,7 @@ AbstractPokerClientActivity {
 		});
 		button.startAnimation(myFadeInAnimation);
 		Toast.makeText(getApplicationContext(), "You Bet!", Toast.LENGTH_LONG)
-		.show();
+				.show();
 	}
 
 	@Override
@@ -285,21 +329,21 @@ AbstractPokerClientActivity {
 			}
 		});
 	}
-	
+
 	public void initialCards(final ImageView card1, final ImageView card2) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				doInitialCards(card1);
-				doInitialCards(card2);
-			}
-		});
+		// runOnUiThread(new Runnable() {
+		// public void run() {
+		// doInitialCards(card1);
+		// doInitialCards(card2);
+		// }
+		// });
 	}
-	
+
 	public void deal(final ImageView card1, final ImageView card2) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				doDeal(card2, card1);
-				//doDeal(card2);
+				// doDeal(card2);
 			}
 		});
 	}
@@ -373,7 +417,7 @@ AbstractPokerClientActivity {
 
 	public void startTurn() {
 		vibrate(500);
-		//fadeBackground();
+		// fadeBackground();
 
 	}
 
@@ -388,6 +432,7 @@ AbstractPokerClientActivity {
 			}
 		});
 	}
+
 	public void setCall() {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -395,28 +440,24 @@ AbstractPokerClientActivity {
 			}
 		});
 	}
-	public void setCheck(){
+
+	public void setCheck() {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_check);
 			}
 		});
 	}
-	public void setFold(){
+
+	public void setFold() {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_fold);
 			}
 		});
 	}
-	public void setRaise(){
-		runOnUiThread(new Runnable() {
-			public void run() {
-				setPlayerAction(R.drawable.action_raise);
-			}
-		});
-	}
-	public void setReRaise(){
+
+	public void setRaise() {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				setPlayerAction(R.drawable.action_raise);
@@ -424,7 +465,15 @@ AbstractPokerClientActivity {
 		});
 	}
 
-	public void resetPlayerAction(){
+	public void setReRaise() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setPlayerAction(R.drawable.action_raise);
+			}
+		});
+	}
+
+	public void resetPlayerAction() {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				ImageView seat = (ImageView) findViewById(R.id.action);
@@ -433,7 +482,7 @@ AbstractPokerClientActivity {
 		});
 	}
 
-	private void setPlayerAction(int drawable){
+	private void setPlayerAction(int drawable) {
 		ImageView seat = (ImageView) findViewById(R.id.action);
 		seat.setImageResource(drawable);
 	}
@@ -470,8 +519,8 @@ AbstractPokerClientActivity {
 			}
 		});
 	}
-	
-	private void setPlayerButton(int drawable){
+
+	private void setPlayerButton(int drawable) {
 		ImageView seat = (ImageView) findViewById(R.id.button);
 		seat.setImageResource(drawable);
 	}
