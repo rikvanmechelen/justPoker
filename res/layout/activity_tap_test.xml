@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/client_background"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:clipChildren="false" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,7 +82,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="20"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:clipChildren="false" >
 
         <ImageView
             android:id="@+id/voiceButton"
