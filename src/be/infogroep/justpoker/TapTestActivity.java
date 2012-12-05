@@ -1,10 +1,17 @@
 package be.infogroep.justpoker;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.NetworkInfo.State;
@@ -13,6 +20,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.provider.Settings.Secure;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.NavUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -35,6 +43,27 @@ import edu.vub.at.commlib.PokerButton;
 
 public class TapTestActivity extends Activity implements
 		AbstractPokerClientActivity {
+	private static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
+	private static final String[] CHECK_OPTIONS = new String[]{"check", "tech"};
+	private static final String[] FOLD_OPTIONS = new String[]{"fold", "bold", "old"};
+	private static final String[] BET_OPTIONS = new String[]{"bet", "Bet", "bed"};
+	private static final String[] RAISE_OPTIONS = new String[]{"race", "racist", "grace"};
+	private static final String[] CALL_OPTIONS = new String[]{"call", "call me"};
+	private static final String[] ALLIN_OPTIONS = new String[]{"all in", "allin", "allen", "all inn"};
+	
+	private static Boolean voiceCheck(String s, String[] items){
+		String lowerS = s.toLowerCase();
+		for(int i =0; i < items.length; i++)
+	    {
+	        if(items[i].contains(lowerS) || lowerS.contains(items[i]))
+	        {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+
 	boolean flippedCard1;
 	boolean flippedCard2;
 
@@ -43,6 +72,8 @@ public class TapTestActivity extends Activity implements
 	private PowerManager.WakeLock wl;
 	private boolean stopFadeThread = false;
 	private String android_id;
+	private ImageView cardContainer1;
+	private ImageView cardContainer2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,11 +96,12 @@ public class TapTestActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tap_test);
 
-		((TextView) findViewById(R.id.info_area)).setMovementMethod(new ScrollingMovementMethod());
-		
+		((TextView) findViewById(R.id.info_area))
+				.setMovementMethod(new ScrollingMovementMethod());
+
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		final ImageView cardContainer1 = (ImageView) findViewById(R.id.card1);
-		final ImageView cardContainer2 = (ImageView) findViewById(R.id.card2);
+		cardContainer1 = (ImageView) findViewById(R.id.card1);
+		cardContainer2 = (ImageView) findViewById(R.id.card2);
 		initialCards(cardContainer1, cardContainer2);
 		final ImageView betChip = (ImageView) findViewById(R.id.betChip);
 		// final TextView betChipText = (TextView)
@@ -115,11 +147,17 @@ public class TapTestActivity extends Activity implements
 			public void onBottomToTop() {
 				client.bet();
 			}
+
+			@Override
+			public void onDoubletap() {
+				client.bet();
+			}
 		};
 
 		cardContainer2.setOnTouchListener(cardListener);
 		cardContainer1.setOnTouchListener(cardListener);
 		betChip.setOnTouchListener(chipListener);
+		checkVoiceRecognition();
 		// betChipText.setOnTouchListener(chipListener);
 
 	}
@@ -139,9 +177,104 @@ public class TapTestActivity extends Activity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE)
 
-	public void printMessage(String s, TextView t) {
-		t.setText(s);
+			//If Voice recognition is successful then it returns RESULT_OK
+			if(resultCode == RESULT_OK) {
+
+				ArrayList<String> textMatchList = data
+						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+				if (!textMatchList.isEmpty()) {
+					// If first Match contains the 'search' word
+					// Then start web search.
+					if (textMatchList.get(0).contains("search")) {
+
+						String searchQuery = textMatchList.get(0);
+						searchQuery = searchQuery.replace("search","");
+						Intent search = new Intent(Intent.ACTION_WEB_SEARCH);
+						search.putExtra(SearchManager.QUERY, searchQuery);
+						startActivity(search);
+					} else {
+						Iterator<String> iter = textMatchList.iterator();
+						while(iter.hasNext()){
+							//Toast.makeText(this, iter.next(), Toast.LENGTH_SHORT).show();
+							String result = iter.next();
+							if (voiceCheck(result, CHECK_OPTIONS)){
+								client.check(cardContainer1, cardContainer2);
+								break;
+							} else if (voiceCheck(result, FOLD_OPTIONS)){
+								client.fold(cardContainer1, cardContainer2);
+								break;
+							} else if (voiceCheck(result, BET_OPTIONS)){
+								client.bet();
+								break;
+							} else if (voiceCheck(result, CALL_OPTIONS)){
+								client.check(cardContainer1, cardContainer2);
+								break;
+							} else if (voiceCheck(result, RAISE_OPTIONS)){
+								client.bet();
+								break;
+							} else if (voiceCheck(result, ALLIN_OPTIONS)){
+								client.bet();
+								break;
+							}
+							
+						}
+					}
+
+				}
+				//Result code for various error.
+			}else if(resultCode == RecognizerIntent.RESULT_AUDIO_ERROR){
+				Toast.makeText(this, "Audio Error", Toast.LENGTH_SHORT).show();
+			}else if(resultCode == RecognizerIntent.RESULT_CLIENT_ERROR){
+				Toast.makeText(this, "Client Error", Toast.LENGTH_SHORT).show();
+			}else if(resultCode == RecognizerIntent.RESULT_NETWORK_ERROR){
+				Toast.makeText(this, "Network Error", Toast.LENGTH_SHORT).show();
+			}else if(resultCode == RecognizerIntent.RESULT_NO_MATCH){
+				Toast.makeText(this, "No Match", Toast.LENGTH_SHORT).show();
+			}else if(resultCode == RecognizerIntent.RESULT_SERVER_ERROR){
+				Toast.makeText(this, "Server Error", Toast.LENGTH_SHORT).show();
+			}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	public void checkVoiceRecognition() {
+		// Check if voice recognition is present
+		PackageManager pm = getPackageManager();
+		List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(
+				RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+		if (activities.size() == 0) {
+			ImageView speak_button = (ImageView) (ImageView) findViewById(R.id.voiceButton);
+			speak_button.setEnabled(false);
+			speak_button.setImageDrawable(null);
+		}
+	}
+	
+	public void speak(View v){
+		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+		// Specify the calling package to identify your application
+		intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass()
+				.getPackage().getName());
+
+		// Display an hint to the user about what he should say.
+		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Your options are: \nFold, Check, Bet, Raise, Call, All In");
+
+		// Given an hint to the recognizer about what the user is going to say
+		//There are two form of language model available
+		//1.LANGUAGE_MODEL_WEB_SEARCH : For short phrases
+		//2.LANGUAGE_MODEL_FREE_FORM  : If not sure about the words or phrases and its domain.
+		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+				RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+		// Specify how many results you want to receive. The results will be
+		// sorted where the first result is the one with higher confidence.
+		intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+		//Start the Voice recognizer activity for the result.
+		startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
 	}
 
 	private void doFold(final ImageView card) {
@@ -239,7 +372,8 @@ public class TapTestActivity extends Activity implements
 			}
 		});
 
-		if (client.getState() == PlayerState.Fold || client.getState() == PlayerState.Unknown) {
+		if (client.getState() == PlayerState.Fold
+				|| client.getState() == PlayerState.Unknown) {
 			card.startAnimation(myFadeInAnimation);
 		} else {
 			card.startAnimation(myFoldInAnimation);
@@ -290,21 +424,22 @@ public class TapTestActivity extends Activity implements
 			}
 		});
 	}
-	
-	private void writeLog(String s){
+
+	private void writeLog(String s) {
 		TextView loginfo = (TextView) findViewById(R.id.info_area);
-		loginfo.append(s+"\n");
-		
-		// find the amount we need to scroll.  This works by
-	    // asking the TextView's internal layout for the position
-	    // of the final line and then subtracting the TextView's height
-	    final int scrollAmount = loginfo.getLayout().getLineTop(loginfo.getLineCount())
-	            -loginfo.getHeight();
-	    // if there is no need to scroll, scrollAmount will be <=0
-	    if(scrollAmount>0)
-	    	loginfo.scrollTo(0, scrollAmount);
-	    else
-	    	loginfo.scrollTo(0,0);
+		loginfo.append(s + "\n");
+
+		// find the amount we need to scroll. This works by
+		// asking the TextView's internal layout for the position
+		// of the final line and then subtracting the TextView's height
+		final int scrollAmount = loginfo.getLayout().getLineTop(
+				loginfo.getLineCount())
+				- loginfo.getHeight();
+		// if there is no need to scroll, scrollAmount will be <=0
+		if (scrollAmount > 0)
+			loginfo.scrollTo(0, scrollAmount);
+		else
+			loginfo.scrollTo(0, 0);
 	}
 
 	protected void runOnNotUiThread(Runnable runnable) {

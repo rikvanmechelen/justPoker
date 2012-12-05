@@ -237,9 +237,18 @@ public class PokerServer {
 	}
 	
 	private void setTurn(PokerPlayer p){
-		p.setMyTurn(true);
-		p.getConnection().sendTCP(new SetYourTurn(true, p.getId()));
-		gui.setTurn(p, connections.indexOfKey(p.getId()));
+		if (p.getConnection().isConnected()) {
+			p.setMyTurn(true);
+			p.getConnection().sendTCP(new SetYourTurn(true, p.getId()));
+			gui.setTurn(p, connections.indexOfKey(p.getId()));
+		} else {
+			notifyOtherPlayers(p.getId(), p.getName()+" Disconnected");
+			p.setState(PlayerState.Fold);
+			gui.displayLogginInfo(p.getName()+" Disconnected");
+			gui.setFolded(p, connections.indexOfKey(p.getId()));
+			gui.setFold(p, connections.indexOfKey(p.getId()));
+			setTurn(connections.nextUnfoldedFrom(p.getId()));
+		}
 	}
 	
 	private void roundSetup(PokerPlayer dealer) {
@@ -311,6 +320,7 @@ public class PokerServer {
 	public void startNewGame() {
 		clearTable();
 		match.newRound();
+		match.resetDeck();
 		for (Iterator<PokerPlayer> iterator = connections.values().iterator(); iterator
 				.hasNext();) {
 			PokerPlayer player = iterator.next();

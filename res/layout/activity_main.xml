@@ -2,33 +2,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/client_background"
     android:orientation="horizontal" >
-    
-    <Button android:id="@+id/open_server"
-        android:text="@string/open_server_btn"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:onClick="openServer"/>
 
-    <Button
-        android:id="@+id/connect"
+    <View
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:onClick="createConnection"
-        android:text="Connect" />
-    
-    <Button android:id="@+id/open_client"
-        android:text="@string/open_client_btn"
-        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_weight="10" />
+
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:onClick="openClient"/>
-    <Button android:id="@+id/open_curl"
-        android:text="@string/open_curl_btn"
-        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_weight="80"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/open_server"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="openServer"
+            android:text="@string/open_server_btn" />
+
+        <Button
+            android:id="@+id/connect"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="createConnection"
+            android:text="Connect" />
+
+        <Button
+            android:id="@+id/open_client"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="openClient"
+            android:text="@string/open_client_btn" />
+
+        <Button
+            android:id="@+id/open_curl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="createCurl"
+            android:text="@string/open_curl_btn" />
+    </LinearLayout>
+
+    <View
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:onClick="createCurl"/>
+        android:layout_height="fill_parent"
+        android:layout_weight="10" />
+
 </LinearLayout>

@@ -1,26 +1,41 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/client_background"
+    android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/server_hello"
-        tools:context=".ServerActivity" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="10" />
 
-    <Button
-        android:id="@+id/start_server"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="18dp"
-        android:layout_marginTop="44dp"
-        android:layout_toLeftOf="@+id/textView1"
-        android:text="@string/start_server"
-        android:onClick="startServer" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="80"
+        android:gravity="top"
+        android:orientation="vertical" >
 
-</RelativeLayout>
+        <!-- <TextView -->
+        <!-- android:id="@+id/textView1" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:text="@string/server_hello" -->
+        <!-- tools:context=".ServerActivity" /> -->
+
+        <Button
+            android:id="@+id/start_server"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="startServer"
+            android:text="@string/start_server" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="10" />
+
+</LinearLayout>

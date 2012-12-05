@@ -1,56 +1,74 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/client_background"
+    android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/nickname_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="17dp"
-        android:text="Nickname"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="10" />
 
-    <TextView
-        android:id="@+id/server_ip_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/nickname_label"
-        android:layout_below="@+id/nickname_label"
-        android:layout_marginTop="29dp"
-        android:text="Server IP"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="80"
+        android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/nickname_label"
-        android:layout_alignBottom="@+id/nickname_label"
-        android:layout_alignParentRight="true"
-        android:ems="10"
-        android:inputType="text|numberDecimal" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/server_ip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/server_ip_label"
-        android:layout_alignBottom="@+id/server_ip_label"
-        android:layout_alignParentRight="true"
-        android:ems="10"
-        android:inputType="text|numberDecimal"
-        android:text="192.168.1.4" />
+            <TextView
+                android:id="@+id/nickname_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nickname "
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/server_ip"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="42dp"
-        android:onClick="connectToServer"
-        android:text="connect" />
+            <EditText
+                android:id="@+id/server_ip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text|numberDecimal"
+                android:text="192.168.1.4" />
+        </LinearLayout>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/server_ip_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Server IP"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/nickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text|numberDecimal" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="connectToServer"
+            android:text="connect" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="10" />
+
+</LinearLayout>

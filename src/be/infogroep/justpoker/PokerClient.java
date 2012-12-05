@@ -250,6 +250,7 @@ public class PokerClient {
 			//endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
+			new EnsureConnection().execute();
 		}		
 	}
 
@@ -260,6 +261,7 @@ public class PokerClient {
 			//endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
+			new EnsureConnection().execute();
 		}
 	}
 
@@ -270,6 +272,7 @@ public class PokerClient {
 			//endMyTurn();
 		} else {
 			gui.displayLoggingInfo("It is not your turn yet!");
+			new EnsureConnection().execute();
 		}
 
 	}
